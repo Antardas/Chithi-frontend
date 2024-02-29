@@ -48,7 +48,8 @@
     "standard",
     "plugin:react-hooks/recommended",
     "plugin:prettier/recommended",
-    "plugin:@typescript-eslint/recommended"
+    "plugin:@typescript-eslint/recommended",
+    "eslint:recommended"
   ],
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
@@ -58,7 +59,7 @@
     "ecmaVersion": "latest",
     "sourceType": "module"
   },
-  "plugins": [ "@typescript-eslint","react", "jest", "prettier"],
+  "plugins": ["@typescript-eslint", "react", "jest", "prettier"],
   "settings": {
     "react": {
       "version": "detect" // Automatically detect the react version
