@@ -1,9 +1,10 @@
 import React, { ReactNode } from 'react';
-interface ButtonProps {
+interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   label: string | ReactNode;
   className?: string;
-  handleClick?(): void;
-  disabled: boolean;
+  handleClick?(event: React.MouseEvent<HTMLButtonElement>): void;
+
+  disabled?: boolean;
 }
 const Button = ({ label, handleClick, className = '', disabled = false }: ButtonProps) => {
   return (

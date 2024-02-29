@@ -23,4 +23,8 @@
     outline: 0;
     transform: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
   }
+  .form-input[type='checkbox']{
+    // width: 5px;
+    line-height: 1rem;
+  }
 }

@@ -1,16 +1,18 @@
-import React from 'react';
+import React, { FC } from 'react';
 import './Input.scss';
-interface InputProps {
+interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   name: string;
+  id: string;
   type: string;
-  value: string;
+  // value: React.InputHTMLAttributes<string | number | boolean | readonly string[] |undefined>;
+  // value: string | number | boolean | readonly string[] | undefined;
   className?: string;
   labelText?: string;
   placeHolder?: string;
   handleChange?(): void;
 }
 
-const Input = ({ className, labelText, name, placeHolder, type, value, handleChange }: InputProps) => {
+const Input: FC<InputProps> = ({ id, className, labelText, name, placeHolder, type, value, handleChange }) => {
   return (
     <div className="form-row">
       {labelText ?? (
@@ -20,6 +22,7 @@ const Input = ({ className, labelText, name, placeHolder, type, value, handleCha
       )}
 
       <input
+        id={id}
         name={name}
         value={value}
         onChange={handleChange}
