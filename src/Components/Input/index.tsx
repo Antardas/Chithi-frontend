@@ -9,7 +9,7 @@ interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   className?: string;
   labelText?: string;
   placeHolder?: string;
-  handleChange?(): void;
+  handleChange?(event: React.ChangeEvent<HTMLInputElement>): void;
 }
 
 const Input: FC<InputProps> = ({ id, className, labelText, name, placeHolder, type, value, handleChange }) => {
