@@ -1,8 +1,10 @@
 import axios from 'axios';
 
-const BASE_URL: string = `${import.meta.env.VITE_BASE_ENDPOINT}/api/v1`;
+// const BASE_URL: string = `${import.meta.env.VITE_BASE_ENDPOINT}/api/v1`;
+const BASE_URL: string = `http://localhost:5000/api/v1`;
 console.log(BASE_URL);
 
+axios.defaults.headers['Authorization'] = window.localStorage.getItem('token') || 'TestToken';
 export default axios.create({
   baseURL: BASE_URL,
   headers: {
