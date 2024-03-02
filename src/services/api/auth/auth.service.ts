@@ -1,5 +1,5 @@
 import axios from '../../axios';
-import { ISignInData, ISignupData } from '../../../types/auth';
+import { ISignInData, ISignupData, ResetPasswordData } from '../../../types/auth';
 
 class AuthService {
   async singUp(body: ISignupData) {
@@ -14,7 +14,7 @@ class AuthService {
     const response = await axios.post('/forgot-password', { email });
     return response;
   }
-  async resetPassword(token: string, body: any) {
+  async resetPassword(token: string, body: ResetPasswordData) {
     const response = await axios.post(`/reset-password/${token}`, body);
     return response;
   }
