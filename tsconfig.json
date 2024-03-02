@@ -18,8 +18,19 @@
     "strict": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-    "noFallthroughCasesInSwitch": true
+    "noFallthroughCasesInSwitch": true,
+    "paths": {
+      "~/Components/*": ["./src/Components/*"],
+      "~/pages/*": ["./src/pages/*"],
+      "~/hooks/*": ["./src/hooks/*"],
+      "~/assets/*": ["./src/assets/*"],
+      "~/services/*": ["./src/services/*"],
+      "~/types/*": ["./src/types/*"],
+      "~/redux/*": ["./src/redux/*"],
+      "~/mocks/*": ["./src/mocks/*"],
+      "~/*": ["./src/*"]
+    }
   },
-  "include": ["src"],
+  "include": ["src", "src/**/*.tsx"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }

@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
 import { AxiosError, AxiosResponse, isAxiosError } from 'axios';
-import './ResetPassword.scss';
 import { Link, useSearchParams } from 'react-router-dom';
-import Button from '../../../Components/Button';
-import Input from '../../../Components/Input';
+import './ResetPassword.scss';
+import Button from '~/Components/Button';
+import Input from '~/Components/Input';
 import { FaArrowLeft } from 'react-icons/fa';
-import backgroundImage from '../../../assets/images/background.jpg';
-import { authService } from '../../../services/api/auth/auth.service';
-import { IError } from '../../../types/axios';
-import { IForgetPasswordRes } from '../../../types/auth';
+import backgroundImage from '~/assets/images/background.jpg';
+import { authService } from '~/services/api/auth/auth.service';
+import { IError } from '~/types/axios';
+import { IForgetPasswordRes } from '~/types/auth';
 
 const ResetPassword = () => {
   const [password, setPassword] = useState<string>('');

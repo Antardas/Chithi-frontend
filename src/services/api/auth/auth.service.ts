@@ -1,5 +1,5 @@
-import axios from '../../axios';
-import { ISignInData, ISignupData, ResetPasswordData } from '../../../types/auth';
+import axios from '~/services/axios';
+import { ISignInData, ISignupData, ResetPasswordData } from '~/types/auth';
 
 class AuthService {
   async singUp(body: ISignupData) {

@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { FaArrowRight } from 'react-icons/fa';
 import './Login.scss';
-import Input from '../../../Components/Input';
-import Button from '../../../Components/Button';
-import { Link } from 'react-router-dom';
-import { ISignUpResponse, IUser } from '../../../types/user';
-import { authService } from '../../../services/api/auth/auth.service';
+import Input from '~/Components/Input';
+import Button from '~/Components/Button';
+import { Link, NavigateFunction, useNavigate } from 'react-router-dom';
+import { ISignUpResponse, IUser } from '~/types/user';
+import { authService } from '~/services/api/auth/auth.service';
 import { AxiosError, AxiosResponse, isAxiosError } from 'axios';
-import { IError } from '../../../types/axios';
+import { IError } from '~/types/axios';
 
 const Login = () => {
   const [username, setUsername] = useState<string>('');
@@ -18,6 +18,7 @@ const Login = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [keepLoggedIn, setKeepLoggedIn] = useState<boolean>(false);
   const [user, setUser] = useState<IUser | null>(null);
+  const navigate: NavigateFunction = useNavigate();
 
   const loginUser = async (event: React.FormEvent<HTMLFormElement>) => {
     setLoading(true);
@@ -52,9 +53,10 @@ const Login = () => {
       return;
     }
     if (user) {
+      navigate('/app/social/streams');
       setLoading(false);
     }
-  }, [loading, user]);
+  }, [loading, user, navigate]);
   return (
     <div className="auth-inner">
       {hasError && errorMessage ? (
@@ -72,7 +74,7 @@ const Login = () => {
             name="username"
             type="text"
             value={username}
-             style={{
+            style={{
               border: `${hasError ? '1px solid #fa9b8a' : ''}`
             }}
             handleChange={(e) => setUsername(e.target.value)}
@@ -84,7 +86,7 @@ const Login = () => {
             name="password"
             type="password"
             value={password}
-             style={{
+            style={{
               border: `${hasError ? '1px solid #fa9b8a' : ''}`
             }}
             placeHolder="Enter your password"

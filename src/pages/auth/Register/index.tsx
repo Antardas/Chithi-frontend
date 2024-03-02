@@ -2,12 +2,14 @@ import React, { useEffect } from 'react';
 import { useState } from 'react';
 import { AxiosError, AxiosResponse, isAxiosError } from 'axios';
 import './Register.scss';
-import Input from '../../../Components/Input';
-import Button from '../../../Components/Button';
-import { IError } from '../../../types/axios';
-import { Utils } from '../../../services/utils/utils.service';
-import { authService } from '../../../services/api/auth/auth.service';
-import { ISignUpResponse, IUser } from '../../../types/user';
+import { IError } from '~/types/axios';
+import { Utils } from '~/services/utils/utils.service';
+import { authService } from '~/services/api/auth/auth.service';
+import { ISignUpResponse, IUser } from '~/types/user';
+import Input from '~/Components/Input';
+import Button from '~/Components/Button';
+import { NavigateFunction, useNavigate } from 'react-router-dom';
+
 const Register = () => {
   const [username, setUsername] = useState<string>('');
   const [email, setEmail] = useState<string>('');
@@ -17,6 +19,7 @@ const Register = () => {
   const [hasError, setHasError] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
   const [user, setUser] = useState<IUser | null>(null);
+  const navigate: NavigateFunction = useNavigate();
 
   const registerUser = async (event: React.FormEvent<HTMLFormElement>) => {
     setLoading(true);
@@ -57,9 +60,11 @@ const Register = () => {
       return;
     }
     if (user) {
+      navigate('/app/social/streams');
+
       setLoading(false);
     }
-  }, [loading, user]);
+  }, [loading, user, navigate]);
 
   return (
     <div className="auth-inner">
