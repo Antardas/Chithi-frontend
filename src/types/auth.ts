@@ -12,4 +12,13 @@ interface ISignInData {
   keepLoggedIn: boolean;
 }
 
-export type { ISignupData, ISignInData };
+interface IForgetPasswordRes {
+  message: string;
+}
+
+interface ResetPasswordData {
+  password: string;
+  confirmPassword: string;
+}
+
+export type { ISignupData, ISignInData, IForgetPasswordRes, ResetPasswordData };

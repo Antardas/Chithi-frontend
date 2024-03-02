@@ -12,7 +12,7 @@ interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   handleChange?(event: React.ChangeEvent<HTMLInputElement>): void;
 }
 
-const Input: FC<InputProps> = ({ id, className, labelText, name, placeHolder, type, value, handleChange }) => {
+const Input: FC<InputProps> = ({ id, className, labelText, name, placeHolder, type, value, handleChange, style }) => {
   return (
     <div className="form-row">
       {labelText ?? (
@@ -30,6 +30,7 @@ const Input: FC<InputProps> = ({ id, className, labelText, name, placeHolder, ty
         type={type}
         className={`form-input ${className}`}
         autoComplete={''}
+        style={style}
       />
     </div>
   );

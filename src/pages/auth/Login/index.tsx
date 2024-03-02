@@ -72,6 +72,9 @@ const Login = () => {
             name="username"
             type="text"
             value={username}
+             style={{
+              border: `${hasError ? '1px solid #fa9b8a' : ''}`
+            }}
             handleChange={(e) => setUsername(e.target.value)}
             placeHolder="Username"
           />
@@ -81,6 +84,9 @@ const Login = () => {
             name="password"
             type="password"
             value={password}
+             style={{
+              border: `${hasError ? '1px solid #fa9b8a' : ''}`
+            }}
             placeHolder="Enter your password"
             handleChange={(e) => setPassword(e.target.value)}
           />
