@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
 import { FaArrowLeft } from 'react-icons/fa';
 import './ForgetPassword.scss';
-import Input from '../../../Components/Input';
-import Button from '../../../Components/Button';
+import Input from '~/Components/Input';
+import Button from '~/Components/Button';
 import { Link } from 'react-router-dom';
-import backgroundImage from '../../../assets/images/background.jpg';
-import { authService } from '../../../services/api/auth/auth.service';
+import backgroundImage from '~/assets/images/background.jpg';
+import { authService } from '~/services/api/auth/auth.service';
 import { AxiosError, AxiosResponse, isAxiosError } from 'axios';
-import { IError } from '../../../types/axios';
-import { IForgetPasswordRes } from '../../../types/auth';
+import { IError } from '~/types/axios';
+import { IForgetPasswordRes } from '~/types/auth';
 const ForgetPassword = () => {
   const [email, setEmail] = useState<string>('');
   const [responseMessage, setResponseMessage] = useState<string>('');

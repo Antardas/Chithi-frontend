@@ -1,4 +1,4 @@
-import { DefaultAvatarImageDataUrl, avatarColors } from './static.data';
+import { DefaultAvatarImageDataUrl, avatarColors } from '~/services/utils/static.data';
 
 export class Utils {
   static avatarColor() {

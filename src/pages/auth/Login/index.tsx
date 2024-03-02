@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { FaArrowRight } from 'react-icons/fa';
 import './Login.scss';
-import Input from '../../../Components/Input';
-import Button from '../../../Components/Button';
+import Input from '~/Components/Input';
+import Button from '~/Components/Button';
 import { Link } from 'react-router-dom';
-import { ISignUpResponse, IUser } from '../../../types/user';
-import { authService } from '../../../services/api/auth/auth.service';
+import { ISignUpResponse, IUser } from '~/types/user';
+import { authService } from '~/services/api/auth/auth.service';
 import { AxiosError, AxiosResponse, isAxiosError } from 'axios';
-import { IError } from '../../../types/axios';
+import { IError } from '~/types/axios';
 
 const Login = () => {
   const [username, setUsername] = useState<string>('');

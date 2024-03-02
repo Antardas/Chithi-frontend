@@ -2,12 +2,13 @@ import React, { useEffect } from 'react';
 import { useState } from 'react';
 import { AxiosError, AxiosResponse, isAxiosError } from 'axios';
 import './Register.scss';
-import Input from '../../../Components/Input';
-import Button from '../../../Components/Button';
-import { IError } from '../../../types/axios';
-import { Utils } from '../../../services/utils/utils.service';
-import { authService } from '../../../services/api/auth/auth.service';
-import { ISignUpResponse, IUser } from '../../../types/user';
+import { IError } from '~/types/axios';
+import { Utils } from '~/services/utils/utils.service';
+import { authService } from '~/services/api/auth/auth.service';
+import { ISignUpResponse, IUser } from '~/types/user';
+import Input from '~/Components/Input';
+import Button from '~/Components/Button';
+
 const Register = () => {
   const [username, setUsername] = useState<string>('');
   const [email, setEmail] = useState<string>('');
