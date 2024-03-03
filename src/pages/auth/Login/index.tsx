@@ -8,7 +8,10 @@ import { ISignUpResponse, IUser } from '~/types/user';
 import { authService } from '~/services/api/auth/auth.service';
 import { AxiosError, AxiosResponse, isAxiosError } from 'axios';
 import { IError } from '~/types/axios';
-
+import useLocalStorage from '~/hooks/useLocalStorage';
+import useSessionStorage from '~/hooks/useSessionStorage';
+import { Utils } from '~/services/utils/utils.service';
+import { useAppDispatch } from '~/redux/store';
 const Login = () => {
   const [username, setUsername] = useState<string>('');
   const [password, setPassword] = useState<string>('');
@@ -18,8 +21,13 @@ const Login = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [keepLoggedIn, setKeepLoggedIn] = useState<boolean>(false);
   const [user, setUser] = useState<IUser | null>(null);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [_username, setStoredUsername] = useLocalStorage('username');
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [_loggedIn, setLoggedIn] = useLocalStorage('keepLoggedIn');
+  const [, setPageReload] = useSessionStorage('pageReload');
   const navigate: NavigateFunction = useNavigate();
-
+  const dispatch = useAppDispatch();
   const loginUser = async (event: React.FormEvent<HTMLFormElement>) => {
     setLoading(true);
     event.preventDefault();
@@ -30,11 +38,14 @@ const Login = () => {
         password,
         keepLoggedIn
       });
-      setUser(result.data.user);
+      setStoredUsername(`${result.data.user.username || ''}`);
+      setLoggedIn(JSON.stringify(true));
+      setKeepLoggedIn(true);
       setLoading(false);
       setErrorMessage('');
       setHasError(false);
       setAlertType('alert-success');
+      Utils.dispatchUser(result, setPageReload, dispatch, setUser);
     } catch (error: unknown) {
       setHasError(true);
       setLoading(false);

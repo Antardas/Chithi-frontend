@@ -49,4 +49,10 @@ interface ISignUpResponse {
   user: IUser;
   token: string;
 }
-export type { ISignUpResponse, IUser, INotificationSettings, IBasicInfo, ISocialLinks };
+
+interface IUserState {
+  token: string;
+  profile: IUser | null;
+}
+
+export type { ISignUpResponse, IUser, INotificationSettings, IBasicInfo, ISocialLinks, IUserState };
