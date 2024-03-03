@@ -1,5 +1,16 @@
+import { AxiosResponse } from 'axios';
+import { SetValue, RemoveValue } from '~/hooks/useLocalStorage';
+import { addUser, clearUser } from '~/redux/reducers/user/user.reducer';
+import { AppDispatch } from '~/redux/store';
 import { DefaultAvatarImageDataUrl, avatarColors } from '~/services/utils/static.data';
+import { ISignUpResponse, IUser } from '~/types/user';
 
+interface IClearStoreParams {
+  dispatch: AppDispatch;
+  removeStorageUsername: RemoveValue;
+  removeSessionPageReload: RemoveValue;
+  setLoggedIn: React.Dispatch<React.SetStateAction<boolean>>;
+}
 export class Utils {
   static avatarColor() {
     const colorsIndex = Math.floor(Math.random() * avatarColors.length);
@@ -27,5 +38,23 @@ export class Utils {
     } else {
       return DefaultAvatarImageDataUrl;
     }
+  }
+
+  static dispatchUser = (
+    result: AxiosResponse<ISignUpResponse>,
+    pageReload: SetValue,
+    dispatch: AppDispatch,
+    setUser: React.Dispatch<React.SetStateAction<IUser | null>>
+  ) => {
+    pageReload(JSON.stringify(true));
+    dispatch(addUser({ token: result.data.token, profile: result.data.user }));
+    setUser(result.data.user);
+  };
+
+  static clearStore({ dispatch, removeStorageUsername, removeSessionPageReload, setLoggedIn }: IClearStoreParams) {
+    dispatch(clearUser());
+    removeStorageUsername();
+    removeSessionPageReload();
+    setLoggedIn(false);
   }
 }
