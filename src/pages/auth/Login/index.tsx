@@ -8,7 +8,8 @@ import { ISignUpResponse, IUser } from '~/types/user';
 import { authService } from '~/services/api/auth/auth.service';
 import { AxiosError, AxiosResponse, isAxiosError } from 'axios';
 import { IError } from '~/types/axios';
-
+import useLocalStorage from '~/hooks/useLocalStorage';
+import useSessionStorage from '~/hooks/useSessionStorage';
 const Login = () => {
   const [username, setUsername] = useState<string>('');
   const [password, setPassword] = useState<string>('');
@@ -18,6 +19,11 @@ const Login = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [keepLoggedIn, setKeepLoggedIn] = useState<boolean>(false);
   const [user, setUser] = useState<IUser | null>(null);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [_username, setStoredUsername] = useLocalStorage('username');
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [_loggedIn, setLoggedIn] = useLocalStorage('keepLoggedIn');
+  const [, setPageReload] = useSessionStorage('pageReload');
   const navigate: NavigateFunction = useNavigate();
 
   const loginUser = async (event: React.FormEvent<HTMLFormElement>) => {
