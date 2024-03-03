@@ -9,6 +9,8 @@ import { ISignUpResponse, IUser } from '~/types/user';
 import Input from '~/Components/Input';
 import Button from '~/Components/Button';
 import { NavigateFunction, useNavigate } from 'react-router-dom';
+import { AppDispatch, useAppDispatch } from '~/redux/store';
+import useSessionStorage from '~/hooks/useSessionStorage';
 
 const Register = () => {
   const [username, setUsername] = useState<string>('');
@@ -20,6 +22,8 @@ const Register = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [user, setUser] = useState<IUser | null>(null);
   const navigate: NavigateFunction = useNavigate();
+  const dispatch: AppDispatch = useAppDispatch();
+  const [, setPageReload] = useSessionStorage('pageReload');
 
   const registerUser = async (event: React.FormEvent<HTMLFormElement>) => {
     setLoading(true);
@@ -37,11 +41,12 @@ const Register = () => {
         email,
         password
       });
-      setUser(result.data.user);
+
       setLoading(false);
       setErrorMessage('');
       setHasError(false);
       setAlertType('alert-success');
+      Utils.dispatchUser(result, setPageReload, dispatch, setUser);
     } catch (error: unknown) {
       setHasError(true);
       setLoading(false);
