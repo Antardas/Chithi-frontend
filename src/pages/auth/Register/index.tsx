@@ -95,6 +95,7 @@ const Register = () => {
             style={{
               border: `${hasError ? '1px solid #fa9b8a' : ''}`
             }}
+            labelText='Email'
           />
           <Input
             id="username"
@@ -108,6 +109,8 @@ const Register = () => {
               setUsername(e.target.value);
             }}
             placeHolder="Username"
+            labelText='Username'
+
           />
           {/* password field */}
           <Input
@@ -122,6 +125,8 @@ const Register = () => {
               setPassword(e.target.value);
             }}
             placeHolder="Enter your password"
+            labelText='Password'
+
           />
         </div>
         {/* button component */}

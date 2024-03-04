@@ -41,7 +41,7 @@ interface IUser {
   bgImageVersion: string;
   bgImageId: string;
   profilePicture: string;
-  createdAt?: Date;
+  createdAt?: string;
 }
 
 interface ISignUpResponse {
