@@ -16,7 +16,15 @@ const Providers = ({ children }: PropsWithChildren<unknown>) => {
 };
 const customRender = (ui: React.ReactNode, options?: RenderOptions) => render(ui, { wrapper: Providers, ...options });
 
-// NOTE: https://webup.org/blog/how-to-avoid-mocking-in-react-router-v6-tests/
+/**
+ * @see [Testing React Router v6 (no mocking)](https://webup.org/blog/how-to-avoid-mocking-in-react-router-v6-tests/) for more details and alternative approaches.
+ *
+ * Renders a React component within a simulated React Router v6 context.
+ *
+ * @param children - The React component to render.
+ * @param routes (optional) - An array of route objects to configure the router.
+ * @returns The rendered component.
+ */
 const renderWithRouter = (children: React.ReactElement<unknown>, routes = []) => {
   const options = isValidElement(children) ? { element: children, path: '/' } : children;
 
