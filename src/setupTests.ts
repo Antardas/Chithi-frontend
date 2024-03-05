@@ -4,11 +4,13 @@ import 'vitest-canvas-mock';
 import '@testing-library/jest-dom/vitest';
 import { server } from '~/mocks/server';
 import { cleanup } from '@testing-library/react';
-import * as matchers from "@testing-library/jest-dom/matchers";
+import * as matchers from '@testing-library/jest-dom/matchers';
 
 expect.extend(matchers);
 beforeAll(() => {
-  server.listen();
+  server.listen({
+    onUnhandledRequest: 'bypass'
+  });
 });
 
 afterEach(() => {
