@@ -1,9 +1,8 @@
 import { RenderOptions, render } from '@testing-library/react';
 import React, { PropsWithChildren, isValidElement } from 'react';
 import { Provider } from 'react-redux';
-import { RouterProvider, createMemoryRouter } from 'react-router-dom';
-import { store } from '~/redux/store';
-// import router from '~/routes';
+import { RouteObject, RouterProvider, createMemoryRouter } from 'react-router-dom';
+import { store } from '~/redux/store'
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const Providers = ({ children }: PropsWithChildren<unknown>) => {
@@ -25,7 +24,7 @@ const customRender = (ui: React.ReactNode, options?: RenderOptions) => render(ui
  * @param routes (optional) - An array of route objects to configure the router.
  * @returns The rendered component.
  */
-const renderWithRouter = (children: React.ReactElement<unknown>, routes = []) => {
+const renderWithRouter = (children: React.ReactElement<unknown>, routes: RouteObject[] = []) => {
   const options = isValidElement(children) ? { element: children, path: '/' } : children;
 
   const router = createMemoryRouter([{ ...options }, ...routes], {
