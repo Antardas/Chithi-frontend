@@ -28,7 +28,6 @@ const ResetPassword = () => {
         confirmPassword,
         password
       });
-      console.log(result);
 
       setLoading(false);
       setResponseMessage(result.data.message);
@@ -62,7 +61,7 @@ const ResetPassword = () => {
             <div className="tab-item">
               <div className="auth-inner">
                 {responseMessage ? (
-                  <div className={`alerts ${alertType}`} role="alert">
+                  <div className={`alerts ${alertType ?? ''}`} role="alert">
                     {responseMessage}
                   </div>
                 ) : (
@@ -83,8 +82,8 @@ const ResetPassword = () => {
                       handleChange={(e) => setPassword(e.target.value)}
                     />
                     <Input
-                      id="password"
-                      name="password"
+                      id="confirmPassword"
+                      name="confirmPassword"
                       type="password"
                       value={confirmPassword}
                       style={{
@@ -97,8 +96,8 @@ const ResetPassword = () => {
                   </div>
                   <Button
                     label={`${loading ? 'RESET PASSWORD in progress' : 'RESET PASSWORD'}`}
-                    className="auth-button button"
-                    disabled={confirmPassword !== password || !password || !confirmPassword || !token || loading}
+                    className={`auth-button button  ${loading}`}
+                    disabled={!(confirmPassword === password) || !password || !confirmPassword || !token || loading}
                   />
 
                   <Link to={'/'}>
