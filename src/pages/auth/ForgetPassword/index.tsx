@@ -21,8 +21,6 @@ const ForgetPassword = () => {
 
     try {
       const result: AxiosResponse<IForgetPasswordRes> = await authService.forgotPassword(email);
-      console.log(result);
-
       setLoading(false);
       setResponseMessage(result.data.message);
       setEmail('');
@@ -87,11 +85,12 @@ const ForgetPassword = () => {
                       }}
                       placeHolder="Enter your Email"
                       handleChange={(e) => setEmail(e.target.value)}
+                      labelText='Email'
                     />
                   </div>
                   {/* button component */}
                   <Button
-                    label={`${loading ? 'Forger Password in progress' : 'Forger Password'}`}
+                    label={`${loading ? 'Forget Password in progress' : 'Forget Password'}`}
                     className="auth-button button"
                     disabled={loading || !email}
                     type="submit"

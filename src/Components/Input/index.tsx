@@ -15,10 +15,12 @@ interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
 const Input: FC<InputProps> = ({ id, className, labelText, name, placeHolder, type, value, handleChange, style }) => {
   return (
     <div className="form-row">
-      {labelText ?? (
+      {labelText ? (
         <label htmlFor={name} className="form-label">
           {labelText}
         </label>
+      ) : (
+        ''
       )}
 
       <input

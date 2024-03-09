@@ -18,15 +18,11 @@ const AuthTabs = (): React.JSX.Element => {
           <div className="tabs">
             <div className="tabs-auth">
               <ul className="tab-group">
-                <li className={`tab ${type === 'SIGN_IN' && 'active'}`}>
-                  <button className="login" onClick={() => setType('SIGN_IN')}>
-                    Sign In
-                  </button>
+                <li className={`tab ${type === 'SIGN_IN' && 'active'}`} onClick={() => setType('SIGN_IN')}>
+                  <button className="login">Sign In</button>
                 </li>
-                <li className={`tab ${type === 'SIGN_UP' && 'active'}`}>
-                  <button className="signup" onClick={() => setType('SIGN_UP')}>
-                    Sign Up
-                  </button>
+                <li className={`tab ${type === 'SIGN_UP' && 'active'}`} onClick={() => setType('SIGN_UP')}>
+                  <button className="signup">Sign Up</button>
                 </li>
               </ul>
               {type === 'SIGN_IN' ? (
