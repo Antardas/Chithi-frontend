@@ -1,8 +1,8 @@
-import { RenderOptions, render } from '@testing-library/react';
+import { RenderOptions, render, RenderHookOptions, RenderHookResult, renderHook } from '@testing-library/react';
 import React, { PropsWithChildren, isValidElement } from 'react';
 import { Provider } from 'react-redux';
 import { RouteObject, RouterProvider, createMemoryRouter } from 'react-router-dom';
-import { store } from '~/redux/store'
+import { store } from '~/redux/store';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const Providers = ({ children }: PropsWithChildren<unknown>) => {
@@ -38,6 +38,17 @@ const renderWithRouter = (children: React.ReactElement<unknown>, routes: RouteOb
     </Provider>
   );
 };
+export type CustomRenderHookOptions<Props> = RenderHookOptions<Props>;
+
+// const customRenderHook = <Props, Result>(
+//   render: (props: Props) => Result,
+//   options?: CustomRenderHookOptions<Props>
+// ): RenderHookResult<Result, Props> => {
+//   return renderHook(render, {
+//     wrapper: (props: any) => <Provider {...props} />,
+//     ...options
+//   });
+// };
 
 export * from '@testing-library/react';
 export { customRender as render, renderWithRouter };
