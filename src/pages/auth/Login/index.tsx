@@ -65,7 +65,6 @@ const Login = () => {
     }
     if (user) {
       navigate('/app/social/streams');
-      setLoading(false);
     }
   }, [loading, user, navigate]);
   return (
@@ -90,6 +89,7 @@ const Login = () => {
             }}
             handleChange={(e) => setUsername(e.target.value)}
             placeHolder="Username"
+            labelText="Username"
           />
           {/* password field */}
           <Input
@@ -102,6 +102,7 @@ const Login = () => {
             }}
             placeHolder="Enter your password"
             handleChange={(e) => setPassword(e.target.value)}
+            labelText="Password"
           />
           <label className="checkmark-container" htmlFor="checkbox">
             <Input
