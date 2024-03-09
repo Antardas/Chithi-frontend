@@ -19,7 +19,7 @@ const userSlice = createSlice({
     },
 
     updaterUserProfile: (state, action) => {
-      state.token = '';
+      // state.token = '';
       state.profile = action.payload;
     }
   }
