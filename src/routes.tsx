@@ -1,5 +1,6 @@
 import { createBrowserRouter } from 'react-router-dom';
 import { AuthTabs, ForgetPassword, ResetPassword } from '~/pages/auth';
+import Social from '~/pages/social';
 import Streams from '~/pages/social/Streams';
 const router = createBrowserRouter([
   {
@@ -15,8 +16,14 @@ const router = createBrowserRouter([
     element: <ResetPassword />
   },
   {
-    path: '/app/social/streams',
-    element: <Streams />
+    path: '/app/social',
+    element: <Social />,
+    children: [
+      {
+        path: 'streams',
+        element: <Streams />
+      }
+    ]
   }
 ]);
 

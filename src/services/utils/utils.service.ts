@@ -57,4 +57,15 @@ export class Utils {
     removeSessionPageReload();
     setLoggedIn(false);
   }
+
+  static appEnvironment(): string {
+    const env = import.meta.env.VITE_ENVIRONMENT;
+    if (env === 'development') {
+      return 'DEV';
+    } else if (env === 'production') {
+      return '';
+    } else {
+      return 'STG';
+    }
+  }
 }

@@ -1,9 +1,16 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { FaCaretDown, FaRegBell, FaRegEnvelope } from 'react-icons/fa';
 import logo from '~/assets/images/logo.svg';
 import '~/Components/Header/Header.scss';
 import Avatar from '~/Components/Avatar';
+import { Utils } from '~/services/utils/utils.service';
 const Header = () => {
+  const [environment, setEnvironment] = useState<string>('');
+  const backgroundColor = `${environment === 'DEV' ? '#50b5ff' : environment === 'STG' ? '#e9710f' : ''}`;
+  useEffect(() => {
+    const env = Utils.appEnvironment();
+    setEnvironment(env);
+  }, []);
   return (
     <div>
       <div className="header-nav-wrapper" data-testid="header-wrapper">
@@ -12,7 +19,18 @@ const Header = () => {
             <img src={logo} className="img-fluid" alt="" />
             <div className="app-name">
               Chithi
-              <span className="environment">DEV</span>
+              {environment ? (
+                <span
+                  style={{
+                    backgroundColor: backgroundColor
+                  }}
+                  className="environment"
+                >
+                  DEV
+                </span>
+              ) : (
+                ''
+              )}
             </div>
           </div>
           <div className="header-menu-toggle">
@@ -42,7 +60,7 @@ const Header = () => {
             </li>
             <li className="header-nav-item">
               <span className="header-list-name profile-image">
-                <Avatar name='antar' size={30} textColor='#ffffff' avatarSrc=''  />
+                <Avatar name="antar" size={30} textColor="#ffffff" avatarSrc="" />
               </span>
               <span className="header-list-name profile-name">
                 Danny
