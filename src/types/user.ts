@@ -54,5 +54,15 @@ interface IUserState {
   token: string;
   profile: IUser | null;
 }
+interface ISuggestionUser {
+  isLoading: boolean;
+  users: IUser[];
+}
 
-export type { ISignUpResponse, IUser, INotificationSettings, IBasicInfo, ISocialLinks, IUserState };
+interface ICurrentUser {
+  token: string;
+  user: IUser;
+  isUser: boolean;
+}
+
+export type { ISignUpResponse, IUser, INotificationSettings, IBasicInfo, ISocialLinks, IUserState, ISuggestionUser, ICurrentUser };

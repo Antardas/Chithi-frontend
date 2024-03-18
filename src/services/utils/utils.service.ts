@@ -4,12 +4,13 @@ import { addUser, clearUser } from '~/redux/reducers/user/user.reducer';
 import { AppDispatch } from '~/redux/store';
 import { DefaultAvatarImageDataUrl, avatarColors } from '~/services/utils/static.data';
 import { ISignUpResponse, IUser } from '~/types/user';
+import { ISettingsDropdown } from '~/types/utils';
 
 interface IClearStoreParams {
   dispatch: AppDispatch;
   removeStorageUsername: RemoveValue;
   removeSessionPageReload: RemoveValue;
-  setLoggedIn: React.Dispatch<React.SetStateAction<boolean>>;
+  setLoggedIn: (value:string) => void;
 }
 export class Utils {
   static avatarColor() {
@@ -55,7 +56,7 @@ export class Utils {
     dispatch(clearUser());
     removeStorageUsername();
     removeSessionPageReload();
-    setLoggedIn(false);
+    setLoggedIn(JSON.stringify(false));
   }
 
   static appEnvironment(): string {
@@ -68,4 +69,29 @@ export class Utils {
       return 'STG';
     }
   }
+
+  static mapSettingsDropDownItems(setSettings: (items: Array<ISettingsDropdown>) => void): ISettingsDropdown[] {
+    const items = [];
+    const item = {
+      topText: 'My Profile',
+      subText: 'View personal profile'
+    };
+
+    items.push(item);
+
+    setSettings(items);
+    return items;
+  }
+
+  static generateString = (len: number) => {
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+
+    let result = ' ';
+    const charactersLength = characters.length;
+    for (let i = 0; i < len; i++) {
+      result += characters.charAt(Math.floor(Math.random() * charactersLength));
+    }
+
+    return result;
+  };
 }

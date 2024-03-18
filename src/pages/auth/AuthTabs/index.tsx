@@ -1,10 +1,24 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import './AuthTabs.scss';
 import backgroundImage from '~/assets/images/background.jpg';
 import { Login, Register } from '../index';
+import { Utils } from '~/services/utils/utils.service';
+import { useNavigate } from 'react-router-dom';
+import useLocalStorage from '~/hooks/useLocalStorage';
 
 const AuthTabs = (): React.JSX.Element => {
   const [type, setType] = useState<'SIGN_IN' | 'SIGN_UP'>('SIGN_IN');
+  const [environment, setEnvironment] = useState<string>('');
+  const [loggedIn, setLoggedIn, deleteLoggedIn] = useLocalStorage ('keepLoggedIn');
+  const navigate = useNavigate();
+  useEffect(() => {
+    setEnvironment(Utils.appEnvironment());
+    console.log(JSON.parse(loggedIn));
+
+    if (JSON.parse(loggedIn)) {
+      navigate('/app/social/streams');
+    }
+  }, []);
   return (
     <>
       <div
