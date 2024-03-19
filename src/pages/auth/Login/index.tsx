@@ -120,12 +120,15 @@ const Login = () => {
         </div>
         {/* button component */}
         <Button label={`${loading ? 'Login in progress' : 'Login'}`} className="auth-button button" disabled={!username || !password} type="submit" />
-        <Link to={'/forget-password'}>
-          <span className="forgot-password">
-            Forgot password?
-            <FaArrowRight className="arrow-right" />
-          </span>
-        </Link>
+
+        <div className='forget-password-container'>
+          <Link to={'/forget-password'}>
+            <span className="forgot-password">
+              Forgot password?
+              <FaArrowRight className="arrow-right" />
+            </span>
+          </Link>
+        </div>
       </form>
     </div>
   );

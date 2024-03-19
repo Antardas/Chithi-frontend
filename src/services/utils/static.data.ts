@@ -27,7 +27,7 @@ import {
   FaUsers
 } from 'react-icons/fa';
 
-interface ISideBarItems {
+export interface ISideBarItems {
   index: number;
   name: string;
   url: string;
