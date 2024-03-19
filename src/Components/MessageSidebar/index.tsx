@@ -5,12 +5,13 @@ import { FaCheck, FaCircle } from 'react-icons/fa';
 import '~/Components/MessageSidebar/MessageSidebar.scss';
 import { Utils } from '~/services/utils/utils.service';
 import { IUser } from '~/types/user';
-import { INotification } from '~/types/notification';
+// import { INotification } from '~/types/notification';
+import { IMessageData } from '~/types/message';
 interface MessageSidebarProps {
   profile: IUser; // Optional: Add specific properties if known
   messageCount: number;
-  messageNotifications: Array<INotification>; // Optional: Refine type based on notification structure
-  openChatPage: (notification: INotification) => void;
+  messageNotifications: Array<IMessageData>; // Optional: Refine type based on notification structure
+  openChatPage: (notification: IMessageData) => void;
 }
 const MessageSidebar = ({ profile, messageCount, messageNotifications, openChatPage }: MessageSidebarProps) => {
   return (
