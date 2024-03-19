@@ -18,6 +18,7 @@ import { useNavigate } from 'react-router-dom';
 import { userService } from '~/services/api/user/user.service';
 import useLocalStorage from '~/hooks/useLocalStorage';
 import useSessionStorage from '~/hooks/useSessionStorage';
+import HeaderSkeleton from '~/Components/Header/HeaderSkeleton';
 const Header = () => {
   // State and Hooks
   const { profile } = useSelector((state: RootState) => state.user);
@@ -60,12 +61,15 @@ const Header = () => {
 
       await userService.logoutUser();
       navigate('/');
-      
     } catch (error) {
       console.log(error);
     }
     await userService.logoutUser();
   };
+
+  if (!profile) {
+    return <HeaderSkeleton />;
+  }
   return (
     <div>
       <div className="header-nav-wrapper" data-testid="header-wrapper">
