@@ -7,7 +7,8 @@ import { Utils } from '~/services/utils/utils.service';
 import { CSSProperties } from 'react';
 import { ISettingsDropdown } from '~/types/utils';
 
-interface DropdownProps {
+// TODO: here make the dropdown props more dynamic using generic
+export interface DropdownProps {
   data: ISettingsDropdown[];
   notificationCount: number;
   title: string;
