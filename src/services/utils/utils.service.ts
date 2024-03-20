@@ -10,7 +10,7 @@ interface IClearStoreParams {
   dispatch: AppDispatch;
   removeStorageUsername: RemoveValue;
   removeSessionPageReload: RemoveValue;
-  setLoggedIn: (value:string) => void;
+  setLoggedIn: (value: string) => void;
 }
 export class Utils {
   static avatarColor() {
@@ -94,4 +94,13 @@ export class Utils {
 
     return result;
   };
+
+  static cloneDeep(item: object | Array<unknown>) {
+    return JSON.parse(JSON.stringify(item));
+  }
+
+  // TODO:Use the Generic for better type
+  static uniqueByKey<T>(items: T[], key: keyof T): T[] {
+    return [...new Map(items.map((item: T) => [item[key], item])).values()];
+  }
 }
