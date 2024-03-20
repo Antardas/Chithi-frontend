@@ -56,7 +56,7 @@ const notificationSlice = createSlice({
       return list;
     },
 
-    clearNotification: (_state, _action) => {
+    clearNotification: () => {
       list = [];
       return list;
     }
