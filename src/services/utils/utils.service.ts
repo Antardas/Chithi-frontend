@@ -1,5 +1,7 @@
 import { AxiosResponse } from 'axios';
+import { NotificationType } from '~/Components/Toast';
 import { SetValue, RemoveValue } from '~/hooks/useLocalStorage';
+import { addNotification, clearNotification } from '~/redux/reducers/notification/notification.reducer';
 import { addUser, clearUser } from '~/redux/reducers/user/user.reducer';
 import { AppDispatch } from '~/redux/store';
 import { DefaultAvatarImageDataUrl, avatarColors } from '~/services/utils/static.data';
@@ -52,8 +54,21 @@ export class Utils {
     setUser(result.data.user);
   };
 
+  static dispatchNotification(message: string, type: NotificationType, dispatch: AppDispatch): void {
+    dispatch(
+      addNotification({
+        message,
+        type
+      })
+    );
+  }
+  static dispatchClearNotification(dispatch: AppDispatch): void {
+    dispatch(clearNotification());
+  }
+
   static clearStore({ dispatch, removeStorageUsername, removeSessionPageReload, setLoggedIn }: IClearStoreParams) {
     dispatch(clearUser());
+    dispatch(clearNotification());
     removeStorageUsername();
     removeSessionPageReload();
     setLoggedIn(JSON.stringify(false));
