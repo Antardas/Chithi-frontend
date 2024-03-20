@@ -4,7 +4,7 @@ import { Socket, io } from 'socket.io-client';
 const BASE_URL: string = `${import.meta.env.VITE_BASE_ENDPOINT}`;
 
 class SocketService {
-  private socket: Socket<DefaultEventsMap, DefaultEventsMap>;
+  private socket!: Socket<DefaultEventsMap, DefaultEventsMap>;
 
   setupSocketConnection() {
     this.socket = io(BASE_URL, {
