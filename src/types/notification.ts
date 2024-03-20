@@ -1,7 +1,12 @@
 export interface INotification {
   _id: string;
   userTo: string;
-  userFrom: string;
+  userFrom: {
+    profilePicture: string;
+    username: string;
+    avatarColor: string;
+    uId: string;
+  };
   message: string;
   notificationType: string;
   entityId: string;
@@ -14,4 +19,9 @@ export interface INotification {
   gifUrl: string;
   read?: boolean;
   createdAt?: string;
+}
+
+export interface IGetALlNotificationResponse {
+  data: INotification[];
+  message: string;
 }
