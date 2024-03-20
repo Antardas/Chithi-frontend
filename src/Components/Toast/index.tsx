@@ -2,12 +2,14 @@ import '~/Components/Toast/Toast.scss';
 
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { Utils } from '~/services/utils/utils.service';
+import { useAppDispatch } from '~/redux/store';
 
 const Toast = (props: IToastProps) => {
   const { toastList, position, autoDelete, autoDeleteTime = 2000 } = props;
 
   const [list, setList] = useState(toastList);
   const listDataRef = useRef([]);
+  const dispatch = useAppDispatch();
 
   const deleteToast = useCallback(() => {
     listDataRef.current = Utils.cloneDeep(list);
@@ -17,6 +19,7 @@ const Toast = (props: IToastProps) => {
     setList([...listDataRef.current]);
     if (!listDataRef.current.length) {
       list.length = 0;
+      Utils.dispatchClearNotification(dispatch);
     }
   }, [list]);
 
@@ -34,7 +37,7 @@ const Toast = (props: IToastProps) => {
       interval = setInterval(tick, autoDeleteTime);
       return () => clearInterval(interval);
     }
-    }, [autoDelete, toastList, list, deleteToast, autoDeleteTime]);
+  }, [autoDelete, toastList, list, deleteToast, autoDeleteTime]);
 
   return (
     <div className={`toast-notification-container ${position}`}>
@@ -62,17 +65,18 @@ const Toast = (props: IToastProps) => {
 
 export default Toast;
 
+export type NotificationType = 'success' | 'error' | 'info' | 'warning';
 export interface IToastItem {
   backgroundColor: string;
   description: string;
   icon: string;
   id: number | string;
-  type: 'success' | 'error' | 'info' | 'warning';
+  type: NotificationType;
 }
 
 interface IToastProps {
   toastList: Array<IToastItem>;
   position: string;
   autoDelete: boolean;
-  autoDeleteTime: number;
+  autoDeleteTime?: number;
 }

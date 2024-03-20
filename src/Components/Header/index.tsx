@@ -19,6 +19,9 @@ import { userService } from '~/services/api/user/user.service';
 import useLocalStorage from '~/hooks/useLocalStorage';
 import useSessionStorage from '~/hooks/useSessionStorage';
 import HeaderSkeleton from '~/Components/Header/HeaderSkeleton';
+import { AxiosError, isAxiosError } from 'axios';
+import { IError } from '~/types/axios';
+
 const Header = () => {
   // State and Hooks
   const { profile } = useSelector((state: RootState) => state.user);
@@ -60,9 +63,16 @@ const Header = () => {
       });
 
       await userService.logoutUser();
+      Utils.dispatchNotification('Log Out Successful', 'success', dispatch);
       navigate('/');
     } catch (error) {
       console.log(error);
+      if (isAxiosError(error)) {
+        const typedError: AxiosError<IError> = error;
+        Utils.dispatchNotification(typedError?.response?.data?.message || 'Something went wrong', 'error', dispatch);
+      } else {
+        Utils.dispatchNotification('Something went wrong', 'error', dispatch);
+      }
     }
     await userService.logoutUser();
   };
