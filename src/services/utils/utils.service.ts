@@ -120,6 +120,8 @@ export class Utils {
   }
 
   static generateImageUrl(version: string, public_id: string): string {
+    version = version.replace(/['"]+/g, '');
+    public_id = public_id.replace(/['"]+/g, '');
     return `https://res.cloudinary.com/${import.meta.env.VITE_CLOUD_NAME}/image/upload/v${version}/${public_id}`;
   }
 }
