@@ -9,7 +9,7 @@ interface ISignupData {
 interface ISignInData {
   username: string;
   password: string;
-  keepLoggedIn: boolean;
+  // keepLoggedIn: boolean;
 }
 
 interface IForgetPasswordRes {

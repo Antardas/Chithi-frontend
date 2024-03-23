@@ -1,5 +1,7 @@
 import { AxiosResponse } from 'axios';
+import { NotificationType } from '~/Components/Toast';
 import { SetValue, RemoveValue } from '~/hooks/useLocalStorage';
+import { addNotification, clearNotification } from '~/redux/reducers/notification/notification.reducer';
 import { addUser, clearUser } from '~/redux/reducers/user/user.reducer';
 import { AppDispatch } from '~/redux/store';
 import { DefaultAvatarImageDataUrl, avatarColors } from '~/services/utils/static.data';
@@ -10,7 +12,7 @@ interface IClearStoreParams {
   dispatch: AppDispatch;
   removeStorageUsername: RemoveValue;
   removeSessionPageReload: RemoveValue;
-  setLoggedIn: (value:string) => void;
+  setLoggedIn: (value: string) => void;
 }
 export class Utils {
   static avatarColor() {
@@ -52,8 +54,21 @@ export class Utils {
     setUser(result.data.user);
   };
 
+  static dispatchNotification(message: string, type: NotificationType, dispatch: AppDispatch): void {
+    dispatch(
+      addNotification({
+        message,
+        type
+      })
+    );
+  }
+  static dispatchClearNotification(dispatch: AppDispatch): void {
+    dispatch(clearNotification());
+  }
+
   static clearStore({ dispatch, removeStorageUsername, removeSessionPageReload, setLoggedIn }: IClearStoreParams) {
     dispatch(clearUser());
+    dispatch(clearNotification());
     removeStorageUsername();
     removeSessionPageReload();
     setLoggedIn(JSON.stringify(false));
@@ -94,4 +109,17 @@ export class Utils {
 
     return result;
   };
+
+  static cloneDeep(item: object | Array<unknown>) {
+    return JSON.parse(JSON.stringify(item));
+  }
+
+  // TODO:Use the Generic for better type
+  static uniqueByKey<T>(items: T[], key: keyof T): T[] {
+    return [...new Map(items.map((item: T) => [item[key], item])).values()];
+  }
+
+  static generateImageUrl(version: string, public_id: string): string {
+    return `https://res.cloudinary.com/${import.meta.env.VITE_CLOUD_NAME}/image/upload/v${version}/${public_id}`;
+  }
 }

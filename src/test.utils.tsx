@@ -32,11 +32,9 @@ const renderWithRouter = (children: React.ReactElement<unknown>, routes: RouteOb
     initialIndex: 1
   });
 
-  return render(
-    <Provider store={store}>
-      <RouterProvider router={router} />
-    </Provider>
-  );
+  return render(<RouterProvider router={router} />, {
+    wrapper: Providers
+  });
 };
 export type CustomRenderHookOptions<Props> = RenderHookOptions<Props>;
 

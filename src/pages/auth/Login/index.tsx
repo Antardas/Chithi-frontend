@@ -36,7 +36,7 @@ const Login = () => {
       const result: AxiosResponse<ISignUpResponse> = await authService.singIn({
         username,
         password,
-        keepLoggedIn
+        // keepLoggedIn
       });
       setStoredUsername(`${result.data.user.username || ''}`);
       setLoggedIn(JSON.stringify(true));
