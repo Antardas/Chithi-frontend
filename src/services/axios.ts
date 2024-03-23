@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const BASE_URL: string = `${import.meta.env.VITE_BASE_ENDPOINT}/api/v1`;
+export const BASE_URL: string = `${import.meta.env.VITE_BASE_ENDPOINT}/api/v1`;
 
 
 axios.defaults.headers['Authorization'] = window.localStorage.getItem('token') || 'TestToken';
