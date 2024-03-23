@@ -15,7 +15,7 @@ const Streams = () => {
     dispatch(getSuggestions());
   });
   return (
-    <div className="steams" data-testid="streams">
+    <div className="streams" data-testid="streams">
       <div className="streams-content">
         <div className="streams-post" ref={bodyRef}>
           <PostForm />
