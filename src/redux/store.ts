@@ -9,6 +9,7 @@ const store = configureStore({
   reducer: {
     user: userReducer,
     suggestion: suggestionReducer,
+    notification: notificationReducer,
     app: appReducer
   }
 });

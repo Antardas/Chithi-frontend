@@ -45,15 +45,20 @@ const notificationSlice = createSlice({
   initialState,
   reducers: {
     addNotification: (state, action) => {
-      const { message, type } = action.payload;
-      const notification = notifications[type];
-      notification.description = message;
-      notification.id = state.length;
-
-      list = Utils.cloneDeep(list);
-      list.unshift(notification);
-      list = [...Utils.uniqueByKey(list, 'description')];
-      return list;
+      try {
+        const { message, type } = action.payload;
+        const notification = Utils.cloneDeep(notifications[type]);
+        notification['description'] = '';
+        notification.description = message;
+        notification.id = state.length;
+        list = Utils.cloneDeep(list);
+        list.unshift(notification);
+        // list = [...Utils.uniqueByKey(list, 'description')];
+        state = list;
+        return list;
+      } catch (error) {
+        console.log(error);
+      }
     },
 
     clearNotification: () => {
