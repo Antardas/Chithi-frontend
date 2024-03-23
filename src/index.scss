@@ -27,6 +27,21 @@ body {
   position: fixed;
 }
 
+::-webkit-scrollbar {
+  width: 10px;
+}
+  ::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+  ::-webkit-scrollbar-thumb {
+  background: var(--primary-1);
+    border-radius:10px;
+}
+::-webkit-scrollbar-thumb:hover {
+
+  background: var(--primary-2);
+}
+
 h1,
 h2,
 h3,
