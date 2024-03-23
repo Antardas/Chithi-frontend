@@ -1,5 +1,6 @@
 // import React from 'react'
 import { useEffect, useRef } from 'react';
+import PostForm from '~/Components/Post/PostForm';
 import Suggestion from '~/Components/Suggestions';
 import useEffectOnce from '~/hooks/useEffectOnce';
 import '~/pages/social/Streams/Streams.scss';
@@ -17,7 +18,7 @@ const Streams = () => {
     <div className="steams" data-testid="streams">
       <div className="streams-content">
         <div className="streams-post" ref={bodyRef}>
-          <div>Post Form</div>
+          <PostForm />
           <div>Post Items</div>
           <div
             style={{
