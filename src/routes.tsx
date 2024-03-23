@@ -14,6 +14,7 @@ import ProtectedRoutes from '~/pages/ProtectedRoutes';
 import Error from '~/pages/Error';
 import { Suspense, lazy } from 'react';
 import StreamSkeleton from '~/pages/social/Streams/StreamSkeleton';
+import NotificationSkeleton from '~/pages/social/notification/NotificationSkeleton';
 
 const Social = lazy(() => import('~/pages/social'));
 const Streams = lazy(() => import('~/pages/social/Streams'));
@@ -75,7 +76,11 @@ const router = createBrowserRouter([
       },
       {
         path: 'notifications',
-        element: <Notifications />
+        element: (
+          <Suspense fallback={<NotificationSkeleton/>}>
+            <Notifications />
+          </Suspense>
+        )
       },
       {
         path: 'profile/:username',
