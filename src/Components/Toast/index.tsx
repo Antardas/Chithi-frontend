@@ -21,7 +21,7 @@ const Toast = (props: IToastProps) => {
       list.length = 0;
       Utils.dispatchClearNotification(dispatch);
     }
-  }, [list]);
+  }, [dispatch, list]);
 
   useEffect(() => {
     setList([...toastList]);
@@ -74,7 +74,7 @@ export interface IToastItem {
   type: NotificationType;
 }
 
-interface IToastProps {
+export interface IToastProps {
   toastList: Array<IToastItem>;
   position: string;
   autoDelete: boolean;
