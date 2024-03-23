@@ -118,4 +118,8 @@ export class Utils {
   static uniqueByKey<T>(items: T[], key: keyof T): T[] {
     return [...new Map(items.map((item: T) => [item[key], item])).values()];
   }
+
+  static generateImageUrl(version: string, public_id: string): string {
+    return `https://res.cloudinary.com/${import.meta.env.VITE_CLOUD_NAME}/image/upload/v${version}/${public_id}`;
+  }
 }
