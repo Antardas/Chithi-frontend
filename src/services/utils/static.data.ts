@@ -227,8 +227,10 @@ export const emptyPostData = {
   imgId: '',
   createdAt: ''
 };
-
-export const reactionsMap = {
+interface IReactionIcon {
+  [reaction: string]: string;
+}
+export const reactionsMap: IReactionIcon = {
   like,
   love,
   wow,
