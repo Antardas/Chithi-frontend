@@ -13,7 +13,14 @@ import '~/pages/social/notification/Notifications.scss'
 const Notifications = () => {
   const [notifications, setNotifications] = useState<INotification[]>([]);
   const [loading, setLoading] = useState(true);
-
+  const [notificationDialogContent, setNotificationDialogContent] = useState<INotificationPreview>({
+    post: '',
+    imgUrl: '',
+    comment: '',
+    reaction: '',
+    senderName: ''
+  });
+  const { profile } = useSelector((state: RootState) => state.user);
   const dispatch = useAppDispatch();
   const getUserNotifications = useCallback(async () => {
     setLoading(true);
@@ -33,6 +40,21 @@ const Notifications = () => {
   });
   return (
     <div>
+      {' '}
+      {notificationDialogContent?.senderName ? (
+        <NotificationPreview
+          title="Your Post"
+          post={notificationDialogContent.post}
+          comment={notificationDialogContent.comment}
+          imgUrl={notificationDialogContent.imgUrl}
+          reaction={notificationDialogContent.reaction}
+          senderName={notificationDialogContent.senderName}
+          secondButtonText={'Close'}
+          secondBtnHandler={() => {
+            setNotificationDialogContent({ post: '', imgUrl: '', comment: '', reaction: '', senderName: '' });
+          }}
+        />
+      ) : null}
       <div className="notifications-container">
         <div className="notifications">Notifications</div>
         <div className="notifications-box">
