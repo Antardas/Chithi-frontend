@@ -4,7 +4,9 @@ import { IModalInterface } from '~/types/modal';
 const initialState: IModalInterface = {
   type: '',
   isOpen: false,
-  feeling: '',
+  feeling: {
+    name: ''
+  },
   image: '',
   data: null,
   feelingsIsOpen: false,
@@ -29,7 +31,10 @@ const modalSlice = createSlice({
     closeModal: (state) => {
       state.type = '';
       state.isOpen = false;
-      state.feeling = '';
+      state.feeling = {
+        name: '',
+        image: ''
+      };
       state.image = '';
       state.data = null;
       state.feelingsIsOpen = false;
