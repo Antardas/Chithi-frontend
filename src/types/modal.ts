@@ -1,7 +1,10 @@
 export interface IModalInterface {
   type: string;
   isOpen: boolean;
-  feeling: string;
+  feeling: {
+    name?: string;
+    image?: string;
+  };
   image: string;
   data: object | null;
   feelingsIsOpen: boolean;
