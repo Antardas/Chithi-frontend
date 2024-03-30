@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { forwardRef } from 'react';
 import './Input.scss';
 interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   name: string;
@@ -12,7 +12,9 @@ interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   handleChange?(event: React.ChangeEvent<HTMLInputElement>): void;
 }
 
-const Input: FC<InputProps> = ({ id, className, labelText, name, placeHolder, type, value, handleChange, style }) => {
+type Ref = HTMLInputElement;
+
+const Input = forwardRef<Ref, InputProps>(({ id, className, labelText, name, placeHolder, type, value, handleChange, style, ...rest }, ref) => {
   return (
     <div className="form-row">
       {labelText ? (
@@ -33,9 +35,11 @@ const Input: FC<InputProps> = ({ id, className, labelText, name, placeHolder, ty
         className={`form-input ${className}`}
         autoComplete={''}
         style={style}
+        ref={ref}
+        {...rest}
       />
     </div>
   );
-};
+});
 
 export default Input;
