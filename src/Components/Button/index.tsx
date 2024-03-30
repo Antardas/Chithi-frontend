@@ -6,8 +6,9 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   disabled?: boolean;
 }
 const Button = ({ label, handleClick, className = '', disabled = false, ...props }: ButtonProps) => {
+  const onClick = props.onClick ? props.onClick : handleClick;
   return (
-    <button className={className} disabled={disabled} onClick={handleClick} {...props}>
+    <button className={className} disabled={disabled} onClick={onClick} {...props}>
       {label}
     </button>
   );
