@@ -1,11 +1,13 @@
-import { Slice, createSlice } from '@reduxjs/toolkit';
+import { createSlice } from '@reduxjs/toolkit';
 import { IModalInterface } from '~/types/modal';
 
 const initialState: IModalInterface = {
   type: '',
   isOpen: false,
   feeling: {
-    name: ''
+    name: '',
+    image: '',
+    index: -1
   },
   image: '',
   data: null,
@@ -33,7 +35,8 @@ const modalSlice = createSlice({
       state.isOpen = false;
       state.feeling = {
         name: '',
-        image: ''
+        image: '',
+        index: -1
       };
       state.image = '';
       state.data = null;
@@ -45,12 +48,15 @@ const modalSlice = createSlice({
       state.deleteDialogIsOpen = false;
     },
 
-    addPostFeelings: (state, action) => {
-      const { feeling } = action.payload;
-      state.feeling = feeling;
+    addPostFeeling: (state, action) => {
+      // const { feeling } = action.payload;
+      state.feeling = action.payload;
+    },
+    toggleFeelingModal: (state, action) => {
+      state.feelingsIsOpen = action.payload;
     },
     toggleImageModal: (state, action) => {
-      state.feelingsIsOpen = action.payload;
+      state.openFileDialog = action.payload;
     },
     toggleGifModal: (state, action) => {
       state.gifModalIsOpen = action.payload;
@@ -68,14 +74,15 @@ const modalSlice = createSlice({
 });
 
 export const {
-  addPostFeelings,
+  addPostFeeling,
   closeModal,
   openModal,
   toggleCommentModal,
   toggleDeleteDialog,
   toggleGifModal,
-  toggleImageModal,
-  toggleReactionModal
+  toggleFeelingModal,
+  toggleReactionModal,
+  toggleImageModal
 } = modalSlice.actions;
 
 export default modalSlice.reducer;
