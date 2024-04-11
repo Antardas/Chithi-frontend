@@ -14,7 +14,7 @@ const Toast = (props: IToastProps) => {
   const deleteToast = useCallback(() => {
     listDataRef.current = Utils.cloneDeep(list);
     const removedItem = listDataRef.current.splice(0, 1);
-    console.log(listDataRef, removedItem);
+    // console.log(listDataRef, removedItem);
 
     setList([...listDataRef.current]);
     if (!listDataRef.current.length) {
@@ -29,7 +29,7 @@ const Toast = (props: IToastProps) => {
 
   useEffect(() => {
     const tick = () => {
-      console.log('Interval Called');
+      // console.log('Interval Called');
       deleteToast();
     };
     let interval: ReturnType<typeof setInterval>;
