@@ -7,3 +7,5 @@ export type ISettingsDropdown = Partial<INotification> & {
   topText: string;
   subText: string;
 };
+
+export type SetState<T> = React.Dispatch<React.SetStateAction<T>>;

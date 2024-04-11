@@ -26,6 +26,7 @@ import {
   FaUserPlus,
   FaUsers
 } from 'react-icons/fa';
+import { IPost, IDropdownOption } from '~/types/post.js';
 
 export interface ISideBarItems {
   index: number;
@@ -84,7 +85,7 @@ export const sideBarItems: ISideBarItems[] = [
   }
 ];
 
-interface IFeeling {
+export interface IFeeling {
   index: number;
   name: string;
   image: string;
@@ -142,7 +143,7 @@ export const fontAwesomeIcons = {
   })
 };
 
-export const privacyList = [
+export const privacyList: IDropdownOption[] = [
   {
     topText: 'Public',
     subText: 'Anyone on Chithi',
@@ -208,7 +209,7 @@ export const avatarColors: string[] = [
   '#FFFFFF'
 ];
 
-export const emptyPostData = {
+export const emptyPostData: IPost = {
   _id: '',
   post: '',
   bgColor: '',

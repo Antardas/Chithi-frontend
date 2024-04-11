@@ -20,7 +20,7 @@ describe('Avatar', () => {
       render(<Avatar {...props} />);
       const divElement = screen.getByTestId('avatar-container');
       const divElementStyles = window.getComputedStyle(divElement);
-      screen.debug();
+      // screen.debug();
       expect(divElementStyles.backgroundColor).toBe('rgb(0, 128, 0)');
       expect(divElementStyles.width).toBe('40px');
       expect(divElementStyles.height).toBe('40px');

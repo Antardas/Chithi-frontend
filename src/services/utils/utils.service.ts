@@ -5,6 +5,7 @@ import { addNotification, clearNotification } from '~/redux/reducers/notificatio
 import { addUser, clearUser } from '~/redux/reducers/user/user.reducer';
 import { AppDispatch } from '~/redux/store';
 import { DefaultAvatarImageDataUrl, avatarColors } from '~/services/utils/static.data';
+import { IFollower } from '~/types/follower';
 import { ISignUpResponse, IUser } from '~/types/user';
 import { ISettingsDropdown } from '~/types/utils';
 
@@ -120,6 +121,15 @@ export class Utils {
   }
 
   static generateImageUrl(version: string, public_id: string): string {
+    version = version.replace(/['"]+/g, '');
+    public_id = public_id.replace(/['"]+/g, '');
     return `https://res.cloudinary.com/${import.meta.env.VITE_CLOUD_NAME}/image/upload/v${version}/${public_id}`;
+  }
+
+  static checkIfUserIsBlocked(blocked: string[], userId: string) {
+    return blocked.some((id) => id === userId);
+  }
+  static checkIfUserIsFollowed(followers: string[], postCreatorId: string, userId: string) {
+    return followers.some((id) => id === postCreatorId || id === userId);
   }
 }

@@ -13,6 +13,7 @@ import { NotificationUtils } from '~/services/utils/notification-utils.service';
 import { useSelector } from 'react-redux';
 import { IUser } from '~/types/user';
 import NotificationPreview from '~/Components/Dialog/NotificationPreview';
+import { timeAgo } from '~/services/utils/timeago.utils';
 const Notifications = () => {
   const [notifications, setNotifications] = useState<INotification[]>([]);
   const [loading, setLoading] = useState(true);
@@ -123,6 +124,7 @@ const Notifications = () => {
                         className="subtitle"
                         onClick={(e) => {
                           e.preventDefault();
+                          e.stopPropagation()
                           deleteNotification(notification._id);
                         }}
                       >
@@ -131,7 +133,8 @@ const Notifications = () => {
                     </h6>
                     <div className="subtitle-body">
                       <small className="subtitle">{!notification?.read ? <FaCircle className="icon" /> : <FaRegCircle className="icon" />}</small>
-                      <p className="subtext">1 hr ago</p>
+                      {/* TODO: Fix the Time Ago */}
+                      <p className="subtext">{ timeAgo.transform(notification.createdAt)}</p>
                     </div>
                   </div>
                 </div>

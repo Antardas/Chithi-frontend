@@ -4,13 +4,19 @@ import userReducer from '~/redux/reducers/user/user.reducer';
 import suggestionReducer from '~/redux/reducers/suggestion/suggestion.reducer';
 import notificationReducer from '~/redux/reducers/notification/notification.reducer';
 import appReducer from '~/redux/reducers/app/app.reducer';
+import modalReducer from '~/redux/reducers/modal/modal.reducer';
+import postReducer from '~/redux/reducers/post/post.reducer';
+import postsReducer from '~/redux/reducers/post/posts.reducer';
 
 const store = configureStore({
   reducer: {
     user: userReducer,
     suggestion: suggestionReducer,
     notification: notificationReducer,
-    app: appReducer
+    app: appReducer,
+    modal: modalReducer,
+    post: postReducer,
+    posts: postsReducer
   }
 });
 

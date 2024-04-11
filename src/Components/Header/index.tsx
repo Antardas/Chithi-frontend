@@ -214,9 +214,7 @@ const Header = () => {
                 }}
               >
                 <FaRegBell className="header-list-icon" />
-                <span className="bg-danger-dots dots" data-testid="notification-dots">
-                  5
-                </span>
+                {notificationCount ? <span className="bg-danger-dots dots" data-testid="notification-dots"></span> : null}
               </span>
               {isNotificationActive ? (
                 <ul className="dropdown-ul" ref={notificationRef}>

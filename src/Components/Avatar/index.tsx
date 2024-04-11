@@ -10,7 +10,11 @@ export interface AvatarProps {
   round?: boolean;
 }
 
-const Avatar: React.FC<AvatarProps> = ({ avatarSrc, name='', bgColor = '#f33e58', textColor, size, round = true }: AvatarProps) => {
+const fixImageUrl = (url: string): string => {
+  return url.replace(/^"|"$/g, '');
+};
+
+const Avatar: React.FC<AvatarProps> = ({ avatarSrc, name = '', bgColor = '#f33e58', textColor, size, round = true }: AvatarProps) => {
   const textSizeRatio: number = 1.7;
   const fontSize = Math.floor(size / textSizeRatio);
 
@@ -50,7 +54,7 @@ const Avatar: React.FC<AvatarProps> = ({ avatarSrc, name='', bgColor = '#f33e58'
         </div>
       ) : (
         <img
-          src={avatarSrc}
+          src={fixImageUrl(avatarSrc)}
           alt="Avatar"
           className="avatar-content avatar-container"
           style={{ width: `${size}px`, height: `${size}px`, borderRadius: `${round ? '50%' : ''}` }}
