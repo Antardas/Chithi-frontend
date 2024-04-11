@@ -16,16 +16,23 @@ export interface IPost {
   feelings?: string;
   gifUrl?: string;
   profilePicture: string;
-  image: string;
+  image?: string;
   userId: string;
   username: string;
   email: string;
   avatarColor: string;
-  commentsCount: string;
-  reactions: unknown[];
+  commentCount: number;
+  reactions: {
+    like?: number;
+    love?: number;
+    happy?: number;
+    wow?: number;
+    sad?: number;
+    angry?: number;
+  };
   imgVersion?: string;
   imgId?: string;
-  createdAt: string;
+  createAt: string;
   [key: string]: unknown;
 }
 
@@ -33,4 +40,10 @@ export interface IDropdownOption {
   topText: string;
   subText: string;
   icon: JSX.Element;
+}
+
+export interface IGetPostsApiResponse {
+  message: string;
+  posts: IPost[];
+  totalPost: number;
 }
