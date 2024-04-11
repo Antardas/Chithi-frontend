@@ -6,6 +6,8 @@ import { timeAgo } from '~/services/utils/timeago.utils';
 import { feelingsList, privacyList } from '~/services/utils/static.data';
 import '~/Components/Post/Post.scss';
 import { Utils } from '~/services/utils/utils.service';
+import CommentSection from './CommentSection';
+
 interface IPostProps {
   post: IPost;
   showIcons: boolean;
@@ -78,7 +80,9 @@ const Post = ({ post, showIcons }: IPostProps) => {
                 <img className="post-image" src={`${post?.gifUrl}`} alt="" />
               </div>
             )}
+            {/* TODO: need to fix it, if any reaction category have reaction */}
             {(post?.reactions.length > 0 || post?.commentCount > 0) && <hr />}
+            <CommentSection post={post} />
           </div>
         </div>
       </div>
