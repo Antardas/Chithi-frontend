@@ -6,6 +6,7 @@ import notificationReducer from '~/redux/reducers/notification/notification.redu
 import appReducer from '~/redux/reducers/app/app.reducer';
 import modalReducer from '~/redux/reducers/modal/modal.reducer';
 import postReducer from '~/redux/reducers/post/post.reducer';
+import postsReducer from '~/redux/reducers/post/posts.reducer';
 
 const store = configureStore({
   reducer: {
@@ -14,7 +15,8 @@ const store = configureStore({
     notification: notificationReducer,
     app: appReducer,
     modal: modalReducer,
-    post: postReducer
+    post: postReducer,
+    posts: postsReducer
   }
 });
 

@@ -85,7 +85,7 @@ export const sideBarItems: ISideBarItems[] = [
   }
 ];
 
-interface IFeeling {
+export interface IFeeling {
   index: number;
   name: string;
   image: string;
