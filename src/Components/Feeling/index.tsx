@@ -20,7 +20,12 @@ const Feelings = () => {
         <hr />
         <ul className="feelings-container-picker-list">
           {feelingsList.map((feeling) => (
-            <li className="feelings-container-picker-list-item" key={feeling.index} onClick={() => selectFeeling(feeling)}>
+            <li
+              className="feelings-container-picker-list-item"
+              key={feeling.index}
+              onClick={() => selectFeeling(feeling)}
+              data-testid="feelings-item"
+            >
               <img src={feeling.image} alt="" />
               <span> {feeling.name}</span>
             </li>
