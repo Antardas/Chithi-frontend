@@ -24,10 +24,10 @@ const postSlice = createSlice({
         state[key] = value;
       }
     },
-    clearPostItem: (state) => {
+    clearPostItem: () => {
       return emptyPostData;
     }
   }
 });
-export const { updatePostItem } = postSlice.actions;
+export const { updatePostItem, clearPostItem } = postSlice.actions;
 export default postSlice.reducer;
