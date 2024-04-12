@@ -1,5 +1,6 @@
 import axios from '~/services/axios';
 import { IGetPostsApiResponse, IPostData } from '~/types/post';
+import { UserReactionsResponse } from '~/types/reaction';
 
 class PostService {
   async createPost(body: IPostData) {
@@ -13,6 +14,10 @@ class PostService {
 
   async getAllPost(page: number = 1) {
     const response = await axios.get<IGetPostsApiResponse>(`/post/all/${page}`);
+    return response;
+  }
+  async getReactionsByUser(username: string) {
+    const response = await axios.get<UserReactionsResponse>(`/post/single/reactions/${username}`);
     return response;
   }
 }
