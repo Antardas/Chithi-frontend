@@ -132,4 +132,12 @@ export class Utils {
   static checkIfUserIsFollowed(followers: string[], postCreatorId: string, userId: string) {
     return followers.some((id) => id === postCreatorId || id === userId);
   }
+
+  static firstLatterUpperCase(word: string): string {
+    if (!word) {
+      return '';
+    }
+
+    return `${word.charAt(0).toUpperCase()}${word.slice(1)}`
+  }
 }
