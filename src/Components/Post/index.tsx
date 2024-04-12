@@ -81,7 +81,7 @@ const Post = ({ post, showIcons }: IPostProps) => {
               </div>
             )}
             {/* TODO: need to fix it, if any reaction category have reaction */}
-            {(post?.reactions.length > 0 || post?.commentCount > 0) && <hr />}
+            {(Object.values(post?.reactions).filter((count) => count > 0).length || post?.commentCount > 0) && <hr />}
             <CommentSection post={post} />
           </div>
         </div>
