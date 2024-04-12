@@ -14,3 +14,9 @@ export interface IReactionPost {
   userTo: string;
   comment: string;
 }
+
+export interface UserReactionsResponse {
+  message: string;
+  reactions: IReactionPost[];
+  count: number;
+}
