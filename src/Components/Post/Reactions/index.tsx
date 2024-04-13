@@ -2,7 +2,7 @@ import React from 'react';
 import '~/Components/Post/Reactions/Reactions.scss';
 import { reactionsMap } from '~/services/utils/static.data';
 const Reactions = ({ onClick, showLabel = true }: IReactionProps) => {
-  const reactions = ['like', 'love', 'wow', 'haha', 'sad', 'angry'];
+  const reactions = ['like', 'love', 'wow', 'happy', 'sad', 'angry'];
 
   return (
     <div className="reactions" data-testid="reactions">

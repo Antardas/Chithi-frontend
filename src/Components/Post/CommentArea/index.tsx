@@ -8,7 +8,7 @@ import '~/Components/Post/CommentArea/CommentArea.scss';
 import { IPost } from '~/types/post';
 import like from '~/assets/reactions/like.png';
 import Reactions from '~/Components/Post/Reactions';
-import { AddReactionBody, IReactionPost, ReactionType } from '~/types/reaction';
+import { AddReactionBody, IReactionPost, ReactionType, SocketReactionResponse } from '~/types/reaction';
 import { Utils } from '~/services/utils/utils.service';
 import { reactionsMap } from '~/services/utils/static.data';
 import { useSelector } from 'react-redux';
@@ -47,7 +47,7 @@ const CommentArea = ({ post }: ICommentAreaProps) => {
       type: newReaction
     } as IReactionPost;
 
-    if ((!hasResponse && newReaction !== prevReaction) || !hasResponse) {
+    if ((hasResponse && newReaction !== prevReaction) || !hasResponse) {
       postReactions.push(newPostReaction);
     }
 
@@ -61,12 +61,12 @@ const CommentArea = ({ post }: ICommentAreaProps) => {
     if (!hasResponse) {
       clonedPost.reactions[newReaction as reactionKeyType] += 1;
     } else {
-      if (post.reactions[prevReaction as reactionKeyType] > 0) {
-        post.reactions[prevReaction as reactionKeyType] -= 1;
+      if (clonedPost.reactions[prevReaction as reactionKeyType] > 0) {
+        clonedPost.reactions[prevReaction as reactionKeyType] -= 1;
       }
 
       if (prevReaction !== newReaction) {
-        post.reactions[prevReaction as reactionKeyType] += 1;
+        clonedPost.reactions[newReaction as reactionKeyType] += 1;
       }
     }
 
@@ -74,15 +74,15 @@ const CommentArea = ({ post }: ICommentAreaProps) => {
   };
 
   const sendSocketReactions = ({ post, hasResponse, newReaction, prevReaction }: ISendSocketIoResponse) => {
-    const socketReactionsData = {
+    const socketReactionsData: SocketReactionResponse = {
       userTo: post.userId,
       postId: post._id,
-      username: profile?.username ?? username,
-      avatarColor: profile?.avatarColor,
+      username: profile?.username ?? username ?? '',
+      avatarColor: profile?.avatarColor ?? '',
       type: newReaction,
       postReactions: post.reactions,
       profilePicture: post.profilePicture,
-      previousReaction: hasResponse ? prevReaction : ''
+      previousReaction: hasResponse ? prevReaction : ('' as ReactionType)
     };
 
     socketService.socket.emit('reaction', socketReactionsData);
@@ -102,10 +102,8 @@ const CommentArea = ({ post }: ICommentAreaProps) => {
       const updatedPost = updatePostReaction(reaction as ReactionType, hasResponse, reactionResponse.data.reactions.type as ReactionType);
 
       const newReactions = getReactions(reaction as ReactionType, hasResponse, reactionResponse.data.reactions.type as ReactionType);
-
-      dispatch(addReactions(newReactions));
-
       post = updatedPost;
+      dispatch(addReactions(newReactions));
 
       sendSocketReactions({
         post,

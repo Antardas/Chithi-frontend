@@ -66,7 +66,7 @@ const Post = ({ post, showIcons }: IPostProps) => {
               </div>
             )}
 
-            {post?.imgId && !post?.gifUrl && post.bgColor === '#ffffff' && (
+            {post?.imgId && post.imgVersion && !post?.gifUrl && post.bgColor === '#ffffff' && (
               <div data-testid="post-image" className="image-display-flex">
                 <div className="background">
                   <img className="image" src={Utils.generateImageUrl(post.imgVersion, post.imgId)} alt="" />
