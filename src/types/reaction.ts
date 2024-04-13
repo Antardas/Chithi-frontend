@@ -15,8 +15,32 @@ export interface IReactionPost {
   comment: string;
 }
 
+export interface IReactionsCount {
+  like: number;
+  love: number;
+  happy: number;
+  wow: number;
+  sad: number;
+  angry: number;
+}
+
 export interface UserReactionsResponse {
   message: string;
   reactions: IReactionPost[];
   count: number;
+}
+export interface PostReactionResponse extends Omit<UserReactionsResponse, 'reactions'> {
+  message: string;
+  reactions: IReactionPost;
+  count: number;
+}
+export type ReactionType = 'like' | 'love' | 'wow' | 'haha' | 'sad' | 'angry';
+
+export interface AddReactionBody {
+  userTo: string;
+  postId: string;
+  type: ReactionType;
+  previousReaction?: ReactionType;
+  postReactions: IReactionsCount;
+  profilePicture: string;
 }

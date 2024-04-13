@@ -23,6 +23,7 @@ const PAGE_SIZE = 10;
 const Streams = () => {
   // const [posts, setPosts] = useState<IPost[]>([]);
   const { posts, isLoading, totalPost } = useSelector((state: RootState) => state.posts);
+  const { profile } = useSelector((state: RootState) => state.user);
   const [loading, setLoading] = useState<boolean>(false);
   const [currentPage, setCurrentPage] = useState<number>(0);
   const bodyRef = useRef<HTMLInputElement | null>(null);
@@ -59,7 +60,7 @@ const Streams = () => {
   const getReactionsByUserName = async (username: string) => {
     if (!username) return;
     try {
-      const reactions = await postService.getReactionsByUser(username);
+      const reactions = await postService.getReactionsByUsername(username);
       dispatch(addReactions(reactions.data.reactions));
     } catch (error) {
       if (isAxiosError(error)) {
@@ -76,7 +77,7 @@ const Streams = () => {
   useEffectOnce(() => {
     dispatch(getSuggestions());
     setCurrentPage(currentPage + 1);
-    getReactionsByUserName(username ?? '');
+
     // getAllPost();
     // dispatch(getPosts(1));
   });
@@ -89,6 +90,10 @@ const Streams = () => {
   useEffect(() => {
     PostUtils.socketIOPost(posts, dispatch);
   }, [posts, dispatch]);
+
+  useEffect(() => {
+    getReactionsByUserName(username ?? profile?.username ?? '');
+  }, [username]);
 
   /**
    * How actually calling the API

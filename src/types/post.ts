@@ -23,12 +23,12 @@ export interface IPost {
   avatarColor: string;
   commentCount: number;
   reactions: {
-    like?: number;
-    love?: number;
-    happy?: number;
-    wow?: number;
-    sad?: number;
-    angry?: number;
+    like: number;
+    love: number;
+    happy: number;
+    wow: number;
+    sad: number;
+    angry: number;
   };
   imgVersion?: string;
   imgId?: string;
