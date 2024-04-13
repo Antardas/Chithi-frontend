@@ -9,8 +9,8 @@ import { NotificationType } from '~/Components/Toast';
 import { AxiosError, isAxiosError } from 'axios';
 import { IError } from '~/types/axios';
 import { IUser } from '~/types/user';
-import { IFollower } from '~/types/follower';
 import { addPosts } from '~/redux/reducers/post/posts.reducer';
+import { SocketReactionResponse } from '~/types/reaction';
 
 export class PostUtils {
   static selectBackgroundColor({ bgColor, postData, setTextAreaBackground, setPostData }: ISelectBackgroundColorParams) {
@@ -151,11 +151,12 @@ export class PostUtils {
     });
 
     // TODO: fix the Type
-    socketService.socket.on('update like', (data: object) => {
+    socketService.socket.on('update like', (data: SocketReactionResponse) => {
       const post = posts.find((item) => item._id === data.postId);
+
       if (post) {
-        post.reactions = data;
-        PostUtils.updateSinglePost(posts, post, dispatch)
+        post.reactions = data.postReactions;
+        PostUtils.updateSinglePost(posts, post, dispatch);
       }
     });
     // TODO: fix the Type
@@ -163,7 +164,7 @@ export class PostUtils {
       const post = posts.find((item) => item._id === data.postId);
       if (post) {
         post.commentCount = data;
-        PostUtils.updateSinglePost(posts, post, dispatch)
+        PostUtils.updateSinglePost(posts, post, dispatch);
       }
     });
   }
