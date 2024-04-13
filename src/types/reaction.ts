@@ -34,7 +34,7 @@ export interface PostReactionResponse extends Omit<UserReactionsResponse, 'react
   reactions: IReactionPost;
   count: number;
 }
-export type ReactionType = 'like' | 'love' | 'wow' | 'haha' | 'sad' | 'angry';
+export type ReactionType = 'like' | 'love' | 'wow' | 'happy' | 'sad' | 'angry';
 
 export interface AddReactionBody {
   userTo: string;
@@ -43,4 +43,9 @@ export interface AddReactionBody {
   previousReaction?: ReactionType;
   postReactions: IReactionsCount;
   profilePicture: string;
+}
+
+export interface SocketReactionResponse extends AddReactionBody {
+  username: string;
+  avatarColor: string;
 }
