@@ -19,7 +19,8 @@ import { postService } from '~/services/api/post/post.service';
 import useLocalStorage from '~/hooks/useLocalStorage';
 import { addReactions } from '~/redux/reducers/post/userReactions.reducer';
 import { socketService } from '~/services/socket/sokcet.service';
-const CommentArea = ({ post }: ICommentAreaProps) => {
+import { SetState } from '~/types/utils';
+const CommentArea = ({ post,setPost }: ICommentAreaProps) => {
   const [userSelectedReaction, setUserSelectedReaction] = useState<string>('');
   const [username] = useLocalStorage('username');
   const { profile } = useSelector((state: RootState) => state.user);
@@ -102,7 +103,8 @@ const CommentArea = ({ post }: ICommentAreaProps) => {
       const updatedPost = updatePostReaction(reaction as ReactionType, hasResponse, reactionResponse.data.reactions.type as ReactionType);
 
       const newReactions = getReactions(reaction as ReactionType, hasResponse, reactionResponse.data.reactions.type as ReactionType);
-      post = updatedPost;
+      // post = updatedPost;
+      setPost(updatedPost)
       dispatch(addReactions(newReactions));
 
       sendSocketReactions({
@@ -182,6 +184,7 @@ export default CommentArea;
 
 interface ICommentAreaProps {
   post: IPost;
+  setPost: SetState<IPost>;
 }
 
 interface ISendSocketIoResponse {
