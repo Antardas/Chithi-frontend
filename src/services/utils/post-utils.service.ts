@@ -10,7 +10,8 @@ import { AxiosError, isAxiosError } from 'axios';
 import { IError } from '~/types/axios';
 import { IUser } from '~/types/user';
 import { addPosts } from '~/redux/reducers/post/posts.reducer';
-import { SocketReactionResponse } from '~/types/reaction';
+import { IReactionPost, IReactionsCount, ReactionType, SocketReactionResponse } from '~/types/reaction';
+import millify from 'millify';
 
 export class PostUtils {
   static selectBackgroundColor({ bgColor, postData, setTextAreaBackground, setPostData }: ISelectBackgroundColorParams) {
@@ -177,6 +178,27 @@ export class PostUtils {
       dispatch(addPosts(clonedPosts));
     }
   }
+
+  static formatReactionsCount(reactions: IReactionsCount): FormattedReactionCount[] {
+    const newFormattedReactions: FormattedReactionCount[] = [];
+    Object.entries(reactions).forEach(([key, value]) => {
+      if (value > 0) {
+        newFormattedReactions.push({
+          type: key as ReactionType,
+          value
+        });
+      }
+    });
+    return newFormattedReactions;
+  }
+
+  static shortenLargeNumberReactions(data: number): string {
+    if (!data) {
+      return '0';
+    } else {
+      return millify(data);
+    }
+  }
 }
 
 interface ISelectBackgroundColorParams {
@@ -220,3 +242,5 @@ type IAddNotification = Omit<ISendPostWithImage, 'file' | 'postData' | 'imageInp
   type: NotificationType;
 };
 type SetState<T> = React.Dispatch<React.SetStateAction<T>>;
+
+export type FormattedReactionCount = { type: ReactionType; value: number | string };
