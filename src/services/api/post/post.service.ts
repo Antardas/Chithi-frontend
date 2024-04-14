@@ -32,6 +32,11 @@ class PostService {
     const response = await axios.delete<PostReactionResponse>(`/post/reaction/${postId}/${previousReaction}/${JSON.stringify(postReactions)}`);
     return response;
   }
+
+  async getReactionsByPostId(postId: string) {
+    const response = await axios.get<UserReactionsResponse>(`/post/reactions/${postId}`);
+    return response;
+  }
 }
 
 export const postService: PostService = new PostService();
