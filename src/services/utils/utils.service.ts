@@ -1,4 +1,4 @@
-import { AxiosResponse } from 'axios';
+import { AxiosResponse, AxiosError, isAxiosError  } from 'axios';
 import { NotificationType } from '~/Components/Toast';
 import { SetValue, RemoveValue } from '~/hooks/useLocalStorage';
 import { addNotification, clearNotification } from '~/redux/reducers/notification/notification.reducer';
@@ -8,7 +8,7 @@ import { DefaultAvatarImageDataUrl, avatarColors } from '~/services/utils/static
 import { IFollower } from '~/types/follower';
 import { ISignUpResponse, IUser } from '~/types/user';
 import { ISettingsDropdown } from '~/types/utils';
-
+import { IError } from '~/types/axios';
 interface IClearStoreParams {
   dispatch: AppDispatch;
   removeStorageUsername: RemoveValue;
@@ -138,6 +138,16 @@ export class Utils {
       return '';
     }
 
-    return `${word.charAt(0).toUpperCase()}${word.slice(1)}`
+    return `${word.charAt(0).toUpperCase()}${word.slice(1)}`;
+  }
+
+  static addErrorNotification(error: unknown, dispatch: AppDispatch) {
+    if (isAxiosError(error)) {
+      const typedError: AxiosError<IError> = error;
+      const message = typedError?.response?.data?.message || 'Something went wrong';
+      Utils.dispatchNotification(message, 'error', dispatch);
+    } else {
+      Utils.dispatchNotification((error as Error).message || 'Something went wrong', 'error', dispatch);
+    }
   }
 }
