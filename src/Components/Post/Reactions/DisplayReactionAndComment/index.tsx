@@ -1,9 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { FaSpinner } from 'react-icons/fa';
+import { useSelector } from 'react-redux';
 import '~/Components/Post/Reactions/DisplayReactionAndComment/DisplayReactionAndComment.scss';
 import like from '~/assets/reactions/like.png';
 import useEffectOnce from '~/hooks/useEffectOnce';
-import { useAppDispatch } from '~/redux/store';
+import { toggleReactionModal } from '~/redux/reducers/modal/modal.reducer';
+import { updatePostItem } from '~/redux/reducers/post/post.reducer';
+import { RootState, useAppDispatch } from '~/redux/store';
 import { postService } from '~/services/api/post/post.service';
 import { FormattedReactionCount, PostUtils } from '~/services/utils/post-utils.service';
 import { reactionsMap } from '~/services/utils/static.data';
@@ -15,6 +18,7 @@ function DisplayReactionAndComment({ post }: IDisplayReactionAndCommentProps) {
   const [postReactions, setPostReactions] = useState<IReactionPost[]>([]);
   const [reactions, setReactions] = useState<FormattedReactionCount[]>([]);
   const [loading, setLoading] = useState(false);
+  const { reactionModalIsOpen } = useSelector((state: RootState) => state.modal);
 
   const dispatch = useAppDispatch();
 
@@ -35,9 +39,10 @@ function DisplayReactionAndComment({ post }: IDisplayReactionAndCommentProps) {
     setLoading(false);
   };
 
-  // useEffectOnce(() => {
-  //   getPostReactions();
-  // });
+  const openReactionsModal = () => {
+    dispatch(updatePostItem(post));
+    dispatch(toggleReactionModal(!reactionModalIsOpen));
+  };
 
   useEffect(() => {
     setReactions(PostUtils.formatReactionsCount(post.reactions));
@@ -90,7 +95,12 @@ function DisplayReactionAndComment({ post }: IDisplayReactionAndCommentProps) {
               </div>
             </div> */}
           </div>
-          <span data-testid="reactions-count" className="tooltip-container reactions-count" onMouseEnter={getPostReactions}>
+          <span
+            data-testid="reactions-count"
+            className="tooltip-container reactions-count"
+            onMouseEnter={getPostReactions}
+            onClick={() => openReactionsModal()}
+          >
             {sumAllReactions()}
             <div className="tooltip-container-text tooltip-container-likes-bottom" data-testid="tooltip-container">
               <div className="likes-block-icons-list">
