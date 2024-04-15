@@ -8,3 +8,11 @@ export interface IComment {
   createdAt?: string;
   userTo?: string;
 }
+
+export interface IAddComment {
+  userTo: string;
+  postId: string;
+  comment: string;
+  profilePicture?: string;
+  commentsCount?: number;
+}

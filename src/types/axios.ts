@@ -10,4 +10,8 @@ interface SuggestionResponse {
   data: IUser[];
 }
 
-export type { IError, SuggestionResponse };
+interface OnlyMessageResponse {
+  message: string;
+}
+
+export type { IError, SuggestionResponse, OnlyMessageResponse };
