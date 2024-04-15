@@ -23,7 +23,7 @@ const Posts = ({ posts, userFollowing, postsLoading }: IPostsProps) => {
         <div key={post._id} data-testid="posts-item">
           {!Utils.checkIfUserIsFollowed(profile?.blockedBy as string[], post.userId, profile?._id as string) || post.userId === profile?._id ? (
             PostUtils.checkPrivacy(post, profile as IUser, followings) ? (
-              <Post post={post} showIcons={false } loading={loading} />
+              <Post post={post} showIcons={false } loading={loading} key={`post-${post._id}`} />
             ) : null
           ) : null}
         </div>
