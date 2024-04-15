@@ -1,4 +1,6 @@
 import axios from '~/services/axios';
+import { OnlyMessageResponse } from '~/types/axios';
+import { IAddComment } from '~/types/comment';
 import { IGetPostsApiResponse, IPostData } from '~/types/post';
 import { AddReactionBody, IReactionsCount, PostReactionResponse, UserReactionsResponse } from '~/types/reaction';
 
@@ -35,6 +37,11 @@ class PostService {
 
   async getReactionsByPostId(postId: string) {
     const response = await axios.get<UserReactionsResponse>(`/post/reactions/${postId}`);
+    return response;
+  }
+
+  async addComment(body: IAddComment) {
+    const response = await axios.post<OnlyMessageResponse>(`/comments`, body);
     return response;
   }
 }
