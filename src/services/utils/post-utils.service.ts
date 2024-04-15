@@ -10,7 +10,7 @@ import { AxiosError, isAxiosError } from 'axios';
 import { IError } from '~/types/axios';
 import { IUser } from '~/types/user';
 import { addPosts } from '~/redux/reducers/post/posts.reducer';
-import { IReactionPost, IReactionsCount, ReactionType, SocketReactionResponse } from '~/types/reaction';
+import { IReactionsCount, ReactionType, SocketReactionResponse } from '~/types/reaction';
 import millify from 'millify';
 
 export class PostUtils {

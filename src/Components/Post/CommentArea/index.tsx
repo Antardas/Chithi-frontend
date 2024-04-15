@@ -118,7 +118,7 @@ const CommentArea = ({ post,setPost }: ICommentAreaProps) => {
         userTo: post.userId,
         postId: post._id,
         type: reaction as ReactionType,
-        postReactions: post.reactions,
+        postReactions: updatedPost.reactions,
         profilePicture: post.profilePicture
       };
       if (!hasResponse) {
