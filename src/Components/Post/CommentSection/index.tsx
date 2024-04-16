@@ -3,12 +3,13 @@ import '~/Components/Post/CommentSection/CommentSection.scss';
 import { IPost } from '~/types/post';
 import CommentArea from '~/Components/Post/CommentArea';
 import DisplayReactionAndComment from '~/Components/Post/Reactions/DisplayReactionAndComment';
-const CommentSection = ({ post }: ICommentSectionProps) => {
-  const [updatedPost, setUpdatedPost] = useState<IPost>(post);
+import { SetState } from '~/types/utils';
+const CommentSection = ({ post, setPost }: ICommentSectionProps) => {
+  // const [updatedPost, setUpdatedPost] = useState<IPost>(post);
   return (
     <div data-testid="comment-section">
-      <DisplayReactionAndComment post={updatedPost} />
-      <CommentArea post={updatedPost} setPost={setUpdatedPost} />
+      <DisplayReactionAndComment post={post} />
+      <CommentArea post={post} setPost={setPost} />
     </div>
   );
 };
@@ -17,4 +18,5 @@ export default CommentSection;
 
 interface ICommentSectionProps {
   post: IPost;
+  setPost: SetState<IPost>;
 }

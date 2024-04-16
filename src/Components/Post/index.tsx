@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { IPost } from '~/types/post';
 import Avatar from '~/Components/Avatar';
 import { FaPencilAlt, FaRegTrashAlt } from 'react-icons/fa';
@@ -10,14 +10,19 @@ import CommentSection from './CommentSection';
 import { useSelector } from 'react-redux';
 import { RootState } from '~/redux/store';
 import ReactionModal from '~/Components/Post/Reactions/ReactionsModal';
+import useLocalStorage from '~/hooks/useLocalStorage';
+import CommentInput from './Comments/CommentInput';
 
 interface IPostProps {
   post: IPost;
   showIcons: boolean;
   loading: boolean;
 }
-const Post = ({ post, showIcons }: IPostProps) => {
+const Post = ({ post: rawPost, showIcons }: IPostProps) => {
   const { reactionModalIsOpen } = useSelector((state: RootState) => state.modal);
+  const { _id } = useSelector((state: RootState) => state.post);
+  const [selectedPosId] = useLocalStorage('selectedPosId');
+  const [post, setPost] = useState<IPost>(rawPost);
   const getFeeling = (name: string) => {
     const feeling = feelingsList.find((item) => item.name === name);
     return feeling?.name;
@@ -88,9 +93,11 @@ const Post = ({ post, showIcons }: IPostProps) => {
               )}
               {/* TODO: need to fix it, if any reaction category have reaction */}
               {(Object.values(post?.reactions).filter((count) => count > 0).length || post?.commentCount > 0) && <hr />}
-              <CommentSection post={post} />
+              <CommentSection post={post} setPost={setPost} />
             </div>
           </div>
+
+          {selectedPosId === post._id && _id === selectedPosId ? <CommentInput post={post} setPost={setPost} /> : null}
         </div>
       </div>
     </>

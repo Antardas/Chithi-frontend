@@ -20,10 +20,12 @@ import useLocalStorage from '~/hooks/useLocalStorage';
 import { addReactions } from '~/redux/reducers/post/userReactions.reducer';
 import { socketService } from '~/services/socket/sokcet.service';
 import { SetState } from '~/types/utils';
-const CommentArea = ({ post,setPost }: ICommentAreaProps) => {
+import { clearPostItem, updatePostItem } from '~/redux/reducers/post/post.reducer';
+const CommentArea = ({ post, setPost }: ICommentAreaProps) => {
   const [userSelectedReaction, setUserSelectedReaction] = useState<string>('');
   const [username] = useLocalStorage('username');
   const { profile } = useSelector((state: RootState) => state.user);
+  const [selectedPosId, setSelectedPosId] = useLocalStorage('selectedPosId');
 
   const dispatch = useAppDispatch();
 
@@ -104,7 +106,7 @@ const CommentArea = ({ post,setPost }: ICommentAreaProps) => {
 
       const newReactions = getReactions(reaction as ReactionType, hasResponse, reactionResponse.data.reactions.type as ReactionType);
       // post = updatedPost;
-      setPost(updatedPost)
+      setPost(updatedPost);
       dispatch(addReactions(newReactions));
 
       sendSocketReactions({
@@ -142,6 +144,24 @@ const CommentArea = ({ post,setPost }: ICommentAreaProps) => {
     }
   };
 
+  const removeSelectedPostId = () => {
+    if (selectedPosId === post._id) {
+      setSelectedPosId('');
+      dispatch(clearPostItem());
+    } else {
+      setSelectedPosId(post._id);
+      dispatch(updatePostItem(post));
+    }
+  };
+
+  const toggleCommentInput = () => {
+    if (!selectedPosId) {
+      setSelectedPosId(post._id);
+      dispatch(updatePostItem(post));
+    } else {
+      removeSelectedPostId();
+    }
+  };
   useEffect(() => {
     selectedUserReaction(reactions);
   }, [selectedUserReaction, reactions]);
@@ -171,7 +191,7 @@ const CommentArea = ({ post,setPost }: ICommentAreaProps) => {
           <Reactions onClick={addReactionToPost} />
         </div>
       </div>
-      <div className="comment-block">
+      <div className="comment-block" onClick={toggleCommentInput}>
         <span className="comments-text">
           <FaRegCommentAlt className="comment-alt" /> <span>Comments</span>
         </span>
