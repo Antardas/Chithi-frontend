@@ -8,7 +8,7 @@ const CommentSection = ({ post, setPost }: ICommentSectionProps) => {
   // const [updatedPost, setUpdatedPost] = useState<IPost>(post);
   return (
     <div data-testid="comment-section">
-      <DisplayReactionAndComment post={post} />
+      <DisplayReactionAndComment post={post} key={`preview-reactions-and-comment-${post._id}`} />
       <CommentArea post={post} setPost={setPost} />
     </div>
   );

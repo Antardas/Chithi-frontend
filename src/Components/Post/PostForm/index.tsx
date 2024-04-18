@@ -10,6 +10,7 @@ import feeling from '~/assets/images/feeling.png';
 import { openModal, toggleFeelingModal, toggleGifModal, toggleImageModal } from '~/redux/reducers/modal/modal.reducer';
 import AddPost from '~/Components/Post/PostModal/AddPost';
 import { ImageUtils } from '~/services/utils/image-utils.service';
+import EditPost from '../PostModal/EditPost';
 
 const PostForm = () => {
   const { profile } = useSelector((state: RootState) => state.user);
@@ -84,13 +85,14 @@ const PostForm = () => {
                 <img src={gif} alt="" /> Gif
               </li>
               <li className="post-form-list-item" onClick={openFeelingModal}>
-                <img src={feeling} alt=""  /> Feeling
+                <img src={feeling} alt="" /> Feeling
               </li>
             </ul>
           </div>
         </div>
       </div>
       {isOpen && type === 'add' ? <AddPost selectedImage={selectedPostImage} /> : null}
+      {isOpen && type === 'edit' ? <EditPost /> : null}
     </div>
   );
 };
