@@ -1,7 +1,7 @@
 import axios from '~/services/axios';
 import { OnlyMessageResponse } from '~/types/axios';
-import { IAddComment } from '~/types/comment';
-import { IGetPostsApiResponse, IPostData } from '~/types/post';
+import { GetComments, GetCommentsNames, IAddComment } from '~/types/comment';
+import { IGetPostsApiResponse, IPostData, IPostDataEdit } from '~/types/post';
 import { AddReactionBody, IReactionsCount, PostReactionResponse, UserReactionsResponse } from '~/types/reaction';
 
 class PostService {
@@ -9,8 +9,21 @@ class PostService {
     const response = await axios.post('/post', body);
     return response;
   }
+  async updatePost(postId: string, body: IPostDataEdit) {
+    const response = await axios.put(`/post/${postId}`, body);
+    return response;
+  }
   async createPostWithImage(body: IPostData) {
     const response = await axios.post('/post/image', body);
+    return response;
+  }
+  async updatePostWithImage(postId: string, body: IPostDataEdit) {
+    const response = await axios.put(`/post/image/${postId}`, body);
+    return response;
+  }
+
+  async deletePost(postId: string) {
+    const response = await axios.delete<OnlyMessageResponse>(`/post/${postId}`,);
     return response;
   }
 
@@ -42,6 +55,15 @@ class PostService {
 
   async addComment(body: IAddComment) {
     const response = await axios.post<OnlyMessageResponse>(`/comments`, body);
+    return response;
+  }
+
+  async getPostCommentsNames(postId: string) {
+    const response = await axios.get<GetCommentsNames>(`/comments/names/${postId}`);
+    return response;
+  }
+  async getPostComments(postId: string) {
+    const response = await axios.get<GetComments>(`/comments/${postId}`);
     return response;
   }
 }
