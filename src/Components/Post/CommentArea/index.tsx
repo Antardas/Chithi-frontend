@@ -21,11 +21,14 @@ import { addReactions } from '~/redux/reducers/post/userReactions.reducer';
 import { socketService } from '~/services/socket/sokcet.service';
 import { SetState } from '~/types/utils';
 import { clearPostItem, updatePostItem } from '~/redux/reducers/post/post.reducer';
+import { toggleCommentBox } from '~/redux/reducers/modal/modal.reducer';
 const CommentArea = ({ post, setPost }: ICommentAreaProps) => {
   const [userSelectedReaction, setUserSelectedReaction] = useState<string>('');
   const [username] = useLocalStorage('username');
   const { profile } = useSelector((state: RootState) => state.user);
-  const [selectedPosId, setSelectedPosId] = useLocalStorage('selectedPosId');
+  const [selectedPosId, setSelectedPosId, removeSelectedPosId] = useLocalStorage('selectedPosId');
+  const { showCommentBox } = useSelector((state: RootState) => state.modal);
+  const { _id } = useSelector((state: RootState) => state.post);
 
   const dispatch = useAppDispatch();
 
@@ -145,19 +148,26 @@ const CommentArea = ({ post, setPost }: ICommentAreaProps) => {
   };
 
   const removeSelectedPostId = () => {
-    if (selectedPosId === post._id) {
-      setSelectedPosId('');
+    if (_id === post._id) {
+      removeSelectedPosId();
       dispatch(clearPostItem());
+      dispatch(toggleCommentBox(false));
     } else {
+      dispatch(toggleCommentBox(true));
       setSelectedPosId(post._id);
       dispatch(updatePostItem(post));
     }
   };
 
   const toggleCommentInput = () => {
-    if (!selectedPosId) {
+    console.log('toggleCommentInput', selectedPosId, post._id);
+
+    // if (!selectedPosId)  {
+    if (!showCommentBox) {
+      //
       setSelectedPosId(post._id);
       dispatch(updatePostItem(post));
+      dispatch(toggleCommentBox(!showCommentBox));
     } else {
       removeSelectedPostId();
     }
@@ -182,7 +192,7 @@ const CommentArea = ({ post, setPost }: ICommentAreaProps) => {
               </div>
             ) : (
               <div className="reaction-display" data-testid="default-reaction">
-                <img className="reaction-img" src={like} alt="" /> <span>Like</span>
+                <img className="reaction-img" src={like} alt="" /><span>Like</span>
               </div>
             )}
           </div>
