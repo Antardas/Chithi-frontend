@@ -23,7 +23,8 @@ const initialState: IModalInterface = {
   gifModalIsOpen: false,
   reactionModalIsOpen: false,
   commentsModalIsOpen: false,
-  deleteDialogIsOpen: false
+  deleteDialogIsOpen: false,
+  showCommentBox: false
 };
 
 const modalData: IModalInterface = {
@@ -41,7 +42,8 @@ const modalData: IModalInterface = {
   gifModalIsOpen: true,
   reactionModalIsOpen: true,
   commentsModalIsOpen: true,
-  deleteDialogIsOpen: true
+  deleteDialogIsOpen: true,
+  showCommentBox: true
 };
 
 describe('modal reducer', () => {
@@ -57,6 +59,7 @@ describe('modal reducer', () => {
     initialState.reactionModalIsOpen = false;
     initialState.commentsModalIsOpen = false;
     initialState.deleteDialogIsOpen = false;
+    initialState.showCommentBox = false;
   });
 
   it('should return the initial state', () => {
@@ -79,7 +82,8 @@ describe('modal reducer', () => {
       gifModalIsOpen: false,
       reactionModalIsOpen: false,
       commentsModalIsOpen: false,
-      deleteDialogIsOpen: false
+      deleteDialogIsOpen: false,
+      showCommentBox: false
     });
   });
 
@@ -99,7 +103,8 @@ describe('modal reducer', () => {
       gifModalIsOpen: false,
       reactionModalIsOpen: false,
       commentsModalIsOpen: false,
-      deleteDialogIsOpen: false
+      deleteDialogIsOpen: false,
+      showCommentBox: false
     });
   });
 
@@ -128,7 +133,8 @@ describe('modal reducer', () => {
       gifModalIsOpen: false,
       reactionModalIsOpen: false,
       commentsModalIsOpen: false,
-      deleteDialogIsOpen: false
+      deleteDialogIsOpen: false,
+      showCommentBox: false
     });
   });
 
@@ -148,7 +154,8 @@ describe('modal reducer', () => {
       gifModalIsOpen: false,
       reactionModalIsOpen: false,
       commentsModalIsOpen: false,
-      deleteDialogIsOpen: false
+      deleteDialogIsOpen: false,
+      showCommentBox: false
     });
   });
 
@@ -168,7 +175,8 @@ describe('modal reducer', () => {
       gifModalIsOpen: false,
       reactionModalIsOpen: false,
       commentsModalIsOpen: false,
-      deleteDialogIsOpen: false
+      deleteDialogIsOpen: false,
+      showCommentBox: false
     });
   });
 
@@ -188,7 +196,8 @@ describe('modal reducer', () => {
       gifModalIsOpen: true,
       reactionModalIsOpen: false,
       commentsModalIsOpen: false,
-      deleteDialogIsOpen: false
+      deleteDialogIsOpen: false,
+      showCommentBox: false
     });
   });
 
@@ -208,7 +217,8 @@ describe('modal reducer', () => {
       gifModalIsOpen: false,
       reactionModalIsOpen: true,
       commentsModalIsOpen: false,
-      deleteDialogIsOpen: false
+      deleteDialogIsOpen: false,
+      showCommentBox: false
     });
   });
 
@@ -228,12 +238,13 @@ describe('modal reducer', () => {
       gifModalIsOpen: false,
       reactionModalIsOpen: false,
       commentsModalIsOpen: true,
-      deleteDialogIsOpen: false
+      deleteDialogIsOpen: false,
+      showCommentBox: false
     });
   });
 
   it('should toggleDeleteDialog', () => {
-    expect(reducer(initialState, toggleDeleteDialog(true))).toEqual({
+    expect(reducer(initialState, toggleDeleteDialog({data:null, toggle:true}))).toEqual({
       type: '',
       isOpen: false,
       feeling: {
@@ -248,7 +259,8 @@ describe('modal reducer', () => {
       gifModalIsOpen: false,
       reactionModalIsOpen: false,
       commentsModalIsOpen: false,
-      deleteDialogIsOpen: true
+      deleteDialogIsOpen: true,
+      showCommentBox: false
     });
   });
 });
