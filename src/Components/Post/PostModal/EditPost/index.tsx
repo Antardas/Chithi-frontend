@@ -186,13 +186,14 @@ const EditPost = () => {
       postData.bgColor = bgColor;
       setPostData(postData);
       setTextAreaBackground(bgColor);
-      setTimeout(() => {
-        if (inputRef.current) {
-          postData.post = post;
-          inputRef.current.textContent = post;
-          setPostData(postData);
-        }
-      });
+      // setTimeout(() => {
+      if (inputRef.current) {
+        postData.post = post;
+        inputRef.current.textContent = post;
+        setPostData(postData);
+        console.log(1);
+      }
+      // });
     }
 
     if (gifUrl && !imgId) {
