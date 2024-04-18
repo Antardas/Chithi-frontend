@@ -3,7 +3,7 @@ import { Utils } from '~/services/utils/utils.service';
 import { closeModal } from '~/redux/reducers/modal/modal.reducer';
 import { clearPostItem, updatePostItem } from '~/redux/reducers/post/post.reducer';
 import { AppDispatch } from '~/redux/store';
-import { IPost, IPostData } from '~/types/post';
+import { IPost, IPostData, IPostDataEdit } from '~/types/post';
 import { postService } from '../api/post/post.service';
 import { NotificationType } from '~/Components/Toast';
 import { AxiosError, isAxiosError } from 'axios';
@@ -12,15 +12,21 @@ import { IUser } from '~/types/user';
 import { addPosts } from '~/redux/reducers/post/posts.reducer';
 import { IReactionsCount, ReactionType, SocketReactionResponse } from '~/types/reaction';
 import millify from 'millify';
+import { ICommentSocketResponse } from '~/types/comment';
 
 export class PostUtils {
-  static selectBackgroundColor({ bgColor, postData, setTextAreaBackground, setPostData }: ISelectBackgroundColorParams) {
+  static selectBackgroundColor<T extends IPostData | IPostDataEdit>({
+    bgColor,
+    postData,
+    setTextAreaBackground,
+    setPostData
+  }: ISelectBackgroundColorParams<T>) {
     postData.bgColor = bgColor;
     setTextAreaBackground(bgColor);
     setPostData(postData);
   }
 
-  static postInputEditable({ postData, setPostData, textContent }: IPostInputEditable) {
+  static postInputEditable<T extends IPostData | IPostDataEdit>({ postData, setPostData, textContent }: IPostInputEditable<T>) {
     postData.post = textContent;
     setPostData(postData);
   }
@@ -30,7 +36,15 @@ export class PostUtils {
     dispatch(clearPostItem());
   }
 
-  static clearImage({ postData, post, dispatch, inputRef, setPostData, setPostImage, setSelectedPostImage }: IClearImage) {
+  static clearImage<T extends IPostData | IPostDataEdit>({
+    postData,
+    post,
+    dispatch,
+    inputRef,
+    setPostData,
+    setPostImage,
+    setSelectedPostImage
+  }: IClearImage<T>) {
     postData.gifUrl = '';
     postData.image = '';
     setSelectedPostImage(undefined);
@@ -107,6 +121,76 @@ export class PostUtils {
     }
   }
 
+  static async updatePostWithImage({ dispatch, file, postData, postId, setApiResponse, setLoading }: IUpdatePostWithImage) {
+    try {
+      postData.image = file;
+      postData.gifUrl = '';
+      postData.imgId = '';
+      postData.imgVersion = '';
+
+      const response = await postService.updatePostWithImage(postId, postData);
+
+      if (response) {
+        // setApiResponse('success');
+        setLoading(false);
+        const message: string = response.data?.message as string;
+        PostUtils.addNotification({ dispatch, message, setApiResponse, setLoading, type: 'success' });
+
+        setTimeout(() => {
+          setApiResponse('success');
+          setLoading(false);
+        }, 3000);
+      }
+      return response;
+    } catch (error) {
+      if (isAxiosError(error)) {
+        const typedError: AxiosError<IError> = error;
+        const message = typedError?.response?.data?.message || 'Something went wrong';
+        PostUtils.addNotification({ dispatch, message, setApiResponse, setLoading, type: 'error' });
+      } else {
+        PostUtils.addNotification({
+          dispatch,
+          message: (error as Error).message || 'Something went wrong',
+          setApiResponse,
+          setLoading,
+          type: 'error'
+        });
+      }
+    }
+  }
+
+  static async updatePost({ dispatch, postData, postId, setApiResponse, setLoading }: IUpdatePost) {
+    try {
+      const response = await postService.updatePost(postId, postData);
+
+      if (response) {
+        setLoading(false);
+        const message: string = response.data?.message as string;
+        PostUtils.addNotification({ dispatch, message, setApiResponse, setLoading, type: 'success' });
+
+        setTimeout(() => {
+          setApiResponse('success');
+          setLoading(false);
+        }, 3000);
+      }
+      return response;
+    } catch (error) {
+      if (isAxiosError(error)) {
+        const typedError: AxiosError<IError> = error;
+        const message = typedError?.response?.data?.message || 'Something went wrong';
+        PostUtils.addNotification({ dispatch, message, setApiResponse, setLoading, type: 'error' });
+      } else {
+        PostUtils.addNotification({
+          dispatch,
+          message: (error as Error).message || 'Something went wrong',
+          setApiResponse,
+          setLoading,
+          type: 'error'
+        });
+      }
+    }
+  }
+
   static checkPrivacy(post: IPost, profile: IUser, following: string[]) {
     const isPrivate = post.privacy === 'Private' && post.userId === profile._id;
 
@@ -136,23 +220,25 @@ export class PostUtils {
 
   static socketIOPost(posts: IPost[], dispatch: AppDispatch) {
     const clonedPosts = Utils.cloneDeep(posts) as IPost[];
-    socketService.socket.on('addPost', (data: IPost) => {
+    socketService.socket && socketService.socket.on('addPost', (data: IPost) => {
       clonedPosts.unshift(data);
       dispatch(addPosts(clonedPosts));
     });
 
-    socketService.socket.on('update post', (data: IPost) => {
+    socketService.socket && socketService.socket.on('update post', (data: IPost) => {
+      console.log('🚀 ~ PostUtils ~ socketService.socket.on ~ data:', data);
+
       PostUtils.updateSinglePost(posts, data, dispatch);
     });
 
-    socketService.socket.on('delete post', (postId: string) => {
+    socketService.socket && socketService.socket.on('delete post', (postId: string) => {
       let clonedPosts = Utils.cloneDeep(posts) as IPost[];
       clonedPosts = clonedPosts.filter((data) => data._id !== postId);
       dispatch(addPosts(clonedPosts));
     });
 
     // TODO: fix the Type
-    socketService.socket.on('update like', (data: SocketReactionResponse) => {
+    socketService.socket && socketService.socket.on('update like', (data: SocketReactionResponse) => {
       const post = posts.find((item) => item._id === data.postId);
 
       if (post) {
@@ -161,10 +247,10 @@ export class PostUtils {
       }
     });
     // TODO: fix the Type
-    socketService.socket.on('update comment', (data: object) => {
+    socketService.socket && socketService.socket.on('update comment', (data: ICommentSocketResponse) => {
       const post = posts.find((item) => item._id === data.postId);
       if (post) {
-        post.commentCount = data;
+        post.commentCount = data.commentsCount;
         PostUtils.updateSinglePost(posts, post, dispatch);
       }
     });
@@ -201,30 +287,30 @@ export class PostUtils {
   }
 }
 
-interface ISelectBackgroundColorParams {
+interface ISelectBackgroundColorParams<T> {
   bgColor: string;
-  postData: IPostData;
+  postData: T;
   setTextAreaBackground: SetState<string>;
-  setPostData: SetState<IPostData>;
+  setPostData: SetState<T>;
 }
 
-interface IPostInputEditable {
+interface IPostInputEditable<T> {
   textContent: string;
-  postData: IPostData;
-  setPostData: SetState<IPostData>;
+  postData: T;
+  setPostData: SetState<T>;
 }
 
-interface IClearImage {
-  postData: IPostData;
+interface IClearImage<T> {
+  postData: T;
   post: string;
   inputRef: React.RefObject<HTMLDivElement>;
   dispatch: AppDispatch;
   setSelectedPostImage: SetState<File | undefined>;
   setPostImage: SetState<string>;
-  setPostData: SetState<IPostData>;
+  setPostData: SetState<T>;
 }
 
-interface IPostInputInputData extends Omit<IClearImage, 'dispatch' | 'setPostImage' | 'inputRef' | 'setSelectedPostImage'> {
+interface IPostInputInputData extends Omit<IClearImage<IPostDataEdit | IPostData>, 'dispatch' | 'setPostImage' | 'inputRef' | 'setSelectedPostImage'> {
   imageInputRef: React.RefObject<HTMLDivElement>;
 }
 
@@ -235,6 +321,14 @@ interface ISendPostWithImage {
   setApiResponse: SetState<string>;
   setLoading: SetState<boolean>;
   dispatch: AppDispatch;
+}
+interface IUpdatePostWithImage extends Omit<ISendPostWithImage, 'imageInputRef' | 'postData'> {
+  postId: string;
+  postData: IPostDataEdit;
+}
+interface IUpdatePost extends Omit<IUpdatePostWithImage, 'file'> {
+  postId: string;
+  postData: IPostDataEdit;
 }
 
 type IAddNotification = Omit<ISendPostWithImage, 'file' | 'postData' | 'imageInputRef'> & {
