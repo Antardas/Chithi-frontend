@@ -7,6 +7,10 @@ export interface IPostData {
   profilePicture: string;
   image: string;
 }
+export interface IPostDataEdit extends IPostData {
+  imgVersion: string;
+  imgId: string;
+}
 
 export interface IPost {
   _id: string;
