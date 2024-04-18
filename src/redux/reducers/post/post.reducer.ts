@@ -24,8 +24,9 @@ const postSlice = createSlice({
         state[key] = value;
       }
     },
-    clearPostItem: () => {
-      return emptyPostData;
+    clearPostItem: (state) => {
+      state = emptyPostData;
+      return state;
     }
   }
 });
