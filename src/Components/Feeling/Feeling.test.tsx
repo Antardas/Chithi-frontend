@@ -22,6 +22,6 @@ describe('Feelings', () => {
     const feelingImage = container.querySelector('.feeling-icon');
     expect(selectedFeelings).toBeInTheDocument();
     expect(feelingImage).toBeInTheDocument();
-    expect(feelingImage).toHaveAttribute('src', '/src/assets/feelings/happy.jpg');
+    expect(feelingImage).toHaveAttribute('src', '/src/assets/reactions/happy.png');
   });
 });

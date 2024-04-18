@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux';
 import '~/Components/Post/Reactions/DisplayReactionAndComment/DisplayReactionAndComment.scss';
 import like from '~/assets/reactions/like.png';
 import useEffectOnce from '~/hooks/useEffectOnce';
-import { toggleReactionModal } from '~/redux/reducers/modal/modal.reducer';
+import { toggleCommentModal, toggleReactionModal } from '~/redux/reducers/modal/modal.reducer';
 import { updatePostItem } from '~/redux/reducers/post/post.reducer';
 import { RootState, useAppDispatch } from '~/redux/store';
 import { postService } from '~/services/api/post/post.service';
@@ -17,8 +17,9 @@ import { IReactionPost } from '~/types/reaction';
 function DisplayReactionAndComment({ post }: IDisplayReactionAndCommentProps) {
   const [postReactions, setPostReactions] = useState<IReactionPost[]>([]);
   const [reactions, setReactions] = useState<FormattedReactionCount[]>([]);
+  const [commentsNames, setCommentsNames] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
-  const { reactionModalIsOpen } = useSelector((state: RootState) => state.modal);
+  const { reactionModalIsOpen, commentsModalIsOpen } = useSelector((state: RootState) => state.modal);
 
   const dispatch = useAppDispatch();
 
@@ -38,17 +39,32 @@ function DisplayReactionAndComment({ post }: IDisplayReactionAndCommentProps) {
     }
     setLoading(false);
   };
+  const getCommentNames = async () => {
+    setLoading(true);
+    try {
+      const res = await postService.getPostCommentsNames(post._id);
+      setCommentsNames([...new Set(res.data.comments.names)]);
+    } catch (error) {
+      Utils.addErrorNotification(error, dispatch);
+    }
+    setLoading(false);
+  };
 
   const openReactionsModal = () => {
     dispatch(updatePostItem(post));
     dispatch(toggleReactionModal(!reactionModalIsOpen));
   };
 
+  const openCommentsModal = () => {
+    dispatch(updatePostItem(post));
+    dispatch(toggleCommentModal(!commentsModalIsOpen));
+  };
+
   useEffect(() => {
     setReactions(PostUtils.formatReactionsCount(post.reactions));
   }, [post.reactions]);
   return (
-    <div className="reactions-display">
+    <div className="reactions-display" key={`preview-reactions-and-comment-inner-${post._id}`}>
       <div className="reaction">
         <div className="likes-block">
           <div className="likes-block-icons reactions-icon-display">
@@ -64,13 +80,13 @@ function DisplayReactionAndComment({ post }: IDisplayReactionAndCommentProps) {
                       <div className="likes-block-icons-list">
                         {loading ? <FaSpinner className="circle-notch" /> : null}
 
-                        {postReactions.map((reaction) => (
-                          <>
+                        {postReactions.slice(0, 19).map((reaction) => (
+
                             <div key={reaction._id}>
                               {' '}
                               <span>{reaction.username}</span>
                             </div>
-                          </>
+
                         ))}
                         {postReactions.length > 20 ? <span>and {postReactions.length - 20} others...</span> : null}
                       </div>
@@ -106,13 +122,13 @@ function DisplayReactionAndComment({ post }: IDisplayReactionAndCommentProps) {
               <div className="likes-block-icons-list">
                 {loading ? <FaSpinner className="circle-notch" /> : null}
 
-                {postReactions.map((reaction) => (
-                  <>
+                {postReactions.slice(0, 19).map((reaction) => (
+
                     <div key={reaction._id}>
                       {' '}
                       <span>{reaction.username}</span>{' '}
                     </div>
-                  </>
+                  
                 ))}
                 {postReactions.length > 20 ? <span>and {postReactions.length - 20} others...</span> : null}
               </div>
@@ -120,14 +136,23 @@ function DisplayReactionAndComment({ post }: IDisplayReactionAndCommentProps) {
           </span>
         </div>
       </div>
-      <div className="comment tooltip-container" data-testid="comment-container">
-        <span data-testid="comment-count">20 Comments</span>
+      <div className="comment tooltip-container" data-testid="comment-container" onClick={openCommentsModal}>
+        {post.commentCount ? (
+          <span data-testid="comment-count" onMouseEnter={getCommentNames}>
+            {PostUtils.shortenLargeNumberReactions(post.commentCount)} {`${post.commentCount === 1 ? 'Comment' : 'Comments'}`}
+          </span>
+        ) : null}
         <div className="tooltip-container-text tooltip-container-comments-bottom" data-testid="comment-tooltip">
           <div className="likes-block-icons-list">
-            <FaSpinner className="circle-notch" />
+            {loading ? <FaSpinner className="circle-notch" /> : null}
             <div>
-              <span>Stan</span>
-              <span>and 50 others...</span>
+              {commentsNames.slice(0, 19).map((name) => (
+                <div key={name}>
+                  {' '}
+                  <span>{name}</span>{' '}
+                </div>
+              ))}
+              {commentsNames.length > 20 ? <span>and {commentsNames.length - 20} others...</span> : null}
             </div>
           </div>
         </div>
