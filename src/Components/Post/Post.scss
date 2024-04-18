@@ -155,6 +155,7 @@
         height: 400px;
         position: relative;
         overflow: hidden;
+        z-index: 0;
 
         .background {
           position: absolute;
