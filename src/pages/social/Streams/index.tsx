@@ -7,10 +7,13 @@ import Posts from '~/Components/Posts';
 import Suggestion from '~/Components/Suggestions';
 import useEffectOnce from '~/hooks/useEffectOnce';
 import useInfinityScroll from '~/hooks/useInfinityScroll';
+import useLocalStorage from '~/hooks/useLocalStorage';
 import '~/pages/social/Streams/Streams.scss';
 import { getPosts } from '~/redux/api/posts';
 import { getSuggestions } from '~/redux/api/suggestion';
+import { addReactions } from '~/redux/reducers/post/userReactions.reducer';
 import { RootState, useAppDispatch } from '~/redux/store';
+import { postService } from '~/services/api/post/post.service';
 import { PostUtils } from '~/services/utils/post-utils.service';
 import { Utils } from '~/services/utils/utils.service';
 import { IError } from '~/types/axios';
@@ -20,15 +23,15 @@ const PAGE_SIZE = 10;
 const Streams = () => {
   // const [posts, setPosts] = useState<IPost[]>([]);
   const { posts, isLoading, totalPost } = useSelector((state: RootState) => state.posts);
+  const { profile } = useSelector((state: RootState) => state.user);
   const [loading, setLoading] = useState<boolean>(false);
   const [currentPage, setCurrentPage] = useState<number>(0);
   const bodyRef = useRef<HTMLInputElement | null>(null);
   const bottomLineRef = useRef<HTMLInputElement | null>(null);
   const dispatch = useAppDispatch();
+  const [username] = useLocalStorage('username');
 
   const fetchNextPost = () => {
-    console.log('caleed');
-
     if (currentPage <= Math.ceil(totalPost / PAGE_SIZE)) {
       setCurrentPage(currentPage + 1);
 
@@ -54,10 +57,27 @@ const Streams = () => {
     setLoading(false);
   };
 
+  const getReactionsByUserName = async (username: string) => {
+    if (!username) return;
+    try {
+      const reactions = await postService.getReactionsByUsername(username);
+      dispatch(addReactions(reactions.data.reactions));
+    } catch (error) {
+      if (isAxiosError(error)) {
+        const typedError: AxiosError<IError> = error;
+        const message = typedError?.response?.data?.message || 'Something went wrong';
+        Utils.dispatchNotification(message, 'error', dispatch);
+      } else {
+        Utils.dispatchNotification((error as Error).message || 'Something went wrong', 'error', dispatch);
+      }
+    }
+  };
+
   useInfinityScroll(bodyRef, bottomLineRef, fetchNextPost);
   useEffectOnce(() => {
     dispatch(getSuggestions());
     setCurrentPage(currentPage + 1);
+
     // getAllPost();
     // dispatch(getPosts(1));
   });
@@ -70,6 +90,10 @@ const Streams = () => {
   useEffect(() => {
     PostUtils.socketIOPost(posts, dispatch);
   }, [posts, dispatch]);
+
+  useEffect(() => {
+    getReactionsByUserName(username ?? profile?.username ?? '');
+  }, [username]);
 
   /**
    * How actually calling the API

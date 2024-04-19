@@ -1,9 +1,9 @@
-import { IFeeling } from "~/services/utils/static.data";
+import { IFeeling } from '~/services/utils/static.data';
 
 export interface IModalInterface {
   type: string;
   isOpen: boolean;
-  feeling: IFeeling
+  feeling: IFeeling;
   image: string;
   data: object | null;
   feelingsIsOpen: boolean;
@@ -12,4 +12,5 @@ export interface IModalInterface {
   commentsModalIsOpen: boolean;
   deleteDialogIsOpen: boolean;
   gifModalIsOpen: boolean;
+  showCommentBox: boolean;
 }

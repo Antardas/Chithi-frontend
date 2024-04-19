@@ -7,6 +7,7 @@ import appReducer from '~/redux/reducers/app/app.reducer';
 import modalReducer from '~/redux/reducers/modal/modal.reducer';
 import postReducer from '~/redux/reducers/post/post.reducer';
 import postsReducer from '~/redux/reducers/post/posts.reducer';
+import userReactionsReducer from '~/redux/reducers/post/userReactions.reducer';
 
 const store = configureStore({
   reducer: {
@@ -16,12 +17,12 @@ const store = configureStore({
     app: appReducer,
     modal: modalReducer,
     post: postReducer,
-    posts: postsReducer
+    posts: postsReducer,
+    userReactions: userReactionsReducer
   }
 });
 
 export type AppDispatch = typeof store.dispatch;
 export const useAppDispatch: () => AppDispatch = useDispatch;
 export type RootState = ReturnType<typeof store.getState>;
-
 export { store };

@@ -16,7 +16,8 @@ const initialState: IModalInterface = {
   reactionModalIsOpen: false,
   gifModalIsOpen: false,
   commentsModalIsOpen: false,
-  deleteDialogIsOpen: false
+  deleteDialogIsOpen: false,
+  showCommentBox: false
 };
 
 const modalSlice = createSlice({
@@ -46,6 +47,7 @@ const modalSlice = createSlice({
       state.gifModalIsOpen = false;
       state.commentsModalIsOpen = false;
       state.deleteDialogIsOpen = false;
+      state.showCommentBox = false;
     },
 
     addPostFeeling: (state, action) => {
@@ -68,7 +70,13 @@ const modalSlice = createSlice({
       state.commentsModalIsOpen = action.payload;
     },
     toggleDeleteDialog: (state, action) => {
-      state.deleteDialogIsOpen = action.payload;
+      const { data, toggle } = action.payload;
+
+      state.deleteDialogIsOpen = toggle;
+      state.data = data;
+    },
+    toggleCommentBox: (state, action) => {
+      state.showCommentBox = action.payload;
     }
   }
 });
@@ -82,7 +90,8 @@ export const {
   toggleGifModal,
   toggleFeelingModal,
   toggleReactionModal,
-  toggleImageModal
+  toggleImageModal,
+  toggleCommentBox
 } = modalSlice.actions;
 
 export default modalSlice.reducer;

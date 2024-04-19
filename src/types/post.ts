@@ -7,6 +7,10 @@ export interface IPostData {
   profilePicture: string;
   image: string;
 }
+export interface IPostDataEdit extends IPostData {
+  imgVersion: string;
+  imgId: string;
+}
 
 export interface IPost {
   _id: string;
@@ -23,12 +27,12 @@ export interface IPost {
   avatarColor: string;
   commentCount: number;
   reactions: {
-    like?: number;
-    love?: number;
-    happy?: number;
-    wow?: number;
-    sad?: number;
-    angry?: number;
+    like: number;
+    love: number;
+    happy: number;
+    wow: number;
+    sad: number;
+    angry: number;
   };
   imgVersion?: string;
   imgId?: string;
