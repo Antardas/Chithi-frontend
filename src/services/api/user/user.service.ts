@@ -1,4 +1,5 @@
 import axios from '~/services/axios';
+import { GetUsersResponse } from '~/types/follower';
 
 class UserService {
   async getUserSuggestion() {
@@ -11,6 +12,10 @@ class UserService {
   }
   async currentUser() {
     const response = await axios.get('/current-user');
+    return response;
+  }
+  async getAllUsers(page: number) {
+    const response = await axios.get<GetUsersResponse>(`/users?page=${page}`);
     return response;
   }
 }
