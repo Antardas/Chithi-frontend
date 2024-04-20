@@ -24,3 +24,7 @@ export interface GetUsersResponse {
     followers: IFollower[];
   };
 }
+export interface GetFollowingsResponse {
+  message: string;
+  data: IFollower[];
+}
