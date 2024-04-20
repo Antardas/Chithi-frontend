@@ -15,6 +15,7 @@ import Error from '~/pages/Error';
 import { Suspense, lazy } from 'react';
 import StreamSkeleton from '~/pages/social/Streams/StreamSkeleton';
 import NotificationSkeleton from '~/pages/social/notification/NotificationSkeleton';
+import CardSkeleton from './Components/CardElement/CardSkeleton';
 
 const Social = lazy(() => import('~/pages/social'));
 const Streams = lazy(() => import('~/pages/social/Streams'));
@@ -60,7 +61,11 @@ const router = createBrowserRouter([
       },
       {
         path: 'people',
-        element: <Peoples />
+        element: (
+          <Suspense fallback={'loading'}>
+            <Peoples />
+          </Suspense>
+        )
       },
       {
         path: 'followers',
@@ -77,14 +82,18 @@ const router = createBrowserRouter([
       {
         path: 'notifications',
         element: (
-          <Suspense fallback={<NotificationSkeleton/>}>
+          <Suspense fallback={<NotificationSkeleton />}>
             <Notifications />
           </Suspense>
         )
       },
       {
         path: 'profile/:username',
-        element: <Profiles />
+        element: (
+          <Suspense fallback={<CardSkeleton />}>
+            <Profiles />
+          </Suspense>
+        )
       }
     ]
   },

@@ -133,6 +133,11 @@ export class Utils {
     return followers.some((id) => id === postCreatorId || id === userId);
   }
 
+
+  static checkIfUserIsOnline(username: string, onlineUsers: string[]) {
+    return onlineUsers.some((item) => item.toLowerCase() === username.toLowerCase());
+  }
+
   static firstLatterUpperCase(word: string): string {
     if (!word) {
       return '';
