@@ -12,6 +12,7 @@ import useLocalStorage from '~/hooks/useLocalStorage';
 import useSessionStorage from '~/hooks/useSessionStorage';
 import { Utils } from '~/services/utils/utils.service';
 import { useAppDispatch } from '~/redux/store';
+import axios from '~/services/axios';
 const Login = () => {
   const [username, setUsername] = useState<string>('');
   const [password, setPassword] = useState<string>('');
@@ -23,6 +24,7 @@ const Login = () => {
   const [user, setUser] = useState<IUser | null>(null);
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [_username, setStoredUsername] = useLocalStorage('username');
+  const [token, setToken] = useLocalStorage('token');
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [_loggedIn, setLoggedIn] = useLocalStorage('keepLoggedIn');
   const [, setPageReload] = useSessionStorage('pageReload');
@@ -35,9 +37,11 @@ const Login = () => {
     try {
       const result: AxiosResponse<ISignUpResponse> = await authService.singIn({
         username,
-        password,
+        password
         // keepLoggedIn
       });
+      axios.defaults.headers['Authorization'] = result.data.token;
+      setToken(result.data.token);
       setStoredUsername(`${result.data.user.username || ''}`);
       setLoggedIn(JSON.stringify(true));
       setKeepLoggedIn(true);
@@ -121,7 +125,7 @@ const Login = () => {
         {/* button component */}
         <Button label={`${loading ? 'Login in progress' : 'Login'}`} className="auth-button button" disabled={!username || !password} type="submit" />
 
-        <div className='forget-password-container'>
+        <div className="forget-password-container">
           <Link to={'/forget-password'}>
             <span className="forgot-password">
               Forgot password?
