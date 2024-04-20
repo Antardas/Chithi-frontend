@@ -60,7 +60,11 @@ const router = createBrowserRouter([
       },
       {
         path: 'people',
-        element: <Peoples />
+        element: (
+          <Suspense fallback={'loading'}>
+            <Peoples />
+          </Suspense>
+        )
       },
       {
         path: 'followers',
@@ -77,7 +81,7 @@ const router = createBrowserRouter([
       {
         path: 'notifications',
         element: (
-          <Suspense fallback={<NotificationSkeleton/>}>
+          <Suspense fallback={<NotificationSkeleton />}>
             <Notifications />
           </Suspense>
         )

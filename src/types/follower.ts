@@ -10,3 +10,17 @@ export interface IFollower {
   _id: string;
   userProfile?: IUser;
 }
+
+export interface IAllUsers {
+  users: IUser[];
+  totalUsers: number;
+}
+
+export interface GetUsersResponse {
+  message: string;
+  data: {
+    users: IUser[];
+    totalUser: number;
+    followers: IFollower[];
+  };
+}
