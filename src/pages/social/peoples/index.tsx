@@ -33,9 +33,18 @@ const Peoples = () => {
   const bottomLineRef = useRef<HTMLDivElement | null>(null);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+
+  let timerRef: undefined | ReturnType<typeof setTimeout>;
   const setNextPage = () => {
-    if (currentPage <= Math.ceil(totalUser / PAGE_SIZE) && !loading) {
-      setCurrentPage(currentPage + 1);
+    console.log('setNextPage Called');
+
+    if (!timerRef) {
+      timerRef = setTimeout(() => {
+        if (currentPage < Math.ceil(totalUser / PAGE_SIZE)) {
+          setCurrentPage(currentPage + 1);
+        }
+        timerRef = undefined; // Reset timer reference
+      }, 300);
     }
   };
 
@@ -89,10 +98,10 @@ const Peoples = () => {
 
   useEffectOnce(() => {
     setCurrentPage(currentPage + 1);
+    getFollowings();
   });
   useEffect(() => {
     getAllPost();
-    getFollowings();
   }, [getAllPost]);
 
   useEffect(() => {
