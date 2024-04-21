@@ -20,17 +20,16 @@ const Followings = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
-  const followUser = async (user: IUser) => {
+  const followUser = async (user: IFollower) => {
     try {
       await FollowerUtils.followUser(user, dispatch);
     } catch (error) {
       Utils.addErrorNotification(error, dispatch);
     }
   };
-  const unfollowUser = async (user: IUser) => {
+  const unfollowUser = async (user: IFollower) => {
     try {
-      const followObj = FollowerUtils.getFollowObj(user);
-      socketService.socket.emit('UNFOLLOW_USER', followObj);
+      socketService.socket.emit('UNFOLLOW_USER', user);
       await FollowerUtils.unfollowUser(user, dispatch);
     } catch (error) {
       Utils.addErrorNotification(error, dispatch);

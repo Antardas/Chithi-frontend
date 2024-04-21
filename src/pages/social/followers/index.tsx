@@ -85,7 +85,7 @@ const Followers = () => {
 
             <CardElement postCount={item.postCount} followersCount={item.followersCount} followingCount={item.followingCount} />
             <CardElementButton
-              isChecked={Utils.checkIfUserIsBlocked(blockedUsers, profile?._id as string)}
+              isChecked={Utils.checkIfUserIsBlocked(blockedUsers, item._id)}
               btnTextOne="Block"
               btnTextTwo="Unblock"
               onClickBtnOne={() => blockUser(item)}
