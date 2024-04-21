@@ -62,18 +62,27 @@ const router = createBrowserRouter([
       {
         path: 'people',
         element: (
-          <Suspense fallback={'loading'}>
+          <Suspense fallback={<CardSkeleton/>}>
             <Peoples />
           </Suspense>
         )
       },
       {
         path: 'followers',
-        element: <Followers />
+        element: (
+          <Suspense fallback={<CardSkeleton/>}>
+            {' '}
+            <Followers />
+          </Suspense>
+        )
       },
       {
         path: 'following',
-        element: <Followings />
+        element: (
+          <Suspense fallback={<CardSkeleton/>}>
+            <Followings />
+          </Suspense>
+        )
       },
       {
         path: 'photos',
