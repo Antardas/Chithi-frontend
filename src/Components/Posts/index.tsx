@@ -23,9 +23,9 @@ const Posts = ({ posts, userFollowing, postsLoading }: IPostsProps) => {
       {postsLoading ? <PostsSkeleton /> : null}
       {posts.map((post) => (
         <div key={`post-container-${post._id}`} data-testid="posts-item">
-          {!Utils.checkIfUserIsBlocked(profile?.blockedBy as string[], profile?._id as string) || post.userId === profile?._id ? (
+          {!Utils.checkIfUserIsBlocked(profile?.blockedBy as string[], post.userId)|| post.userId === profile?._id  ? (
             PostUtils.checkPrivacy(post, profile as IUser, followings) ? (
-              <Post post={post} showIcons={true} loading={loading} key={`post-${post._id}`} />
+              <Post post={post} showIcons={false} loading={loading} key={`post-${post._id}`} />
             ) : null
           ) : null}
         </div>
