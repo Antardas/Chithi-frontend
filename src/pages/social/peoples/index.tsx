@@ -10,7 +10,10 @@ import useEffectOnce from '~/hooks/useEffectOnce';
 import useInfinityScroll from '~/hooks/useInfinityScroll';
 import '~/pages/social/peoples/Peoples.scss';
 import { RootState, useAppDispatch } from '~/redux/store';
+import { followerService } from '~/services/api/follower/follower.service';
 import { userService } from '~/services/api/user/user.service';
+import { socketService } from '~/services/socket/sokcet.service';
+import { FollowerUtils } from '~/services/utils/followers-utils.service';
 import { PostUtils } from '~/services/utils/post-utils.service';
 import { ProfileUtils } from '~/services/utils/profile-utils.service';
 import { Utils } from '~/services/utils/utils.service';
@@ -21,7 +24,7 @@ const PAGE_SIZE = 12;
 const Peoples = () => {
   const [users, setUsers] = useState<IUser[]>([]);
   const [onlineUser, setOnlinUsers] = useState<unknown[]>([]);
-  const [followers, setFollowers] = useState<IFollower[]>([]);
+  const [followings, setFollowings] = useState<IFollower[]>([]);
   const { profile } = useSelector((state: RootState) => state.user);
   const [loading, setLoading] = useState<boolean>(false);
   const [currentPage, setCurrentPage] = useState<number>(0);
@@ -47,7 +50,6 @@ const Peoples = () => {
           const newUsers = Utils.uniqueByKey(uniquePosts, '_id');
           setUsers(newUsers);
         }
-        setFollowers(result.data.data.followers);
       }
     } catch (error) {
       Utils.addErrorNotification(error, dispatch);
@@ -55,9 +57,34 @@ const Peoples = () => {
     setLoading(false);
   }, [currentPage, dispatch]);
 
-  const followUser = async () => {};
-  const unfollowUser = async () => {};
-
+  const followUser = async (user: IUser) => {
+    try {
+      await FollowerUtils.followUser(user, dispatch);
+    } catch (error) {
+      Utils.addErrorNotification(error, dispatch);
+    }
+  };
+  const unfollowUser = async (user: IUser) => {
+    try {
+      user.followersCount -= 1;
+      const followObj = FollowerUtils.getFollowObj(user);
+      socketService.socket.emit('UNFOLLOW_USER', followObj);
+      await FollowerUtils.unfollowUser(user, dispatch);
+    } catch (error) {
+      Utils.addErrorNotification(error, dispatch);
+    }
+  };
+  const getFollowings = async () => {
+    try {
+      const result = await followerService.getUserFollowing();
+      if (result.data.data.length) {
+        const newUsers = Utils.uniqueByKey(result.data.data, '_id');
+        setFollowings(newUsers);
+      }
+    } catch (error) {
+      Utils.addErrorNotification(error, dispatch);
+    }
+  };
   useInfinityScroll(bodyRef, bottomLineRef, setNextPage);
 
   useEffectOnce(() => {
@@ -65,7 +92,12 @@ const Peoples = () => {
   });
   useEffect(() => {
     getAllPost();
+    getFollowings();
   }, [getAllPost]);
+
+  useEffect(() => {
+    FollowerUtils.socketIOFollowAndUnfollow(users, followings, setUsers, setFollowings);
+  }, [followings, users]);
   return (
     <div className="card-container" ref={bodyRef}>
       <div className="people">People</div>
@@ -90,8 +122,8 @@ const Peoples = () => {
             <CardElement postCount={item.postsCount} followersCount={item.followersCount} followingCount={item.followingCount} />
             <CardElementButton
               isChecked={Utils.checkIfUserIsFollowed(
-                followers.map((follower) => follower.username),
-                profile?.username as string,
+                followings.map((follower) => follower._id),
+                item?._id as string,
                 ''
               )}
               btnTextOne="Follow"
