@@ -2,7 +2,7 @@ import { socketService } from '~/services/socket/sokcet.service';
 import { Utils } from '~/services/utils/utils.service';
 import { closeModal } from '~/redux/reducers/modal/modal.reducer';
 import { clearPostItem, updatePostItem } from '~/redux/reducers/post/post.reducer';
-import { AppDispatch } from '~/redux/store';
+import { AppDispatch, RootState, store } from '~/redux/store';
 import { IPost, IPostData, IPostDataEdit } from '~/types/post';
 import { postService } from '../api/post/post.service';
 import { NotificationType } from '~/Components/Toast';
@@ -220,40 +220,49 @@ export class PostUtils {
 
   static socketIOPost(posts: IPost[], dispatch: AppDispatch) {
     const clonedPosts = Utils.cloneDeep(posts) as IPost[];
-    socketService.socket && socketService.socket.on('addPost', (data: IPost) => {
-      clonedPosts.unshift(data);
-      dispatch(addPosts(clonedPosts));
-    });
+    socketService.socket &&
+      socketService.socket.on('addPost', (data: IPost) => {
+        const { profile } = store.getState().user;
+        if (!profile?.blockedBy.find((item) => item === data.userId)) {
+          clonedPosts.unshift(data);
 
-    socketService.socket && socketService.socket.on('update post', (data: IPost) => {
-      console.log('🚀 ~ PostUtils ~ socketService.socket.on ~ data:', data);
+          dispatch(addPosts(clonedPosts));
+        }
+      });
 
-      PostUtils.updateSinglePost(posts, data, dispatch);
-    });
+    socketService.socket &&
+      socketService.socket.on('update post', (data: IPost) => {
+        console.log('🚀 ~ PostUtils ~ socketService.socket.on ~ data:', data);
 
-    socketService.socket && socketService.socket.on('delete post', (postId: string) => {
-      let clonedPosts = Utils.cloneDeep(posts) as IPost[];
-      clonedPosts = clonedPosts.filter((data) => data._id !== postId);
-      dispatch(addPosts(clonedPosts));
-    });
+        PostUtils.updateSinglePost(posts, data, dispatch);
+      });
+
+    socketService.socket &&
+      socketService.socket.on('delete post', (postId: string) => {
+        let clonedPosts = Utils.cloneDeep(posts) as IPost[];
+        clonedPosts = clonedPosts.filter((data) => data._id !== postId);
+        dispatch(addPosts(clonedPosts));
+      });
 
     // TODO: fix the Type
-    socketService.socket && socketService.socket.on('update like', (data: SocketReactionResponse) => {
-      const post = posts.find((item) => item._id === data.postId);
+    socketService.socket &&
+      socketService.socket.on('update like', (data: SocketReactionResponse) => {
+        const post = posts.find((item) => item._id === data.postId);
 
-      if (post) {
-        post.reactions = data.postReactions;
-        PostUtils.updateSinglePost(posts, post, dispatch);
-      }
-    });
+        if (post) {
+          post.reactions = data.postReactions;
+          PostUtils.updateSinglePost(posts, post, dispatch);
+        }
+      });
     // TODO: fix the Type
-    socketService.socket && socketService.socket.on('update comment', (data: ICommentSocketResponse) => {
-      const post = posts.find((item) => item._id === data.postId);
-      if (post) {
-        post.commentCount = data.commentsCount;
-        PostUtils.updateSinglePost(posts, post, dispatch);
-      }
-    });
+    socketService.socket &&
+      socketService.socket.on('update comment', (data: ICommentSocketResponse) => {
+        const post = posts.find((item) => item._id === data.postId);
+        if (post) {
+          post.commentCount = data.commentsCount;
+          PostUtils.updateSinglePost(posts, post, dispatch);
+        }
+      });
   }
 
   static updateSinglePost(posts: IPost[], post: IPost, dispatch: AppDispatch) {
@@ -310,7 +319,8 @@ interface IClearImage<T> {
   setPostData: SetState<T>;
 }
 
-interface IPostInputInputData extends Omit<IClearImage<IPostDataEdit | IPostData>, 'dispatch' | 'setPostImage' | 'inputRef' | 'setSelectedPostImage'> {
+interface IPostInputInputData
+  extends Omit<IClearImage<IPostDataEdit | IPostData>, 'dispatch' | 'setPostImage' | 'inputRef' | 'setSelectedPostImage'> {
   imageInputRef: React.RefObject<HTMLDivElement>;
 }
 
