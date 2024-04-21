@@ -9,11 +9,11 @@ import { addToSuggestion } from '~/redux/reducers/suggestion/suggestion.reducer'
 import { addUser } from '~/redux/reducers/user/user.reducer';
 
 export class FollowerUtils {
-  static async followUser(user: IUser, dispatch: AppDispatch) {
+  static async followUser(user: IFollower, dispatch: AppDispatch) {
     const response = await followerService.followUser(user._id);
     Utils.dispatchNotification(response.data.message, 'success', dispatch);
   }
-  static async unfollowUser(user: IUser, dispatch: AppDispatch) {
+  static async unfollowUser(user: IFollower, dispatch: AppDispatch) {
     const response = await followerService.unfollowUser(user._id);
     Utils.dispatchNotification(response.data.message, 'success', dispatch);
   }

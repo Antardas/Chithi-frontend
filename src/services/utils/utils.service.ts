@@ -146,6 +146,10 @@ export class Utils {
     return `${word.charAt(0).toUpperCase()}${word.slice(1)}`;
   }
 
+  static checkUrl(url:string, word:string) {
+    return url.includes(word);
+  }
+
   static addErrorNotification(error: unknown, dispatch: AppDispatch) {
     if (isAxiosError(error)) {
       const typedError: AxiosError<IError> = error;
