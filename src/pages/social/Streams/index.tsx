@@ -13,10 +13,12 @@ import { getPosts } from '~/redux/api/posts';
 import { getSuggestions } from '~/redux/api/suggestion';
 import { addReactions } from '~/redux/reducers/post/userReactions.reducer';
 import { RootState, useAppDispatch } from '~/redux/store';
+import { followerService } from '~/services/api/follower/follower.service';
 import { postService } from '~/services/api/post/post.service';
 import { PostUtils } from '~/services/utils/post-utils.service';
 import { Utils } from '~/services/utils/utils.service';
 import { IError } from '~/types/axios';
+import { IFollower } from '~/types/follower';
 
 const PAGE_SIZE = 10;
 
@@ -26,9 +28,10 @@ const Streams = () => {
   const { profile } = useSelector((state: RootState) => state.user);
   const [loading, setLoading] = useState<boolean>(false);
   const [currentPage, setCurrentPage] = useState<number>(0);
+  const [followings, setFollowings] = useState<IFollower[]>([])
   const bodyRef = useRef<HTMLInputElement | null>(null);
   const bottomLineRef = useRef<HTMLInputElement | null>(null);
-  const dispatch = useAppDispatch();
+  const dispatch = useAppDispatch(); 
   const [username] = useLocalStorage('username');
 
   const fetchNextPost = () => {
@@ -39,6 +42,17 @@ const Streams = () => {
     }
   };
 
+  const getFollowings = async () => {
+    try {
+      const result = await followerService.getUserFollowing();
+      if (result.data.data.length) {
+        const newUsers = Utils.uniqueByKey(result.data.data, '_id');
+        setFollowings(newUsers);
+      }
+    } catch (error) {
+      Utils.addErrorNotification(error, dispatch);
+    }
+  };
   const getAllPost = () => {
     setLoading(true);
     try {
@@ -77,7 +91,7 @@ const Streams = () => {
   useEffectOnce(() => {
     dispatch(getSuggestions());
     setCurrentPage(currentPage + 1);
-
+    getFollowings()
     // getAllPost();
     // dispatch(getPosts(1));
   });
@@ -109,7 +123,7 @@ const Streams = () => {
           <PostForm />
           {/* <div>Post Items</div>
            */}
-          <Posts posts={posts} userFollowing={[]} postsLoading={isLoading} />
+          <Posts posts={posts} userFollowing={followings} postsLoading={isLoading} />
           <div
             style={{
               marginBottom: '50px',
