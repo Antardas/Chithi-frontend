@@ -68,7 +68,7 @@ const Peoples = () => {
 
   const followUser = async (user: IUser) => {
     try {
-      await FollowerUtils.followUser(user, dispatch);
+      await FollowerUtils.followUser(user as unknown as IFollower, dispatch);
     } catch (error) {
       Utils.addErrorNotification(error, dispatch);
     }
@@ -78,7 +78,7 @@ const Peoples = () => {
       user.followersCount -= 1;
       const followObj = FollowerUtils.getFollowObj(user);
       socketService.socket.emit('UNFOLLOW_USER', followObj);
-      await FollowerUtils.unfollowUser(user, dispatch);
+      await FollowerUtils.unfollowUser(user as unknown as IFollower, dispatch);
     } catch (error) {
       Utils.addErrorNotification(error, dispatch);
     }
