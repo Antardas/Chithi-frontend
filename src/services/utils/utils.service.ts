@@ -130,7 +130,7 @@ export class Utils {
     return blocked.some((id) => id === userId);
   }
   static checkIfUserIsFollowed(followers: string[], postCreatorId: string, userId: string) {
-    return followers.some((id) => id === postCreatorId || id === userId);
+    return followers.some((id) => id === postCreatorId || postCreatorId === userId);
   }
 
 

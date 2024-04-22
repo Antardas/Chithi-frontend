@@ -16,6 +16,7 @@ import { Suspense, lazy } from 'react';
 import StreamSkeleton from '~/pages/social/Streams/StreamSkeleton';
 import NotificationSkeleton from '~/pages/social/notification/NotificationSkeleton';
 import CardSkeleton from './Components/CardElement/CardSkeleton';
+import PhotosSkeleton from './pages/social/photos/PhotosSkeleton';
 
 const Social = lazy(() => import('~/pages/social'));
 const Streams = lazy(() => import('~/pages/social/Streams'));
@@ -62,7 +63,7 @@ const router = createBrowserRouter([
       {
         path: 'people',
         element: (
-          <Suspense fallback={<CardSkeleton/>}>
+          <Suspense fallback={<CardSkeleton />}>
             <Peoples />
           </Suspense>
         )
@@ -70,7 +71,7 @@ const router = createBrowserRouter([
       {
         path: 'followers',
         element: (
-          <Suspense fallback={<CardSkeleton/>}>
+          <Suspense fallback={<CardSkeleton />}>
             {' '}
             <Followers />
           </Suspense>
@@ -79,14 +80,18 @@ const router = createBrowserRouter([
       {
         path: 'following',
         element: (
-          <Suspense fallback={<CardSkeleton/>}>
+          <Suspense fallback={<CardSkeleton />}>
             <Followings />
           </Suspense>
         )
       },
       {
         path: 'photos',
-        element: <Photos />
+        element: (
+          <Suspense fallback={<PhotosSkeleton/>}>
+            <Photos />
+          </Suspense>
+        )
       },
       {
         path: 'notifications',

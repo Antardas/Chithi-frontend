@@ -198,7 +198,6 @@ export class PostUtils {
 
     // means if I have already followed that author || or that author in my following array
     const isFollowers = post.privacy === 'Followers' && Utils.checkIfUserIsFollowed(following, post.userId, profile._id);
-
     return isPrivate || isPublic || isFollowers;
   }
 

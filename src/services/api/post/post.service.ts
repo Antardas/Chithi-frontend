@@ -31,6 +31,11 @@ class PostService {
     const response = await axios.get<IGetPostsApiResponse>(`/post/all/${page}`);
     return response;
   }
+
+  async getPostWithImage(page: number = 1) {
+    const response = await axios.get<IGetPostsApiResponse>(`/post/all/images/${page}`);
+    return response;
+  }
   async getReactionsByUsername(username: string) {
     const response = await axios.get<UserReactionsResponse>(`/post/single/reactions/${username}`);
     return response;
