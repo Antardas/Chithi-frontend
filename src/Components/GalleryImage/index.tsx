@@ -5,7 +5,7 @@ import Avatar from '../Avatar';
 import { profile } from 'console';
 import { timeAgo } from '~/services/utils/timeago.utils';
 import '~/Components/GalleryImage/GalleryImage.scss'
-const GalleryImage = ({ imgSrc, onClick, onRemoveImage, post, showCaption, showDelete }: IGalleryImage) => {
+const GalleryImage = ({ imgSrc, onClick, onRemoveImage, post, showCaption, showDelete }: IGalleryImageProps) => {
   return (
     <figure className="gallery-image" onClick={onClick} data-testid="gallery">
       <div className="gallery-image__crop">
@@ -33,7 +33,7 @@ const GalleryImage = ({ imgSrc, onClick, onRemoveImage, post, showCaption, showD
 
 export default GalleryImage;
 
-export interface IGalleryImage {
+export interface IGalleryImageProps {
   post: IPost;
   showCaption: boolean;
   showDelete: boolean;

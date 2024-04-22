@@ -142,7 +142,7 @@ const Photos = () => {
       ) : null}
       <div className="photos-container">
         <div className="photos">Photos</div>
-        <div className="gallery-images">
+        <div className="gallery-images" data-testid='gallery-images'>
           {posts.map((post, index) => (
             <div key={post._id} className={!emptyPost(post) ? 'empty-post-div' : ''}>
               {!Utils.checkIfUserIsBlocked(profile?.blockedBy as string[], post.userId) || post.userId === profile?._id ? (

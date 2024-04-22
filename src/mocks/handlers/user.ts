@@ -18,7 +18,7 @@ export const getUserProfileByIdUserTwoMock = http.get(`${BASE_URL}/user/profile/
   return HttpResponse.json(result, { status: 200 });
 });
 
-export const getAllUsersMock = http.get(`${BASE_URL}/users?page=1`, () => {
+export const getAllUsersMock = http.get(`${BASE_URL}/users`, () => {
   const result = {
     message: 'Get users',
     data: {
@@ -30,12 +30,14 @@ export const getAllUsersMock = http.get(`${BASE_URL}/users?page=1`, () => {
   return HttpResponse.json(result, { status: 200 });
 });
 
-export const emptyUsersMock = http.get(`${BASE_URL}/users?page=1`, () => {
+export const emptyUsersMock = http.get(`${BASE_URL}/users`, () => {
   const result = {
     message: 'Get users',
-    users: [],
-    followers: [],
-    totalUsers: 0
+    data: {
+      users: [],
+      followers: [],
+      totalUsers: 0
+    }
   };
   return HttpResponse.json(result, { status: 200 });
 });
