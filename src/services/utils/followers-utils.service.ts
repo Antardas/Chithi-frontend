@@ -96,27 +96,27 @@ export class FollowerUtils {
     });
   }
 
-  static addBlockedUser(user: IUser, data: ISocketBlockedData) {
-    const clonedUser = Utils.cloneDeep(user) as IUser;
-    if (clonedUser._id === data.blockedBy) {
-      clonedUser.blocked.push(data.blockedBy);
+  static addBlockedUser(profile: IUser, data: ISocketBlockedData) {
+    const clonedProfile = Utils.cloneDeep(profile) as IUser;
+    if (clonedProfile._id === data.blockedBy) {
+      clonedProfile.blocked.push(data.blockedUser);
     }
-    if (clonedUser._id === data.blockedUser) {
-      clonedUser.blockedBy.push(data.blockedUser);
+    if (clonedProfile._id === data.blockedUser) {
+      clonedProfile.blockedBy.push(data.blockedBy);
     }
 
-    return clonedUser;
+    return clonedProfile;
   }
-  static removeBlockUser(user: IUser, data: ISocketBlockedData) {
-    const clonedUser = Utils.cloneDeep(user) as IUser;
-    if (clonedUser._id === data.blockedBy) {
-      clonedUser.blocked = clonedUser.blocked.filter((item) => item !== data.blockedBy);
+  static removeBlockUser(profile: IUser, data: ISocketBlockedData) {
+    const clonedProfile = Utils.cloneDeep(profile) as IUser;
+    if (clonedProfile._id === data.blockedBy) {
+      clonedProfile.blocked = clonedProfile.blocked.filter((item) => item !== data.blockedUser);
     }
-    if (clonedUser._id === data.blockedUser) {
-      clonedUser.blockedBy = clonedUser.blockedBy.filter((item) => item !== data.blockedUser);
+    if (clonedProfile._id === data.blockedUser) {
+      clonedProfile.blockedBy = clonedProfile.blockedBy.filter((item) => item !== data.blockedBy);
     }
 
-    return clonedUser;
+    return clonedProfile;
   }
 
   static updateSingleUser(users: IUser[], userData: IUser, follower: IFollower, setUsers: SetState<IUser[]>) {

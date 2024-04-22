@@ -74,7 +74,7 @@ const Followers = () => {
       <div className="card-element">
         {/* People Card */}
         {followers.map((item, index) => (
-          <div className="card-element-item" key={`users-${index}`} data-testid="card-element-item">
+          <div className="card-element-item" key={`users-${item._id}`} data-testid="card-element-item">
             <div className="card-element-header">
               <div className="card-element-header-bg"></div>
               <Avatar name={item.username} bgColor={item.avatarColor} textColor="#ffffff" size={120} avatarSrc={item.profilePicture} />
