@@ -180,6 +180,9 @@ const Post = ({ post: rawPost, showIcons }: IPostProps) => {
                     setImageUrl(post.gifUrl as string);
                   }}
                 >
+                  <div className="background">
+                    <img className="image" src={`${post?.gifUrl}`} alt="" />
+                  </div>
                   <img className="post-image" src={`${post?.gifUrl}`} alt="" />
                 </div>
               )}

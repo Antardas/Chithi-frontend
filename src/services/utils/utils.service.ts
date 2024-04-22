@@ -130,7 +130,7 @@ export class Utils {
     return blocked.some((id) => id === userId);
   }
   static checkIfUserIsFollowed(followers: string[], postCreatorId: string, userId: string) {
-    return followers.some((id) => id === postCreatorId || id === userId);
+    return followers.some((id) => id === postCreatorId || postCreatorId === userId);
   }
 
 
@@ -144,6 +144,10 @@ export class Utils {
     }
 
     return `${word.charAt(0).toUpperCase()}${word.slice(1)}`;
+  }
+
+  static checkUrl(url:string, word:string) {
+    return url.includes(word);
   }
 
   static addErrorNotification(error: unknown, dispatch: AppDispatch) {

@@ -1,4 +1,3 @@
-
 import { BASE_URL } from '~/services/axios';
 import { HttpResponse, http } from 'msw';
 import { existingUser, existingUserThree, existingUserTwo } from '../data/user.mock';
@@ -19,22 +18,26 @@ export const getUserProfileByIdUserTwoMock = http.get(`${BASE_URL}/user/profile/
   return HttpResponse.json(result, { status: 200 });
 });
 
-export const getAllUsersMock = http.get(`${BASE_URL}/user/all/1`, () => {
+export const getAllUsersMock = http.get(`${BASE_URL}/users`, () => {
   const result = {
     message: 'Get users',
-    users: [existingUserTwo, existingUserThree],
-    followers: [existingUserThree],
-    totalUsers: 2
+    data: {
+      users: [existingUserTwo, existingUserThree],
+      followers: [existingUserThree],
+      totalUsers: 2
+    }
   };
   return HttpResponse.json(result, { status: 200 });
 });
 
-export const emptyUsersMock = http.get(`${BASE_URL}/user/all/1`, () => {
+export const emptyUsersMock = http.get(`${BASE_URL}/users`, () => {
   const result = {
     message: 'Get users',
-    users: [],
-    followers: [],
-    totalUsers: 0
+    data: {
+      users: [],
+      followers: [],
+      totalUsers: 0
+    }
   };
   return HttpResponse.json(result, { status: 200 });
 });

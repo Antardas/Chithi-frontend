@@ -65,4 +65,9 @@ interface ICurrentUser {
   isUser: boolean;
 }
 
-export type { ISignUpResponse, IUser, INotificationSettings, IBasicInfo, ISocialLinks, IUserState, ISuggestionUser, ICurrentUser };
+ interface ISocketBlockedData {
+  blockedUser: string;
+  blockedBy: string;
+}
+
+export type { ISignUpResponse, IUser, INotificationSettings, IBasicInfo, ISocialLinks, IUserState, ISuggestionUser, ICurrentUser, ISocketBlockedData };

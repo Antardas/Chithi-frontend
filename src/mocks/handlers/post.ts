@@ -17,7 +17,7 @@ export const emptyPostsMock = http.get(`${BASE_URL}/post/all/1`, () => {
   });
 });
 
-export const getPostsWithImagesMock = http.get(`${BASE_URL}/post/images/1`, () => {
+export const getPostsWithImagesMock = http.get(`${BASE_URL}/post/all/images/1`, () => {
   const postWithImageOne = postMockData;
   postWithImageOne.imgVersion = '1652904922';
   postWithImageOne.imgId = 'sample.jpg';
@@ -27,7 +27,7 @@ export const getPostsWithImagesMock = http.get(`${BASE_URL}/post/images/1`, () =
   });
 });
 
-export const emptyPostsWithImagesMock = http.get(`${BASE_URL}/post/images/1`, () => {
+export const emptyPostsWithImagesMock = http.get(`${BASE_URL}/post/all/images/1`, () => {
   const result = { message: 'All posts with images', posts: [] };
   return HttpResponse.json(result, {
     status: 200
