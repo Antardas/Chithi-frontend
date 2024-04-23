@@ -1,13 +1,23 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { FaSearch, FaTimes } from 'react-icons/fa';
 import { useSelector } from 'react-redux';
 import Avatar from '~/Components/Avatar';
 import '~/Components/Chat/List/ChatList.scss';
 import Input from '~/Components/Input';
 import { RootState } from '~/redux/store';
+import SearchList from '../Search';
+import { IUser } from '~/types/user';
 const ChatList = () => {
   const { profile } = useSelector((sate: RootState) => sate.user);
+  const { chatList } = useSelector((sate: RootState) => sate.chat);
   const removeSelectedUserFromList = () => {};
+  const [result, setResult] = useState<IUser[]>([]);
+  const [isSearching, setIsSearching] = useState<boolean>(false);
+  const [searchTerm, setSearchTerm] = useState<string>('');
+  const [selectedUser, setSelectedUser] = useState<IUser | null>(null);
+  const [componentType, setComponentType] = useState<string>('chatList');
+
+
   return (
     <div data-testid="chatList">
       <div className="conversation-container">
@@ -32,7 +42,7 @@ const ChatList = () => {
 
         <div className="conversation-container-body">
           <div className="conversation">
-            {[].map((data) => (
+            {[].map((_data) => (
               <div data-testid="conversation-item" className="conversation-item">
                 <div className="avatar">
                   <Avatar name="placeholder" bgColor="red" textColor="#ffffff" size={40} avatarSrc="" />
@@ -53,7 +63,17 @@ const ChatList = () => {
               </div>
             ))}
           </div>
-          {'<!--'}search component {'-->'}
+
+          <SearchList
+            result={result}
+            isSearching={isSearching}
+            searchTerm={searchTerm}
+            setComponentType={setComponentType}
+            setResult={setResult}
+            setIsSearching={setIsSearching}
+            setSearch={setSearchTerm}
+            setSelectedUser={setSelectedUser}
+          />
         </div>
       </div>
     </div>
