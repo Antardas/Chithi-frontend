@@ -8,6 +8,7 @@ import modalReducer from '~/redux/reducers/modal/modal.reducer';
 import postReducer from '~/redux/reducers/post/post.reducer';
 import postsReducer from '~/redux/reducers/post/posts.reducer';
 import userReactionsReducer from '~/redux/reducers/post/userReactions.reducer';
+import chatReducer from '~/redux/reducers/chat/chat.reducer';
 
 const store = configureStore({
   reducer: {
@@ -18,7 +19,8 @@ const store = configureStore({
     modal: modalReducer,
     post: postReducer,
     posts: postsReducer,
-    userReactions: userReactionsReducer
+    userReactions: userReactionsReducer, 
+    chat: chatReducer
   }
 });
 

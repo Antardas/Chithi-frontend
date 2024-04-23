@@ -5,6 +5,7 @@ import { Navigate, useNavigate } from 'react-router-dom';
 import useEffectOnce from '~/hooks/useEffectOnce';
 import useLocalStorage from '~/hooks/useLocalStorage';
 import useSessionStorage from '~/hooks/useSessionStorage';
+import { getConversationList } from '~/redux/api/chat';
 import { addUser } from '~/redux/reducers/user/user.reducer';
 import { RootState, useAppDispatch } from '~/redux/store';
 import { userService } from '~/services/api/user/user.service';
@@ -28,6 +29,7 @@ const ProtectedRoutes: React.FC<{ children: React.ReactNode }> = ({ children }) 
           profile: response.data.user
         })
       );
+      dispatch(getConversationList())
     } catch (error) {
       console.log(error);
       setTimeout(async () => {
