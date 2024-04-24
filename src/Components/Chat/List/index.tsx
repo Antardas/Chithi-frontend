@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { MouseEventHandler, useCallback, useEffect, useState } from 'react';
 import { FaSearch, FaTimes } from 'react-icons/fa';
 import { useSelector } from 'react-redux';
 import Avatar from '~/Components/Avatar';
@@ -12,14 +12,15 @@ import { userService } from '~/services/api/user/user.service';
 import useDebounce from '~/hooks/useDebounce';
 import { ChatUtils, IMessageDataParams } from '~/services/utils/chat-utils.service';
 import { IConversationUsers, IMessageList } from '~/types/chat';
-import { useSearchParams } from 'react-router-dom';
+import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import { setSelectedChatUser } from '~/redux/reducers/chat/chat.reducer';
 import { chatService } from '~/services/api/chat/chat.service';
+import { timeAgo } from '~/services/utils/timeago.utils';
+import ChatListBody from './ChatListBody';
 export type COMPONENT_TYPE = 'chatList' | 'searchList' | '';
 const ChatList = () => {
   const { profile } = useSelector((sate: RootState) => sate.user);
   const { chatList } = useSelector((sate: RootState) => sate.chat);
-  const removeSelectedUserFromList = () => {};
   const [result, setResult] = useState<ISearchUser[]>([]);
   const [isSearching, setIsSearching] = useState<boolean>(false);
   const [searchTerm, setSearchTerm] = useState<string>('');
@@ -29,6 +30,8 @@ const ChatList = () => {
   const [searchParams] = useSearchParams();
   const dispatch = useAppDispatch();
   const searchDebounce = useDebounce(searchTerm, 1000);
+  const navigate = useNavigate();
+  const location = useLocation();
 
   const searchUsers = useCallback(
     async (query: string) => {
@@ -96,6 +99,53 @@ const ChatList = () => {
     },
     [chatList, chatMessageList, dispatch, searchParams, profile]
   );
+
+  const updateQueryParams = (user: IMessageList) => {
+    // setSelectedUser(user);
+    const obj = {
+      receiverId: user.receiverId,
+      receiverName: user.receiverUsername,
+      senderId: user.senderId,
+      senderName: user.senderUsername
+    };
+    const params = ChatUtils.chatUrlParams(obj, profile as IUser);
+    ChatUtils.joinRoomEvent(obj, profile as IUser);
+    ChatUtils.privateChatMessages = [];
+    return params;
+  };
+
+  const removeSelectedUserFromList = (event: MouseEventHandler<HTMLDivElement>) => {
+    // event.stopPropagation();
+    const clonedChatList = Utils.cloneDeep(chatMessageList) as IMessageList[];
+    const paramsUserId = searchParams.get('id');
+    const index = clonedChatList.findIndex((item) => item.receiverId === paramsUserId);
+
+    if (index !== 1) {
+      clonedChatList.splice(index, 1);
+      setSelectedUser(null);
+      setChatMessageList(clonedChatList);
+      ChatUtils.updateSelectedUser({
+        chatMessageList: clonedChatList,
+        dispatch,
+        navigate,
+        params: chatMessageList.length ? updateQueryParams(chatMessageList[0]) : {} as unknown as any,
+        pathname: `${location.pathname}`,
+        profile: profile as IUser,
+        setSelectedChatUser,
+        username: searchParams.get('username') as string
+      });
+    }
+  };
+
+  const isMatchedUsername = (data: IMessageList) => {
+    const paramsUserName = searchParams.get('username');
+    if (paramsUserName === data.receiverUsername.toLowerCase() || paramsUserName === data.senderUsername.toLowerCase()) {
+      return true;
+    } else {
+      return false;
+    }
+  };
+
   useEffect(() => {
     if (searchDebounce) {
       searchUsers(searchDebounce);
@@ -161,24 +211,32 @@ const ChatList = () => {
 
         <div className="conversation-container-body">
           <div className="conversation">
-            {[].map((_data) => (
-              <div data-testid="conversation-item" className="conversation-item">
+            {chatMessageList.map((data) => (
+              <div data-testid="conversation-item" className={`conversation-item ${isMatchedUsername(data) ? 'active' : ''}`}>
                 <div className="avatar">
-                  <Avatar name="placeholder" bgColor="red" textColor="#ffffff" size={40} avatarSrc="" />
+                  <Avatar
+                    name={data.receiverUsername !== profile?.username ? profile?.username : data.senderUsername}
+                    bgColor={data.receiverUsername !== profile?.username ? data.receiverAvatarColor : data.senderAvatarColor}
+                    textColor="#ffffff"
+                    size={40}
+                    avatarSrc={data.receiverUsername !== profile?.username ? data.receiverProfilePicture : data.senderProfilePicture}
+                  />
                 </div>
-                <div className="title-text">Danny</div>
-                <div className="created-date">1 hr ago</div>
-                <div className="created-date" onClick={removeSelectedUserFromList}>
-                  <FaTimes />
+                <div className={`title-text ${selectedUser && !data.body ? 'selected-user-text' : ''}`}>
+                  {data.receiverUsername !== profile?.username ? data.receiverUsername : data.senderUsername}
                 </div>
-                {'<'} !-- chat list body component -- {'>'}
-                <div className="conversation-message">
-                  <span className="message-deleted">message deleted</span>
-                </div>
-                <div className="conversation-message">
-                  <span className="message-deleted">message deleted</span>
-                </div>
-                {' <!-- '}chat list body component {'-->'}
+                {data.createdAt ? <div className="created-date">{timeAgo.transform(data.createdAt)}</div> : null}
+                {!data.body ? (
+                  <div className="created-date" onClick={removeSelectedUserFromList}>
+                    <FaTimes />
+                  </div>
+                ) : null}
+                {data.body && !data.deleteForMe && !data.deleteForEveryone ? <ChatListBody data={data} profile={profile as IUser} /> : null}
+                {data.body && (data.deleteForEveryone || (data.deleteForMe && data.senderUsername === profile?.username)) ? (
+                  <div className="conversation-message">
+                    <span className="message-deleted">message deleted</span>
+                  </div>
+                ) : null}
               </div>
             ))}
           </div>

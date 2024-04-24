@@ -81,7 +81,7 @@
   }
 
   &-body {
-    overflow-y: scroll;
+    overflow-y: auto;
     height: 780px;
 
     .conversation {

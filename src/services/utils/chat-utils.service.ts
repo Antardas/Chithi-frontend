@@ -4,7 +4,7 @@ import { ISearchUser, IUser } from '~/types/user';
 import { IConversationUsers, IMessageList, ISenderReceiver } from '~/types/chat';
 import { AppDispatch } from '~/redux/store';
 import { ActionCreatorWithPayload } from '@reduxjs/toolkit';
-import { createSearchParams } from 'react-router-dom';
+import { createSearchParams, NavigateFunction } from 'react-router-dom';
 import { chatService } from '../api/chat/chat.service';
 import { Utils } from './utils.service';
 
@@ -181,7 +181,7 @@ interface IUpdateSelectedUserParams {
     id: string;
   };
   pathname: string;
-  navigate: (path: string) => void;
+  navigate: (path: string) => void | NavigateFunction;
   dispatch: AppDispatch;
 }
 
