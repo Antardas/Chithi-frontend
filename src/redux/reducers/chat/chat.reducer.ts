@@ -5,7 +5,7 @@ import { IGetALlNotificationResponse } from '~/types/notification';
 
 interface ChatStoreInitialState {
   chatList: IMessageList[];
-  selectedChatUser: null;
+  selectedChatUser: IMessageList | null;
   isLoading: boolean;
 }
 
@@ -23,7 +23,7 @@ interface IAddToChatList extends IAction {
 interface ISetSelectedChatUser extends IAction {
   payload: {
     isLoading: boolean;
-    user: null;
+    user: IMessageList | null;
   };
 }
 

@@ -58,7 +58,11 @@ const router = createBrowserRouter([
       },
       {
         path: 'chat/messages',
-        element: <Chat />
+        element: (
+          <Suspense fallback={<CardSkeleton />}>
+            <Chat />
+          </Suspense>
+        )
       },
       {
         path: 'people',
@@ -88,7 +92,7 @@ const router = createBrowserRouter([
       {
         path: 'photos',
         element: (
-          <Suspense fallback={<PhotosSkeleton/>}>
+          <Suspense fallback={<PhotosSkeleton />}>
             <Photos />
           </Suspense>
         )

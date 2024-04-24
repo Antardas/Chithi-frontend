@@ -7,7 +7,6 @@ const getConversationList = createAsyncThunk('chat/getChatList', async (_nothing
   try {
     const response = await chatService.getConversationList();
     return response.data;
-    return null;
   } catch (error) {
     Utils.addErrorNotification(error, thunkAPI.dispatch as AppDispatch);
   }

@@ -3,7 +3,8 @@ import { SetState } from '~/types/utils';
 import '~/Components/Chat/Search/SearchList.scss';
 import Avatar from '~/Components/Avatar';
 import { createSearchParams, useLocation, useNavigate } from 'react-router-dom';
-import { IUser } from '~/types/user';
+import { ISearchUser, IUser } from '~/types/user';
+import { COMPONENT_TYPE } from '../List';
 const SearchList = ({
   isSearching,
   result,
@@ -17,7 +18,7 @@ const SearchList = ({
   const location = useLocation();
   const navigate = useNavigate();
 
-  const addUsernameToUrlQuery = (user: IUser) => {
+  const addUsernameToUrlQuery = (user: ISearchUser) => {
     setComponentType('searchList');
     setSelectedUser(user);
     const url = `${location.pathname}?${createSearchParams({ username: user?.username as string, id: user._id })}`;
@@ -37,7 +38,7 @@ const SearchList = ({
                 key={user._id}
                 onClick={() => addUsernameToUrlQuery(user)}
               >
-                <Avatar name={user.usename} bgColor={user.avatarColor} textColor="#ffffff" size={40} avatarSrc={user.profilePicture} />
+                <Avatar name={user.username} bgColor={user.avatarColor} textColor="#ffffff" size={40} avatarSrc={user.profilePicture} />
                 <div className="username">{user.username}</div>
               </div>
             ))
@@ -61,12 +62,12 @@ const SearchList = ({
 export default SearchList;
 
 export interface SearchListProps {
-  result: IUser[];
+  result: ISearchUser[];
   isSearching: boolean;
   searchTerm: string;
-  setSelectedUser: SetState<IUser | null>;
+  setSelectedUser: SetState<ISearchUser | null>;
   setSearch: SetState<string>;
   setIsSearching: SetState<boolean>;
-  setResult: SetState<IUser[]>;
-  setComponentType: SetState<string>;
+  setResult: SetState<ISearchUser[]>;
+  setComponentType: SetState<COMPONENT_TYPE>;
 }
