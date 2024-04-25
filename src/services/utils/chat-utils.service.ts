@@ -9,8 +9,8 @@ import { chatService } from '../api/chat/chat.service';
 import { Utils } from './utils.service';
 
 export class ChatUtils {
-  static privateChatMessages: IMessageList[];
-  static chatUsers: IConversationUsers[];
+  static privateChatMessages: IMessageList[] = [];
+  static chatUsers: IConversationUsers[] = [];
 
   static usersOnline(setOnlineUsers: SetState<string[]>) {
     socketService.socket?.on('USER_ONLINE', (data: string[]) => {
