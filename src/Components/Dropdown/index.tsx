@@ -23,7 +23,7 @@ interface SettingsProps {
   onNavigate: () => void;
 }
 
-type DropdownProps = ((NotificationProps & { title: 'Notifications' }) | (SettingsProps & { title: 'Settings' })) & {
+export type DropdownProps = ((NotificationProps & { title: 'Notifications' }) | (SettingsProps & { title: 'Settings' })) & {
   data: ISettingsDropdown[];
   style?: CSSProperties;
   height?: number;
