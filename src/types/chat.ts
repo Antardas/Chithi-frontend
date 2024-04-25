@@ -39,3 +39,14 @@ export interface IConversationUsers {
   receiver: string;
 }
 
+export interface ISendMessageBody {
+  conversationId: string;
+  receiverId: string;
+  receiverUsername: string;
+  receiverAvatarColor: string;
+  receiverProfilePicture: string;
+  body: string;
+  gifUrl: string;
+  selectedImage: string;
+  isRead: boolean;
+}

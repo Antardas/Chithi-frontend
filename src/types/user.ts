@@ -64,6 +64,10 @@ interface ICurrentUser {
   user: IUser;
   isUser: boolean;
 }
+interface IGetUserById {
+  data: IUser;
+  message: string;
+}
 
 interface ISocketBlockedData {
   blockedUser: string;
@@ -94,5 +98,6 @@ export type {
   ICurrentUser,
   ISocketBlockedData,
   ISearchUser,
-  ISearchUserResponse
+  ISearchUserResponse,
+  IGetUserById
 };
