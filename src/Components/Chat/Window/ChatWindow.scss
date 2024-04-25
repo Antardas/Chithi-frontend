@@ -61,14 +61,15 @@
       "message-form";
     grid-template-columns: 1fr;
     grid-template-rows: 1fr max-content 45px;
-    height: 826px;
+    height: calc(100vh - 160px);
     position: relative;
     background-repeat: no-repeat;
+    padding-right: 15px;
 
     &-message {
       grid-area: message-body;
       height: 100%;
-      overflow-y: scroll;
+      overflow-y: auto ;
     }
 
     &-input {

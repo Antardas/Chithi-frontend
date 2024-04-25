@@ -25,7 +25,6 @@ const MessageInput = ({ setChatMessage }: { setChatMessage: (obj: ISendMessagePa
   const [message, setMessage] = useState<string>('');
   const fileInputRef = useRef<HTMLInputElement>(null);
   const messageInputRef = useRef<HTMLInputElement>(null);
-  
 
   const reset = () => {
     setShowEmojiPicker(false);
@@ -42,7 +41,10 @@ const MessageInput = ({ setChatMessage }: { setChatMessage: (obj: ISendMessagePa
     }
   };
   const addToPreview = async (file: File) => {
-    ImageUtils.checkFile(file);
+    const isImageIsValid = ImageUtils.checkFile(file);
+    if (!isImageIsValid) {
+      return;
+    }
     setFile(URL.createObjectURL(file));
     const result = await ImageUtils.readAsBase64(file);
     setFileBase64(result as string);

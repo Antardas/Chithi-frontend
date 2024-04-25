@@ -28,7 +28,9 @@ export class ImageUtils {
     if (hasError) {
       const errorMessages = hasError.split('\n').filter(Boolean);
       errorMessages.forEach((item) => window.alert(item));
+      return false;
     }
+    return true;
   }
 
   static addFileToRedux(

@@ -1,7 +1,7 @@
 import { SetState } from '~/types/utils';
 import { socketService } from '../socket/sokcet.service';
 import { ISearchUser, IUser } from '~/types/user';
-import { IConversationUsers, IMessageList, ISenderReceiver } from '~/types/chat';
+import { IConversationUsers, IMessageList, ISendMessageBody, ISenderReceiver } from '~/types/chat';
 import { AppDispatch } from '~/redux/store';
 import { ActionCreatorWithPayload } from '@reduxjs/toolkit';
 import { createSearchParams, NavigateFunction } from 'react-router-dom';
@@ -59,7 +59,7 @@ export class ChatUtils {
       (chatConversation) => chatConversation.receiverId === searchParamsId || chatConversation.senderId === searchParamsId
     );
 
-    const messageData = {
+    const messageData: ISendMessageBody = {
       conversationId: chatConversationId ? chatConversationId.conversationId : conversationId,
       receiverId: receiver._id,
       receiverUsername: receiver.username,
@@ -186,7 +186,7 @@ interface IUpdateSelectedUserParams {
 }
 
 export interface IMessageDataParams {
-  receiver: ISearchUser;
+  receiver: ISearchUser | IUser;
   message: string;
   searchParamsId: string;
   conversationId: string;

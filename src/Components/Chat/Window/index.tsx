@@ -11,7 +11,7 @@ import { userService } from '~/services/api/user/user.service';
 import { ChatUtils } from '~/services/utils/chat-utils.service';
 import useEffectOnce from '~/hooks/useEffectOnce';
 import { chatService } from '~/services/api/chat/chat.service';
-import { IMessageList } from '~/types/chat';
+import { IMessageList, ISendMessageBody } from '~/types/chat';
 
 const ChatWindow = () => {
   const { isLoading } = useSelector((state: RootState) => state.chat);
@@ -22,7 +22,32 @@ const ChatWindow = () => {
   const [chatMessages, setChatMessages] = useState<IMessageList[]>([]);
   const [searchparams] = useSearchParams();
   const dispatch = useAppDispatch();
-  const sendMessage = ({ gifUrl, image, message }: ISendMessageParam) => {};
+  const sendMessage = async ({ gifUrl, image, message }: ISendMessageParam) => {
+    try {
+      const isSenderInChatPage = ChatUtils.chatUsers.some((user) => user.sender === profile?.username && user.receiver === receiver?.username);
+      const isReceiverInChatPage = ChatUtils.chatUsers.some((user) => user.sender === receiver?.username && user.receiver === profile?.username);
+
+      const searchParamsId = searchparams.get('id');
+      if (!receiver || !searchParamsId) {
+        return;
+      }
+
+      const body = ChatUtils.messageData({
+        chatList: chatMessages,
+        conversationId,
+        gifUrl,
+        message,
+        receiver,
+        searchParamsId: searchParamsId,
+        selectedImage: image,
+        isRead: isSenderInChatPage && isReceiverInChatPage
+      });
+
+      await chatService.sendChatMessage(body);
+    } catch (error) {
+      Utils.addErrorNotification(error, dispatch);
+    }
+  };
 
   const getChatMessages = useCallback(async (receiverId: string) => {
     try {
@@ -70,10 +95,12 @@ const ChatWindow = () => {
     }
   }, [getChatMessages, dispatch, searchparams]);
 
-  useEffectOnce(() => {
-    getUserProfileById();
-    getNewUserMessages();
-  });
+  useEffect(() => {
+    if (searchparams.get('id') && searchparams.get('id') !== receiver?._id) {
+      getUserProfileById();
+      getNewUserMessages();
+    }
+  }, [searchparams, getNewUserMessages, getUserProfileById, receiver]);
 
   useEffect(() => {
     const username = searchparams.get('username');
@@ -118,12 +145,14 @@ const ChatWindow = () => {
                 />
               </div>
             ) : null}
-            <div className="chat-title-items">
-              <div className={`chat-name ${Utils.checkIfUserIsOnline(receiver?._id as string, onlineUsers) ? '' : 'user-not-online'}`}>
-                {receiver?.username}
+            {receiver ? (
+              <div className="chat-title-items">
+                <div className={`chat-name ${Utils.checkIfUserIsOnline(receiver?._id as string, onlineUsers) ? '' : 'user-not-online'}`}>
+                  {receiver?.username}
+                </div>
+                {Utils.checkIfUserIsOnline(receiver?._id as string, onlineUsers) && <span className="chat-active">Online</span>}
               </div>
-              {Utils.checkIfUserIsOnline(receiver?._id as string, onlineUsers) && <span className="chat-active">Online</span>}
-            </div>
+            ) : null}
           </div>
           <div className="chat-window">
             <div className="chat-window-message">
