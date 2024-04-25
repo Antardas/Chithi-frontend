@@ -1,6 +1,7 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
 import ChatList from '~/Components/Chat/List';
+import ChatWindow from '~/Components/Chat/Window';
 import useEffectOnce from '~/hooks/useEffectOnce';
 import '~/pages/social/chat/Chat.scss';
 import { getConversationList } from '~/redux/api/chat';
@@ -19,7 +20,7 @@ const Chat = () => {
             <ChatList />
           </div>
           <div className="private-chat-wrapper-content-conversation">
-            {selectedChatUser || chatList.length ? <div>Chat Window</div> : null}
+            {selectedChatUser || chatList.length ? <ChatWindow /> : null}
             {!selectedChatUser && !chatList.length ? (
               <div className="no-chat" data-testid="no-chat">
                 Select or Search for users to chat with
