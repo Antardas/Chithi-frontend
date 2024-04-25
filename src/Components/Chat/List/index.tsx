@@ -1,4 +1,4 @@
-import React, { MouseEventHandler, useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { FaSearch, FaTimes } from 'react-icons/fa';
 import { useSelector } from 'react-redux';
 import Avatar from '~/Components/Avatar';
@@ -10,9 +10,9 @@ import { ISearchUser, IUser } from '~/types/user';
 import { Utils } from '~/services/utils/utils.service';
 import { userService } from '~/services/api/user/user.service';
 import useDebounce from '~/hooks/useDebounce';
-import { ChatUtils, IMessageDataParams } from '~/services/utils/chat-utils.service';
+import { ChatUtils } from '~/services/utils/chat-utils.service';
 import { IConversationUsers, IMessageList } from '~/types/chat';
-import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
+import { createSearchParams, useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import { setSelectedChatUser } from '~/redux/reducers/chat/chat.reducer';
 import { chatService } from '~/services/api/chat/chat.service';
 import { timeAgo } from '~/services/utils/timeago.utils';
@@ -114,8 +114,8 @@ const ChatList = () => {
     return params;
   };
 
-  const removeSelectedUserFromList = (event: MouseEventHandler<HTMLDivElement>) => {
-    // event.stopPropagation();
+  const removeSelectedUserFromList = (event: React.MouseEvent<HTMLDivElement>) => {
+    event.stopPropagation();
     const clonedChatList = Utils.cloneDeep(chatMessageList) as IMessageList[];
     const paramsUserId = searchParams.get('id');
     const index = clonedChatList.findIndex((item) => item.receiverId === paramsUserId);
@@ -128,7 +128,7 @@ const ChatList = () => {
         chatMessageList: clonedChatList,
         dispatch,
         navigate,
-        params: chatMessageList.length ? updateQueryParams(chatMessageList[0]) : {} as unknown as any,
+        params: chatMessageList.length ? updateQueryParams(chatMessageList[0]) : ({} as ReturnType<typeof updateQueryParams>),
         pathname: `${location.pathname}`,
         profile: profile as IUser,
         setSelectedChatUser,
@@ -146,6 +146,35 @@ const ChatList = () => {
     }
   };
 
+  const addUsernameToURLQuery = async (user: IMessageList) => {
+    try {
+      const paramsUsername = searchParams.get('username');
+      const existingUser = ChatUtils.chatUsers.find((chat) => chat.sender === paramsUsername || chat.receiver === paramsUsername);
+
+      const params = updateQueryParams(user);
+      const body: IConversationUsers = {
+        receiver: user.receiverUsername !== profile?.username ? user.receiverUsername : user.senderUsername,
+        sender: profile?.username as string
+      };
+
+      navigate(`${location.pathname}?${createSearchParams(params)}`);
+      if (existingUser) {
+        await chatService.removeChatUser(existingUser);
+      }
+
+      await chatService.addChatUsers(body);
+      if (user?.receiverUsername === profile?.username && !user.isRead) {
+        const messageReadBody: IConversationUsers = {
+          receiver: user.receiverUsername !== profile?.username ? user.receiverId : user.senderId,
+          sender: user.senderId
+        };
+        await chatService.markAsRead(messageReadBody);
+      }
+    } catch (error) {
+      Utils.addErrorNotification(error, dispatch);
+    }
+  };
+
   useEffect(() => {
     if (searchDebounce) {
       searchUsers(searchDebounce);
@@ -153,15 +182,19 @@ const ChatList = () => {
   }, [searchDebounce, searchUsers]);
 
   useEffect(() => {
-    console.log('run run  run');
+    ChatUtils.socketIOChatList({
+      chatMessageList,
+      profile: profile as IUser,
+      setChatMessageList
+    });
+  }, [chatMessageList, profile]);
 
+  useEffect(() => {
     setChatMessageList(chatList);
   }, [chatList]);
 
   useEffect(() => {
     if (selectedUser && componentType === 'searchList') {
-      console.log('isnt it called');
-
       addSelectedUserToList(selectedUser);
     }
   }, [addSelectedUserToList, componentType, selectedUser]);
@@ -212,10 +245,15 @@ const ChatList = () => {
         <div className="conversation-container-body">
           <div className="conversation">
             {chatMessageList.map((data) => (
-              <div data-testid="conversation-item" className={`conversation-item ${isMatchedUsername(data) ? 'active' : ''}`}>
+              <div
+                data-testid="conversation-item"
+                className={`conversation-item ${isMatchedUsername(data) ? 'active' : ''}`}
+                onClick={() => addUsernameToURLQuery(data)}
+                key={data._id}
+              >
                 <div className="avatar">
                   <Avatar
-                    name={data.receiverUsername !== profile?.username ? profile?.username : data.senderUsername}
+                    name={data.receiverUsername !== profile?.username ? (profile?.username as string) : data.senderUsername}
                     bgColor={data.receiverUsername !== profile?.username ? data.receiverAvatarColor : data.senderAvatarColor}
                     textColor="#ffffff"
                     size={40}
@@ -227,7 +265,12 @@ const ChatList = () => {
                 </div>
                 {data.createdAt ? <div className="created-date">{timeAgo.transform(data.createdAt)}</div> : null}
                 {!data.body ? (
-                  <div className="created-date" onClick={removeSelectedUserFromList}>
+                  <div
+                    className="created-date"
+                    onClick={(event) => {
+                      removeSelectedUserFromList(event);
+                    }}
+                  >
                     <FaTimes />
                   </div>
                 ) : null}
