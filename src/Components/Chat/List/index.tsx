@@ -163,10 +163,10 @@ const ChatList = () => {
       }
 
       await chatService.addChatUsers(body);
-      if (user?.receiverUsername === profile?.username && !user.isRead) {
+      if (user?.receiverUsername.toLowerCase() === profile?.username?.toLowerCase() && !user.isRead) {
         const messageReadBody: IConversationUsers = {
-          receiver: user.receiverUsername !== profile?.username ? user.receiverId : user.senderId,
-          sender: user.senderId
+          receiver: user.senderId,
+          sender: profile._id
         };
         await chatService.markAsRead(messageReadBody);
       }

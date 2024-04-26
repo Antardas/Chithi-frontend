@@ -18,7 +18,6 @@ const EmojiPicker = React.memo(({ onEmojiClick, pickerStyle }: EmojiPickerProps)
 
 interface EmojiPickerProps {
   onEmojiClick: (event: EmojiClickData) => void;
-  pickerStyle: object;
 }
 
 export default EmojiPicker;

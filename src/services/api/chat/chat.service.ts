@@ -1,5 +1,5 @@
 import axios from '~/services/axios';
-import { GetConversationList, IConversationUsers, ISendMessageBody } from '~/types/chat';
+import { GetConversationList, IConversationUsers, IMarkMessageAsDeleted, ISendMessageBody, IUpdateMessageReaction } from '~/types/chat';
 
 class ChatService {
   async getConversationList() {
@@ -29,6 +29,15 @@ class ChatService {
   }
   async sendChatMessage(body: ISendMessageBody) {
     const response = await axios.post<GetConversationList>(`/chat/message`, body);
+    return response;
+  }
+  async updateMessageReaction(body: IUpdateMessageReaction) {
+    const response = await axios.put<GetConversationList>(`/chat/message/reaction`, body);
+    return response;
+  }
+  async markMessageAsDeleted(body: IMarkMessageAsDeleted) {
+    const { messageId, receiverId, senderId, type } = body;
+    const response = await axios.delete<GetConversationList>(`/chat/message/${messageId}/${senderId}/${receiverId}/${type}`);
     return response;
   }
 }

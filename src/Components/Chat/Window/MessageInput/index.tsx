@@ -34,7 +34,7 @@ const MessageInput = ({ setChatMessage }: { setChatMessage: (obj: ISendMessagePa
     setFileBase64('');
     setMessage('');
   };
-
+  
   const fileInputClick = () => {
     if (fileInputRef.current) {
       fileInputRef.current.click();
@@ -61,13 +61,13 @@ const MessageInput = ({ setChatMessage }: { setChatMessage: (obj: ISendMessagePa
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const finalMessage = message || 'Sent an Image';
-    setChatMessage({ message: finalMessage.replace(/ +(?=)/g, ''), gifUrl: '', image: fileBase64 });
+    setChatMessage({ message: finalMessage.replace(/ +(?= )/g, ''), gifUrl: '', image: fileBase64 });
     reset();
   };
 
   const handleImageCLick = () => {
     const finalMessage = message || 'Sent an Image';
-    setChatMessage({ message: finalMessage.replace(/ +(?=)/g, ''), gifUrl: '', image: fileBase64 });
+    setChatMessage({ message: finalMessage.replace(/ +(?= )/g, ''), gifUrl: '', image: fileBase64 });
     reset();
   };
 

@@ -50,3 +50,17 @@ export interface ISendMessageBody {
   selectedImage: string;
   isRead: boolean;
 }
+
+export interface IUpdateMessageReaction {
+  messageId: string;
+  reaction: string;
+  type: 'add' | 'remove';
+  conversationId: string;
+}
+
+export interface IMarkMessageAsDeleted {
+  senderId: string;
+  receiverId: string;
+  messageId: string;
+  type: 'me' | 'everyone';
+}

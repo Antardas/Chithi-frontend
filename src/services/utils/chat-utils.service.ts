@@ -62,8 +62,8 @@ export class ChatUtils {
     const messageData: ISendMessageBody = {
       conversationId: chatConversationId ? chatConversationId.conversationId : conversationId,
       receiverId: receiver._id,
-      receiverUsername: receiver.username,
-      receiverAvatarColor: receiver?.avatarColor,
+      receiverUsername: receiver.username as string,
+      receiverAvatarColor: receiver?.avatarColor as string,
       receiverProfilePicture: receiver?.profilePicture,
       body: message.trim(),
       gifUrl: gifUrl ?? '',

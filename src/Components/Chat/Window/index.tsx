@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import Avatar from '~/Components/Avatar';
 import { RootState, useAppDispatch } from '~/redux/store';
@@ -11,7 +11,8 @@ import { userService } from '~/services/api/user/user.service';
 import { ChatUtils } from '~/services/utils/chat-utils.service';
 import useEffectOnce from '~/hooks/useEffectOnce';
 import { chatService } from '~/services/api/chat/chat.service';
-import { IMessageList, ISendMessageBody } from '~/types/chat';
+import { IMarkMessageAsDeleted, IMessageList, ISendMessageBody, IUpdateMessageReaction } from '~/types/chat';
+import MessageDisplay from './MessageDisplay';
 
 const ChatWindow = () => {
   const { isLoading } = useSelector((state: RootState) => state.chat);
@@ -22,6 +23,7 @@ const ChatWindow = () => {
   const [chatMessages, setChatMessages] = useState<IMessageList[]>([]);
   const [searchparams] = useSearchParams();
   const dispatch = useAppDispatch();
+  const isRendered = useRef(false);
   const sendMessage = async ({ gifUrl, image, message }: ISendMessageParam) => {
     try {
       const isSenderInChatPage = ChatUtils.chatUsers.some((user) => user.sender === profile?.username && user.receiver === receiver?.username);
@@ -42,6 +44,7 @@ const ChatWindow = () => {
         selectedImage: image,
         isRead: isSenderInChatPage && isReceiverInChatPage
       });
+      console.log(body);
 
       await chatService.sendChatMessage(body);
     } catch (error) {
@@ -95,12 +98,31 @@ const ChatWindow = () => {
     }
   }, [getChatMessages, dispatch, searchparams]);
 
+  const updateMessageReaction = async (body: IUpdateMessageReaction) => {
+    try {
+      await chatService.updateMessageReaction(body);
+    } catch (error) {
+      Utils.addErrorNotification(error, dispatch);
+    }
+  };
+  const deleteChatMessage = async (params: IMarkMessageAsDeleted) => {
+    try {
+      await chatService.markMessageAsDeleted(params);
+    } catch (error) {
+      Utils.addErrorNotification(error, dispatch);
+    }
+  };
+
   useEffect(() => {
-    if (searchparams.get('id') && searchparams.get('id') !== receiver?._id) {
+    // if (!isRendered.current) {
+      // isRendered.current = true;
       getUserProfileById();
       getNewUserMessages();
-    }
-  }, [searchparams, getNewUserMessages, getUserProfileById, receiver]);
+    // }
+    // return () => {
+    //   isRendered.current = false;
+    // };
+  }, [searchparams, getNewUserMessages, getUserProfileById]);
 
   useEffect(() => {
     const username = searchparams.get('username');
@@ -156,12 +178,12 @@ const ChatWindow = () => {
           </div>
           <div className="chat-window">
             <div className="chat-window-message">
-              {/* <MessageDisplay
+              <MessageDisplay
                 chatMessages={chatMessages}
-                profile={profile}
+                profile={profile as IUser}
                 updateMessageReaction={updateMessageReaction}
                 deleteChatMessage={deleteChatMessage}
-              /> */}
+              />
             </div>
             <div className="chat-window-input">
               <MessageInput setChatMessage={sendMessage} />
