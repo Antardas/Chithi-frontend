@@ -7,10 +7,11 @@ import { Utils } from '~/services/utils/utils.service';
 import { IUser } from '~/types/user';
 // import { INotification } from '~/types/notification';
 import { IMessageData } from '~/types/message';
+import { IMessageList } from '~/types/chat';
 interface MessageSidebarProps {
   profile: IUser; // Optional: Add specific properties if known
   messageCount: number;
-  messageNotifications: Array<IMessageData>; // Optional: Refine type based on notification structure
+  messageNotifications: Array<IMessageList>; // Optional: Refine type based on notification structure
   openChatPage: (notification: IMessageData) => void;
 }
 const MessageSidebar = ({ profile, messageCount, messageNotifications, openChatPage }: MessageSidebarProps) => {
@@ -28,7 +29,7 @@ const MessageSidebar = ({ profile, messageCount, messageNotifications, openChatP
           <div className="message-card-body-info">
             <div data-testid="info-container" className="message-card-body-info-container">
               {messageNotifications.map((notification) => (
-                <div className="message-sub-card" key={Utils.generateString(10)} onClick={() => openChatPage(notification)}>
+                <div className="message-sub-card" key={notification._id} onClick={() => openChatPage(notification)}>
                   <div className="content-avatar">
                     <Avatar
                       name={notification.receiverUsername === profile?.username ? profile?.username : notification?.senderUsername}

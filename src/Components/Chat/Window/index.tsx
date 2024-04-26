@@ -44,7 +44,6 @@ const ChatWindow = () => {
         selectedImage: image,
         isRead: isSenderInChatPage && isReceiverInChatPage
       });
-      console.log(body);
 
       await chatService.sendChatMessage(body);
     } catch (error) {
@@ -169,7 +168,7 @@ const ChatWindow = () => {
             ) : null}
             {receiver ? (
               <div className="chat-title-items">
-                <div className={`chat-name ${Utils.checkIfUserIsOnline(receiver?._id as string, onlineUsers) ? '' : 'user-not-online'}`}>
+                <div className={`chat-name ${Utils.checkIfUserIsOnline(receiver?.username as string, onlineUsers) ? '' : 'user-not-online'}`}>
                   {receiver?.username}
                 </div>
                 {Utils.checkIfUserIsOnline(receiver?._id as string, onlineUsers) && <span className="chat-active">Online</span>}

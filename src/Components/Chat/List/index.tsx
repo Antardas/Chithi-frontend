@@ -157,7 +157,6 @@ const ChatList = () => {
         sender: profile?.username as string
       };
 
-      navigate(`${location.pathname}?${createSearchParams(params)}`);
       if (existingUser) {
         await chatService.removeChatUser(existingUser);
       }
@@ -170,6 +169,7 @@ const ChatList = () => {
         };
         await chatService.markAsRead(messageReadBody);
       }
+      navigate(`${location.pathname}?${createSearchParams(params)}`);
     } catch (error) {
       Utils.addErrorNotification(error, dispatch);
     }
@@ -182,6 +182,8 @@ const ChatList = () => {
   }, [searchDebounce, searchUsers]);
 
   useEffect(() => {
+    if (!profile) return;
+    console.log('rendering-socket-effect');
     ChatUtils.socketIOChatList({
       chatMessageList,
       profile: profile as IUser,
@@ -190,6 +192,8 @@ const ChatList = () => {
   }, [chatMessageList, profile]);
 
   useEffect(() => {
+    if (!chatList.length) return;
+    console.log('rendering-set-chat-message');
     setChatMessageList(chatList);
   }, [chatList]);
 

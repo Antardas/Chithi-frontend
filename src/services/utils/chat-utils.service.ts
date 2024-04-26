@@ -125,7 +125,7 @@ export class ChatUtils {
       if (data.senderUsername.toLowerCase() === username || data.receiverUsername.toLowerCase() === username) {
         setConversationId(data.conversationId);
         ChatUtils.privateChatMessages.push(data);
-        setChatMessages(ChatUtils.privateChatMessages);
+        setChatMessages([...ChatUtils.privateChatMessages]);
       }
     });
 
