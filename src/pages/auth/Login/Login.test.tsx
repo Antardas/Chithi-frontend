@@ -112,7 +112,7 @@ describe('SignIn', () => {
       user.click(buttonElement);
 
       const alertElement: HTMLElement = await screen.findByRole('alert');
-      expect(alertElement.textContent).toEqual('username and password wrong');
+      expect(alertElement.textContent).toEqual('Something went wrong');
       expect(alertElement).toBeInTheDocument();
       expect(usernameLabel).toHaveStyle({
         border: '1px solid #fa9b8a'
