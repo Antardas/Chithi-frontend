@@ -5,12 +5,12 @@ import { socketIOMock } from '~/mocks/handlers/sokcet';
 import { server } from '~/mocks/server';
 import { socketService } from '~/services/socket/sokcet.service';
 import { sideBarItems } from '~/services/utils/static.data';
-import { renderWithRouter,  routeObject,  screen, waitFor, within } from '~/test.utils';
+import { prettyDOM, renderWithRouter, routeObject, screen, waitFor, within } from '~/test.utils';
 
 const user = userEvent.setup({});
 describe('Sidebar', () => {
   beforeEach(() => {
-    server.use(socketIOMock)
+    server.use(socketIOMock);
     socketService.setupSocketConnection();
     vi.spyOn(socketService?.socket, 'off');
   });
@@ -41,9 +41,14 @@ describe('Sidebar', () => {
   });
 
   it('should have active class on selected item', async () => {
-    renderWithRouter(<Sidebar />,[], );
+    renderWithRouter(<Sidebar />, [
+      {
+        element: 'Hello',
+        path: '/app/social/chat/messages'
+      }
+    ]);
     const listItem = screen.getAllByTestId('sidebar-list');
     await user.click(listItem[1]);
-    await waitFor(() => expect(listItem[1]).toHaveClass('active'));
+    waitFor(() => expect(listItem[1]).toHaveClass('active'));
   });
 });
