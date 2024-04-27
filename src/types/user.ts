@@ -64,10 +64,40 @@ interface ICurrentUser {
   user: IUser;
   isUser: boolean;
 }
+interface IGetUserById {
+  data: IUser;
+  message: string;
+}
 
- interface ISocketBlockedData {
+interface ISocketBlockedData {
   blockedUser: string;
   blockedBy: string;
 }
 
-export type { ISignUpResponse, IUser, INotificationSettings, IBasicInfo, ISocialLinks, IUserState, ISuggestionUser, ICurrentUser, ISocketBlockedData };
+interface ISearchUser {
+  _id: string;
+  profilePicture: string;
+  username: string;
+  email: string;
+  avatarColor: string;
+}
+
+interface ISearchUserResponse {
+  data: ISearchUser[];
+  message: string;
+}
+
+export type {
+  ISignUpResponse,
+  IUser,
+  INotificationSettings,
+  IBasicInfo,
+  ISocialLinks,
+  IUserState,
+  ISuggestionUser,
+  ICurrentUser,
+  ISocketBlockedData,
+  ISearchUser,
+  ISearchUserResponse,
+  IGetUserById
+};

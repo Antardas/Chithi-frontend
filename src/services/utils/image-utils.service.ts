@@ -23,12 +23,14 @@ export class ImageUtils {
     return fileError;
   }
 
-  private static checkFile(file: File) {
+  static checkFile(file: File) {
     const hasError = ImageUtils.checkFileSize(file);
     if (hasError) {
       const errorMessages = hasError.split('\n').filter(Boolean);
       errorMessages.forEach((item) => window.alert(item));
+      return false;
     }
+    return true;
   }
 
   static addFileToRedux(

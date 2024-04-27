@@ -13,6 +13,7 @@ import { RootState, useAppDispatch } from '~/redux/store';
 import { followerService } from '~/services/api/follower/follower.service';
 import { userService } from '~/services/api/user/user.service';
 import { socketService } from '~/services/socket/sokcet.service';
+import { ChatUtils } from '~/services/utils/chat-utils.service';
 import { FollowerUtils } from '~/services/utils/followers-utils.service';
 import { PostUtils } from '~/services/utils/post-utils.service';
 import { ProfileUtils } from '~/services/utils/profile-utils.service';
@@ -23,9 +24,10 @@ import { IUser } from '~/types/user';
 const PAGE_SIZE = 12;
 const Peoples = () => {
   const [users, setUsers] = useState<IUser[]>([]);
-  const [onlineUser, setOnlinUsers] = useState<unknown[]>([]);
   const [followings, setFollowings] = useState<IFollower[]>([]);
   const { profile } = useSelector((state: RootState) => state.user);
+  // const [_onlineUsers, setOnlineUsers] = useState<string[]>([]);
+  const { onlineUsers } = useSelector((state: RootState) => state.chat);
   const [loading, setLoading] = useState<boolean>(false);
   const [currentPage, setCurrentPage] = useState<number>(0);
   const [totalUser, setTotalUser] = useState<number>(0);
@@ -107,6 +109,9 @@ const Peoples = () => {
   useEffect(() => {
     FollowerUtils.socketIOFollowAndUnfollow(users, followings, setUsers, setFollowings);
   }, [followings, users]);
+  useEffect(() => {
+    console.log(onlineUsers);
+  }, [onlineUsers])
   return (
     <div className="card-container" ref={bodyRef}>
       <div className="people">People</div>
@@ -114,7 +119,7 @@ const Peoples = () => {
         {/* People Card */}
         {users.map((item, index) => (
           <div className="card-element-item" key={`users-${index}`} data-testid="card-element-item">
-            {Utils.checkIfUserIsOnline(item.username as string, onlineUser) ? (
+            {Utils.checkIfUserIsOnline(item.username as string, onlineUsers) ? (
               <div className="card-element-item-indicator">
                 <FaCircle className="online-indicator" />
               </div>

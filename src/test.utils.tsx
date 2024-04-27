@@ -24,6 +24,7 @@ const customRender = (ui: React.ReactNode, options?: RenderOptions) => render(ui
  * @param routes (optional) - An array of route objects to configure the router.
  * @returns The rendered component.
  */
+let routeObject: ReturnType<typeof createMemoryRouter>;
 const renderWithRouter = (children: React.ReactElement<unknown>, routes: RouteObject[] = []) => {
   const options = isValidElement(children) ? { element: children, path: '/' } : children;
 
@@ -31,6 +32,7 @@ const renderWithRouter = (children: React.ReactElement<unknown>, routes: RouteOb
     initialEntries: [options.path],
     initialIndex: 1
   });
+  routeObject = router;
 
   return render(<RouterProvider router={router} />, {
     wrapper: Providers
@@ -49,4 +51,4 @@ export type CustomRenderHookOptions<Props> = RenderHookOptions<Props>;
 // };
 
 export * from '@testing-library/react';
-export { customRender as render, renderWithRouter };
+export { customRender as render, renderWithRouter, routeObject };

@@ -4,10 +4,12 @@ import { IUser } from '~/types/user';
 import { Utils } from '~/services/utils/utils.service';
 import { timeAgo } from '~/services/utils/timeago.utils';
 import { notificationService } from '~/services/api/notification/notification.service';
-import { store } from '~/redux/store';
+import { AppDispatch, store } from '~/redux/store';
+import { IMessageList } from '~/types/chat';
+import { SetState } from '~/types/utils';
+import { Location } from 'react-router-dom';
 
 export class NotificationUtils {
-
   private static state = store.getState();
 
   static socketIONotifications(
@@ -108,6 +110,52 @@ export class NotificationUtils {
     return response;
   }
 
+  static socketIOMessageNotification({
+    profile,
+    messageNotification,
+    setMessageNotification,
+    setMessageCount,
+    dispatch,
+    location
+  }: ISocketIOMessageNotification) {
+    socketService.socket.on('CHAT_LIST', (data: IMessageList) => {
+      const clonedMessageNotification = Utils.cloneDeep(messageNotification) as IMessageList[];
+      if (data.receiverUsername === profile.username) {
+        const notificationData = {
+          senderId: data.senderId,
+          senderUsername: data.senderUsername,
+          senderAvatarColor: data.senderAvatarColor,
+          senderProfilePicture: data.senderProfilePicture,
+          receiverId: data.receiverId,
+          receiverUsername: data.receiverUsername,
+          receiverAvatarColor: data.receiverAvatarColor,
+          receiverProfilePicture: data.receiverProfilePicture,
+          messageId: data._id,
+          conversationId: data.conversationId,
+          body: data.body,
+          isRead: data.isRead
+        };
+
+        const messageIndex = clonedMessageNotification.findIndex((msg) => msg.conversationId === data.conversationId);
+
+        if (messageIndex > -1) {
+          clonedMessageNotification.splice(messageIndex, 1);
+        }
+        clonedMessageNotification.unshift(notificationData);
+        const sum = clonedMessageNotification.reduce((acc: number, cur: IMessageList) => {
+          if (!cur.isRead && cur.receiverUsername === profile?.username) {
+            acc += 1;
+          }
+          return acc;
+        }, 0);
+        setMessageCount(sum);
+        if (!Utils.checkUrl(location.pathname, 'chat')) {
+          Utils.dispatchNotification('You have new messages', 'success', dispatch);
+        }
+        setMessageNotification(clonedMessageNotification)
+      }
+    });
+  }
   static cleanup() {
     socketService.socket?.off('INSERT_NOTIFICATION');
     socketService.socket?.off('UPDATE_NOTIFICATION');
@@ -116,3 +164,12 @@ export class NotificationUtils {
 }
 
 type SetDialogState = React.Dispatch<React.SetStateAction<INotificationPreview>>;
+
+interface ISocketIOMessageNotification {
+  profile: IUser;
+  messageNotification: IMessageList[];
+  setMessageNotification: SetState<IMessageList[]>;
+  setMessageCount: SetState<number>;
+  dispatch: AppDispatch;
+  location: Location;
+}

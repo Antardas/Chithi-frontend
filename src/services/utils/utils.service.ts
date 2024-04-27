@@ -1,4 +1,4 @@
-import { AxiosResponse, AxiosError, isAxiosError  } from 'axios';
+import { AxiosResponse, AxiosError, isAxiosError } from 'axios';
 import { NotificationType } from '~/Components/Toast';
 import { SetValue, RemoveValue } from '~/hooks/useLocalStorage';
 import { addNotification, clearNotification } from '~/redux/reducers/notification/notification.reducer';
@@ -133,9 +133,8 @@ export class Utils {
     return followers.some((id) => id === postCreatorId || postCreatorId === userId);
   }
 
-
   static checkIfUserIsOnline(username: string, onlineUsers: string[]) {
-    return onlineUsers.some((item) => item.toLowerCase() === username.toLowerCase());
+    return onlineUsers.some((item) => item && username && item.toLowerCase() === username.toLowerCase());
   }
 
   static firstLatterUpperCase(word: string): string {
@@ -146,7 +145,7 @@ export class Utils {
     return `${word.charAt(0).toUpperCase()}${word.slice(1)}`;
   }
 
-  static checkUrl(url:string, word:string) {
+  static checkUrl(url: string, word: string) {
     return url.includes(word);
   }
 

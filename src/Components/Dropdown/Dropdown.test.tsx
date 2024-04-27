@@ -4,6 +4,13 @@ import Dropdown, { DropdownProps } from '~/Components/Dropdown';
 import { renderWithRouter, screen } from '~/test.utils';
 import { ISettingsDropdown } from '~/types/utils';
 
+type propsType = DropdownProps & {
+  onLogout: () => void;
+  onNavigate: () => void;
+  notificationCount: number;
+  onMarkAsRead: () => void;
+  onDeleteNotification: () => void;
+};
 describe('Dropdown', () => {
   it('should display notification content', async () => {
     const user = userEvent.setup();
@@ -14,7 +21,7 @@ describe('Dropdown', () => {
       subText: 'Subtext'
     };
 
-    const props: DropdownProps = {
+    const props: propsType = {
       data: [item, item, item],
       notificationCount: 1,
       title: 'Notifications',
@@ -48,7 +55,7 @@ describe('Dropdown', () => {
       subText: 'View profile'
     };
 
-    const props: DropdownProps = {
+    const props: propsType = {
       data: [item],
       notificationCount: 0,
       title: 'Settings',

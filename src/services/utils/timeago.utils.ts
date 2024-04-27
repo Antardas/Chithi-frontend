@@ -19,7 +19,7 @@ class TimeAgo {
     } else if (getISOWeek(new Date()) === getISOWeek(date) || getISOWeek(new Date()) - getISOWeek(date) === 1) {
       return format(date, 'EEEE');
     } else {
-      return format(date, 'd MMMM YYYY');
+      return format(date, 'd MMMM yyyy');
     }
   }
 
