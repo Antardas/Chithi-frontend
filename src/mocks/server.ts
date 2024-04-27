@@ -7,6 +7,7 @@ import { reactionHandlers } from './handlers/reaction';
 import { userHandlers } from './handlers/user';
 import { followingHandlers } from './handlers/follow';
 import { socketHandlers } from './handlers/sokcet';
+import { chatHandlers } from './handlers/chat';
 
 // Setup request interception using the given handlers
-export const server = setupServer(...authHandler, ...notificationHandlers, ...giphyHandlers, ...postsHandlers, ...reactionHandlers, ...userHandlers, ...followingHandlers, ...socketHandlers);
+export const server = setupServer(...authHandler, ...notificationHandlers, ...giphyHandlers, ...postsHandlers, ...reactionHandlers, ...userHandlers, ...followingHandlers, ...socketHandlers, ...chatHandlers);
