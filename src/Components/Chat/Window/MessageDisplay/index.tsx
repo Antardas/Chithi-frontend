@@ -108,7 +108,7 @@ const MessageDisplay = ({ chatMessages, deleteChatMessage, profile, updateMessag
 
       <div className="message-page" ref={scrollRef} data-testid="message-page">
         {chatMessages.map((message, index) => (
-          <div className="message-chat" data-testid="message-page" key={message._id}>
+          <div className="message-chat" data-testid="message-chat" key={message._id}>
             {index === 0 || timeAgo.dayMonthYear(message.createdAt) !== timeAgo.dayMonthYear(chatMessages[index - 1].createdAt) ? (
               <div className="message-date-group">
                 <div className="message-chat-date" data-testid="message-chat-date">
@@ -172,7 +172,7 @@ const MessageDisplay = ({ chatMessages, deleteChatMessage, profile, updateMessag
 
 export default MessageDisplay;
 
-interface IMessageDisplayProps {
+export interface IMessageDisplayProps {
   chatMessages: IMessageList[];
   profile: IUser;
   updateMessageReaction: (body: IUpdateMessageReaction) => void;
