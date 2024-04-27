@@ -13,12 +13,13 @@ import useEffectOnce from '~/hooks/useEffectOnce';
 import { chatService } from '~/services/api/chat/chat.service';
 import { IMarkMessageAsDeleted, IMessageList, ISendMessageBody, IUpdateMessageReaction } from '~/types/chat';
 import MessageDisplay from './MessageDisplay';
+import { socketService } from '~/services/socket/sokcet.service';
 
 const ChatWindow = () => {
-  const { isLoading } = useSelector((state: RootState) => state.chat);
+  const { isLoading, onlineUsers } = useSelector((state: RootState) => state.chat);
   const { profile } = useSelector((state: RootState) => state.user);
   const [receiver, setReceiver] = useState<IUser | null>(null);
-  const [onlineUsers, setOnlineUsers] = useState<string[]>([]);
+  // const [onlineUsers, setOnlineUsers] = useState<string[]>([]);
   const [conversationId, setConversationId] = useState<string>('');
   const [chatMessages, setChatMessages] = useState<IMessageList[]>([]);
   const [searchparams] = useSearchParams();
@@ -114,9 +115,9 @@ const ChatWindow = () => {
 
   useEffect(() => {
     // if (!isRendered.current) {
-      // isRendered.current = true;
-      getUserProfileById();
-      getNewUserMessages();
+    // isRendered.current = true;
+    getUserProfileById();
+    getNewUserMessages();
     // }
     // return () => {
     //   isRendered.current = false;
@@ -132,9 +133,14 @@ const ChatWindow = () => {
         setChatMessages,
         setConversationId
       });
-      ChatUtils.usersOnline(setOnlineUsers);
+      // ChatUtils.usersOnline();
       ChatUtils.usersOnChatPage();
     }
+
+    return () => {
+      socketService.socket?.off('MESSAGE_RECEIVED');
+      socketService.socket?.off('CHAT_LIST');
+    };
   }, [searchparams, chatMessages]);
   useEffect(() => {
     const username = searchparams.get('username');
@@ -171,7 +177,7 @@ const ChatWindow = () => {
                 <div className={`chat-name ${Utils.checkIfUserIsOnline(receiver?.username as string, onlineUsers) ? '' : 'user-not-online'}`}>
                   {receiver?.username}
                 </div>
-                {Utils.checkIfUserIsOnline(receiver?._id as string, onlineUsers) && <span className="chat-active">Online</span>}
+                {Utils.checkIfUserIsOnline(receiver?.username as string, onlineUsers) && <span className="chat-active">Online</span>}
               </div>
             ) : null}
           </div>

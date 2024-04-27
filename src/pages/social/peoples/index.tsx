@@ -24,9 +24,10 @@ import { IUser } from '~/types/user';
 const PAGE_SIZE = 12;
 const Peoples = () => {
   const [users, setUsers] = useState<IUser[]>([]);
-  const [onlineUsers, setOnlineUsers] = useState<string[]>([]);
   const [followings, setFollowings] = useState<IFollower[]>([]);
   const { profile } = useSelector((state: RootState) => state.user);
+  // const [_onlineUsers, setOnlineUsers] = useState<string[]>([]);
+  const { onlineUsers } = useSelector((state: RootState) => state.chat);
   const [loading, setLoading] = useState<boolean>(false);
   const [currentPage, setCurrentPage] = useState<number>(0);
   const [totalUser, setTotalUser] = useState<number>(0);
@@ -107,8 +108,10 @@ const Peoples = () => {
 
   useEffect(() => {
     FollowerUtils.socketIOFollowAndUnfollow(users, followings, setUsers, setFollowings);
-    ChatUtils.usersOnline(setOnlineUsers)
   }, [followings, users]);
+  useEffect(() => {
+    console.log(onlineUsers);
+  }, [onlineUsers])
   return (
     <div className="card-container" ref={bodyRef}>
       <div className="people">People</div>

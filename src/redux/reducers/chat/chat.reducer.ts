@@ -5,6 +5,7 @@ import { IGetALlNotificationResponse } from '~/types/notification';
 
 interface ChatStoreInitialState {
   chatList: IMessageList[];
+  onlineUsers: string[];
   selectedChatUser: IMessageList | null;
   isLoading: boolean;
 }
@@ -29,6 +30,7 @@ interface ISetSelectedChatUser extends IAction {
 
 const initialState: ChatStoreInitialState = {
   chatList: [],
+  onlineUsers: [],
   isLoading: false,
   selectedChatUser: null
 };
@@ -46,6 +48,9 @@ const chatSlice = createSlice({
       const { isLoading, user } = action.payload;
       state.selectedChatUser = user;
       state.isLoading = isLoading;
+    },
+    addOnlineUsers: (state, action) => {
+      state.onlineUsers = action.payload;
     }
   },
   extraReducers(builder) {
@@ -55,7 +60,20 @@ const chatSlice = createSlice({
     builder.addCase(getConversationList.fulfilled, (state, action) => {
       const data = action.payload?.data;
       if (data) {
-        state.chatList = [...data];
+        const sortedData = data.sort((a, b) => {
+          const aDate = new Date(a.createdAt);
+          const bDate = new Date(b.createdAt);
+          if (aDate < bDate) {
+            return 1;
+          } else if (aDate > bDate) {
+            return -1;
+          } else {
+            return 0;
+          }
+        });
+
+
+        state.chatList = [...sortedData];
       }
       state.isLoading = false;
     });
@@ -65,5 +83,5 @@ const chatSlice = createSlice({
   }
 });
 
-export const { addToChatList, setSelectedChatUser } = chatSlice.actions;
+export const { addToChatList, setSelectedChatUser, addOnlineUsers } = chatSlice.actions;
 export default chatSlice.reducer;

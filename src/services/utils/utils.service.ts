@@ -134,7 +134,7 @@ export class Utils {
   }
 
   static checkIfUserIsOnline(username: string, onlineUsers: string[]) {
-    return onlineUsers.some((item) => item && item.toLowerCase() === username && username.toLowerCase());
+    return onlineUsers.some((item) => item && username && item.toLowerCase() === username.toLowerCase());
   }
 
   static firstLatterUpperCase(word: string): string {

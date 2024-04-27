@@ -1,7 +1,7 @@
 import { HttpResponse, http } from 'msw';
 import { BASE_URL } from '~/services/axios';
 
-export const socketIOMock = http.get(`${BASE_URL}`, () => {
+export const socketIOMock = http.get(`${BASE_URL}/socket.io`, () => {
   const result = { message: 'Websocket connected successfully' };
   return HttpResponse.json(result, { status: 200 });
 });

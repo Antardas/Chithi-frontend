@@ -2,19 +2,21 @@ import { SetState } from '~/types/utils';
 import { socketService } from '../socket/sokcet.service';
 import { ISearchUser, IUser } from '~/types/user';
 import { IConversationUsers, IMessageList, ISendMessageBody, ISenderReceiver } from '~/types/chat';
-import { AppDispatch } from '~/redux/store';
+import { AppDispatch, store } from '~/redux/store';
 import { ActionCreatorWithPayload } from '@reduxjs/toolkit';
 import { createSearchParams, NavigateFunction } from 'react-router-dom';
 import { chatService } from '../api/chat/chat.service';
 import { Utils } from './utils.service';
+import { addOnlineUsers } from '~/redux/reducers/chat/chat.reducer';
 
 export class ChatUtils {
   static privateChatMessages: IMessageList[] = [];
   static chatUsers: IConversationUsers[] = [];
 
-  static usersOnline(setOnlineUsers: SetState<string[]>) {
+  static usersOnline() {
     socketService.socket?.on('USER_ONLINE', (data: string[]) => {
-      setOnlineUsers(data);
+      // setOnlineUsers(data);
+      store.dispatch(addOnlineUsers(data));
     });
   }
   static usersOnChatPage() {
@@ -120,9 +122,9 @@ export class ChatUtils {
   }
 
   static socketIOMessageReceived({ chatMessages, username, setConversationId, setChatMessages }: ISocketIOMessageReceived) {
-    const clonedChatMessages = Utils.cloneDeep(chatMessages) as IMessageList[];
+    // const clonedChatMessages = Utils.cloneDeep(chatMessages) as IMessageList[];
     socketService.socket?.on('MESSAGE_RECEIVED', (data: IMessageList) => {
-      if (data.senderUsername.toLowerCase() === username || data.receiverUsername.toLowerCase() === username) {
+      if (data.senderUsername.toLowerCase() === username.toLowerCase() || data.receiverUsername.toLowerCase() === username.toLowerCase()) {
         setConversationId(data.conversationId);
         ChatUtils.privateChatMessages.push(data);
         setChatMessages([...ChatUtils.privateChatMessages]);

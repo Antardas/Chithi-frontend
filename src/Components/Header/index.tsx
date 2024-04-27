@@ -181,6 +181,7 @@ const Header = () => {
   useEffect(() => {
     if (socketConnected) {
       socketService.socket.emit('SETUP', { userId: username });
+      ChatUtils.usersOnline()
     }
   }, [socketConnected, username]);
 
