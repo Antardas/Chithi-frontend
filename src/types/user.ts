@@ -1,3 +1,5 @@
+import { IPost } from './post';
+
 interface IBasicInfo {
   quote: string;
   work: string;
@@ -68,6 +70,13 @@ interface IGetUserById {
   data: IUser;
   message: string;
 }
+interface IGetUserByUsername {
+  data: {
+    posts: IPost;
+    user: IUser;
+  };
+  message: string;
+}
 
 interface ISocketBlockedData {
   blockedUser: string;
@@ -99,5 +108,6 @@ export type {
   ISocketBlockedData,
   ISearchUser,
   ISearchUserResponse,
-  IGetUserById
+  IGetUserById,
+  IGetUserByUsername
 };

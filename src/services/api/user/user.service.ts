@@ -1,6 +1,6 @@
 import axios from '~/services/axios';
 import { GetUsersResponse } from '~/types/follower';
-import { IGetUserById, ISearchUserResponse } from '~/types/user';
+import { IGetUserById, IGetUserByUsername, ISearchUserResponse } from '~/types/user';
 
 class UserService {
   async getUserSuggestion() {
@@ -17,6 +17,11 @@ class UserService {
   }
   async getUserById(id: string) {
     const response = await axios.get<IGetUserById>(`/users/${id}`);
+    return response;
+  }
+  async getUserByUsername(params: { id: string; username: string; uId: string }) {
+    const { id, uId, username } = params;
+    const response = await axios.get<IGetUserByUsername>(`/users/${id}/${username}/${uId}`);
     return response;
   }
   async getAllUsers(page: number) {

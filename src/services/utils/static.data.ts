@@ -286,7 +286,7 @@ export const notificationItems = [
   }
 ];
 
-export const tabItems = (showPassword: any, showNotification: any) => {
+export const tabItems = (showPassword: boolean, showNotification: boolean) => {
   const items = [
     { key: 'Timeline', show: true, icon: ConvertToJSX(FaUser, { className: 'banner-nav-item-name-icon' }) },
     { key: 'Followers', show: true, icon: ConvertToJSX(FaHeart, { className: 'banner-nav-item-name-icon' }) },

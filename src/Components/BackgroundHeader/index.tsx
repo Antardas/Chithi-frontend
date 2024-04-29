@@ -185,7 +185,13 @@ interface BackgroundHeaderProps {
   onClick: () => void;
   tab: string;
   hasImage: boolean;
-  tabItems: [];
+  tabItems: [
+    {
+      key: string;
+      show: boolean;
+      icon: JSX.Element;
+    }
+  ];
   hasError: boolean;
   hideSettings: boolean;
   selectedFileImage: (url: string, type: string) => void;
