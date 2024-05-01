@@ -26,6 +26,7 @@ import {
   FaUsers
 } from 'react-icons/fa';
 import { IPost, IDropdownOption } from '~/types/post.js';
+import { ITabItems } from '~/types/utils.js';
 
 export interface ISideBarItems {
   index: number;
@@ -286,7 +287,7 @@ export const notificationItems = [
   }
 ];
 
-export const tabItems = (showPassword: boolean, showNotification: boolean) => {
+export const tabItems = (showPassword: boolean, showNotification: boolean): ITabItems[] => {
   const items = [
     { key: 'Timeline', show: true, icon: ConvertToJSX(FaUser, { className: 'banner-nav-item-name-icon' }) },
     { key: 'Followers', show: true, icon: ConvertToJSX(FaHeart, { className: 'banner-nav-item-name-icon' }) },

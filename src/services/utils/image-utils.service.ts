@@ -74,4 +74,11 @@ export class ImageUtils {
 
     return fileValue;
   }
+
+  static renameImage(file: File) {
+    const fileName = file.name.split('.').slice(0, -1).join('.');
+    const blob = file.slice(0, file.size, '/image/png');
+    const newFile = new File([blob], `${fileName}.png`, { type: '/image/png' });
+    return newFile;
+  }
 }
