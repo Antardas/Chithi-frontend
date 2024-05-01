@@ -1,7 +1,8 @@
 import React from 'react';
 import ReactionWrapper from '../Post/ModalWrapper/ReactionWrapper';
 import { Utils } from '~/services/utils/utils.service';
-
+import { IImageData } from '~/types/image';
+import '~/Components/ImageGrid/ImageGrid.scss'
 const ImageGrid = ({ images, closeModal, selectedImage }: ImageGridProps) => {
   return (
     <ReactionWrapper closeModal={closeModal}>
@@ -29,12 +30,7 @@ const ImageGrid = ({ images, closeModal, selectedImage }: ImageGridProps) => {
 export default ImageGrid;
 
 interface ImageGridProps {
-  images: [
-    {
-      imgId: string;
-      imgVersion: string;
-    }
-  ];
+  images: IImageData[]
   closeModal: () => void;
   selectedImage: (url: string) => void;
 }
