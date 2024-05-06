@@ -10,6 +10,7 @@ export interface IImageData {
   imgId: string;
   imgVersion: string;
   createdAt: Date;
+  _id: string;
 }
 
 export interface IGetImages {

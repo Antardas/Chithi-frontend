@@ -25,13 +25,13 @@ const Followers = () => {
   const getFollowers = useCallback(async () => {
     setLoading(true);
     try {
-      const result = await followerService.getUserFollowers();
+      const result = await followerService.getUserFollowers(profile?._id as string);
       setFollowers(result.data.data);
     } catch (error) {
       Utils.addErrorNotification(error, dispatch);
     }
     setLoading(false);
-  }, [dispatch]);
+  }, [dispatch, profile?._id]);
 
   const blockUser = async (user: IFollower) => {
     try {

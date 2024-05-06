@@ -1,6 +1,7 @@
 import axios from '~/services/axios';
 import { GetUsersResponse } from '~/types/follower';
-import { IGetUserById, IGetUserByUsername, ISearchUserResponse } from '~/types/user';
+import { INotificationUpdateResponse } from '~/types/notification';
+import { BasicInfo, IGetUserById, IGetUserByUsername, INotificationSettings, ISearchUserResponse, IUpdatePassword, SocialLinks } from '~/types/user';
 
 class UserService {
   async getUserSuggestion() {
@@ -31,6 +32,22 @@ class UserService {
 
   async searchUser(query: string) {
     const response = await axios.get<ISearchUserResponse>(`/users/search/${query}/`);
+    return response;
+  }
+  async changePassword(body: IUpdatePassword) {
+    const response = await axios.put<ISearchUserResponse>(`/users/password`, body);
+    return response;
+  }
+  async updateNotificationSettings(body: INotificationSettings) {
+    const response = await axios.put<INotificationUpdateResponse>(`/users/notification-setting`, body);
+    return response;
+  }
+  async updateSocialLinks(body: SocialLinks) {
+    const response = await axios.put<INotificationUpdateResponse>(`/users/social-links`, body);
+    return response;
+  }
+  async updateBasicInfo(body: BasicInfo) {
+    const response = await axios.put<INotificationUpdateResponse>(`/users/basic-info`, body);
     return response;
   }
 }

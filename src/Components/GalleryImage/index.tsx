@@ -16,7 +16,7 @@ const GalleryImage = ({ imgSrc, onClick, onRemoveImage, post, showCaption, showD
           </div>
         ) : null}
       </div>
-      {showCaption ? (
+      {showCaption && post ? (
         <figcaption className="gallery-image__caption">
           <div className="figure-header">
             <Avatar name={post.username} bgColor={post.bgColor} textColor={'#ffffff'} size={40} avatarSrc={post.profilePicture} />
@@ -34,10 +34,10 @@ const GalleryImage = ({ imgSrc, onClick, onRemoveImage, post, showCaption, showD
 export default GalleryImage;
 
 export interface IGalleryImageProps {
-  post: IPost;
+  post?: IPost;
   showCaption: boolean;
   showDelete: boolean;
   imgSrc: string;
   onClick: () => void;
-  onRemoveImage?: () => void;
+  onRemoveImage?: (event:React.MouseEvent<HTMLInputElement>) => void;
 }

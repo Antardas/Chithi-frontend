@@ -1,3 +1,5 @@
+import { INotificationSettings } from './user';
+
 export interface IUserFrom {
   profilePicture: string;
   username: string;
@@ -42,4 +44,17 @@ export interface INotificationDropdown extends INotification {
 export interface IGetALlNotificationResponse {
   data: INotification[];
   message: string;
+}
+
+export interface INotificationType {
+  index: number;
+  title: string;
+  description: string;
+  toggle: boolean;
+  type: 'messages' | 'reactions' | 'comments' | 'follows';
+}
+
+export interface INotificationUpdateResponse {
+  message: string;
+  data: INotificationSettings;
 }

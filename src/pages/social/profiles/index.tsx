@@ -12,10 +12,19 @@ import { ITabItems } from '~/types/utils';
 import { ImageUtils } from '~/services/utils/image-utils.service';
 import { imageService } from '~/services/api/image/image.service';
 import { IImageData } from '~/types/image';
+import Timeline from '~/Components/Timeline';
+import FollowerCard from '../followers/FollowerCard';
+import GalleryImage from '~/Components/GalleryImage';
+import { toggleDeleteDialog } from '~/redux/reducers/modal/modal.reducer';
+import Dialog from '~/Components/Dialog';
+import ChangePassword from '~/Components/ChangePassword';
+import NotificationSetting from '~/Components/NotificationSetting';
+import { IPost } from '~/types/post';
 const Profiles = () => {
   const { profile } = useSelector((state: RootState) => state.user);
   const { deleteDialogIsOpen, data } = useSelector((state: RootState) => state.modal);
   const [user, setUser] = useState<IUser | null>(null);
+  const [posts, setPosts] = useState<IPost[]>([]);
   const [rendered, setRendered] = useState(false);
   const [hasError, setHasError] = useState(false);
   const [hasImage, setHasImage] = useState(false);
@@ -45,7 +54,7 @@ const Profiles = () => {
       });
       const newUser = response.data.data.user;
       setUser(newUser);
-      // setUserProfileData(response.data);
+      setPosts(response.data.data.posts);
       if (newUser?.bgImageVersion && newUser?.bgImageVersion) {
         setBgUrl(Utils.generateImageUrl(newUser.bgImageVersion, newUser.bgImageId));
       }
@@ -138,6 +147,18 @@ const Profiles = () => {
   };
   // const tabItems = () => {};
 
+  const removeImageFromGallery = async (imageId: string) => {
+    try {
+      dispatch(toggleDeleteDialog({ toggle: false, data: null }));
+      const images = galleryImages.filter((image) => image._id !== imageId);
+      setGalleryImages(images);
+      await imageService.deleteUserProfileImage(imageId);
+    } catch (error) {
+      setHasError(true);
+      Utils.addErrorNotification(error, dispatch);
+    }
+  };
+
   useEffect(() => {
     if (!isRendered.current) {
       getUserProfileByUsername();
@@ -148,6 +169,15 @@ const Profiles = () => {
   }, [getUserProfileByUsername, getUserImages]);
   return (
     <>
+      {deleteDialogIsOpen && (
+        <Dialog
+          title="Are you sure you want to delete this image?"
+          firstButtonText="Delete"
+          secondButtonText="Cancel"
+          firstBtnHandler={() => removeImageFromGallery(data as string)}
+          secondBtnHandler={() => dispatch(toggleDeleteDialog({ toggle: false, data: null }))}
+        />
+      )}
       <div className="profile-wrapper">
         <div className="profile-wrapper-container">
           <div className="profile-header">
@@ -169,6 +199,39 @@ const Profiles = () => {
                 galleryImages={galleryImages}
               />
             ) : null}
+            <div className="profile-content">
+              {displayContent === 'timeline' ? <Timeline loading={loading} userProfileData={user as IUser} posts={posts} /> : null}
+              {displayContent === 'Followers' && user ? <FollowerCard userData={user} /> : null}
+              {displayContent === 'Gallery' && user ? (
+                <>
+                  {galleryImages.length > 0 ? (
+                    <>
+                      <div className="imageGrid-container">
+                        {galleryImages.map((image) => (
+                          <div key={`profile-image-${image._id}`}>
+                            <GalleryImage
+                              showCaption={false}
+                              showDelete={true}
+                              imgSrc={Utils.generateImageUrl(image.imgVersion, image?.imgId)}
+                              onClick={() => {
+                                setImageUrl(Utils.generateImageUrl(image.imgVersion, image?.imgId));
+                                setShowImageModal(!showImageModal);
+                              }}
+                              onRemoveImage={(event) => {
+                                event.stopPropagation();
+                                dispatch(toggleDeleteDialog({ toggle: !deleteDialogIsOpen, data: image._id }));
+                              }}
+                            />
+                          </div>
+                        ))}
+                      </div>
+                    </>
+                  ) : null}
+                </>
+              ) : null}
+              {displayContent === 'Change Password' && user ? <ChangePassword /> : null}
+              {displayContent === 'Notifications' && user ? <NotificationSetting /> : null}
+            </div>
           </div>
         </div>
       </div>

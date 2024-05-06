@@ -139,7 +139,7 @@ const Post = ({ post: rawPost, showIcons }: IPostProps) => {
 
               {post?.createAt && (
                 <p className="time-text-display" data-testid="time-display">
-                  {timeAgo.transform(post?.createAt)} &middot; {getPrivacy(post.privacy)}
+                  {timeAgo.transform(post?.createAt ?? (post.createdAt as string))} &middot; {getPrivacy(post.privacy)}
                 </p>
               )}
             </div>

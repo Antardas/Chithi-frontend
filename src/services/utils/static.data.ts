@@ -27,6 +27,7 @@ import {
 } from 'react-icons/fa';
 import { IPost, IDropdownOption } from '~/types/post.js';
 import { ITabItems } from '~/types/utils.js';
+import { INotificationType } from '~/types/notification.js';
 
 export interface ISideBarItems {
   index: number;
@@ -256,7 +257,7 @@ export const reactionsColor = {
   wow: '#f7b124'
 };
 
-export const notificationItems = [
+export const notificationItems: INotificationType[] = [
   {
     index: 0,
     title: 'Direct Messages',
