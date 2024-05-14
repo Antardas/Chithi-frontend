@@ -5,6 +5,7 @@ import { Login, Register } from '../index';
 import { Utils } from '~/services/utils/utils.service';
 import { useNavigate } from 'react-router-dom';
 import useLocalStorage from '~/hooks/useLocalStorage';
+import PageLoader from '~/Components/PageLoader';
 
 const AuthTabs = (): React.JSX.Element => {
   const [type, setType] = useState<'SIGN_IN' | 'SIGN_UP'>('SIGN_IN');
@@ -12,16 +13,20 @@ const AuthTabs = (): React.JSX.Element => {
   const [loggedIn, setLoggedIn, deleteLoggedIn] = useLocalStorage ('keepLoggedIn');
   const navigate = useNavigate();
   useEffect(() => {
-    setEnvironment(Utils.appEnvironment());
-    console.log(JSON.parse(loggedIn));
-
-    if (JSON.parse(loggedIn)) {
-      navigate('/app/social/streams');
-    }
+		setEnvironment(Utils.appEnvironment());
+		if (loggedIn) {
+			
+			console.log(JSON.parse(loggedIn));
+			
+			if (JSON.parse(loggedIn)) {
+				navigate('/app/social/streams');
+			}
+		}
   }, []);
   return (
-    <>
-      <div
+		<>
+			{
+				loggedIn ? <PageLoader/> : <div
         className="container-wrapper"
         style={{
           backgroundImage: `url(${backgroundImage})`
@@ -52,6 +57,8 @@ const AuthTabs = (): React.JSX.Element => {
           </div>
         </div>
       </div>
+			}
+     
     </>
   );
 };

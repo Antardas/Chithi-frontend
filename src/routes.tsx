@@ -15,8 +15,9 @@ import Error from '~/pages/Error';
 import { Suspense, lazy } from 'react';
 import StreamSkeleton from '~/pages/social/Streams/StreamSkeleton';
 import NotificationSkeleton from '~/pages/social/notification/NotificationSkeleton';
-import CardSkeleton from './Components/CardElement/CardSkeleton';
-import PhotosSkeleton from './pages/social/photos/PhotosSkeleton';
+import CardSkeleton from '~/Components/CardElement/CardSkeleton';
+import PhotosSkeleton from '~/pages/social/photos/PhotosSkeleton';
+import ProfileSkeleton from '~/pages/social/profiles/ProfilesSkeleton';
 
 const Social = lazy(() => import('~/pages/social'));
 const Streams = lazy(() => import('~/pages/social/Streams'));
@@ -108,7 +109,7 @@ const router = createBrowserRouter([
       {
         path: 'profile/:username',
         element: (
-          <Suspense fallback={<CardSkeleton />}>
+          <Suspense fallback={<ProfileSkeleton />}>
             <Profiles />
           </Suspense>
         )

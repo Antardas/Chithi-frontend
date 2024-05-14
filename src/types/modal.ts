@@ -13,4 +13,5 @@ export interface IModalInterface {
   deleteDialogIsOpen: boolean;
   gifModalIsOpen: boolean;
   showCommentBox: boolean;
+  videoModalIsOpen: boolean;
 }
