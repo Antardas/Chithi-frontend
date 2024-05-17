@@ -87,6 +87,7 @@ const AddPost = ({ selectedImage, selectedVideo }: AddPostProps) => {
   };
 
   const clearImage = () => {
+    setSelectedPostVideo(undefined)
     PostUtils.clearImage({
       postData,
       post,
@@ -110,30 +111,44 @@ const AddPost = ({ selectedImage, selectedVideo }: AddPostProps) => {
       postData.gifUrl = gifUrl ?? '';
       postData.profilePicture = profile?.profilePicture ?? '';
 
-      if (selectedPostImage) {
-        const result = await ImageUtils.readAsBase64(selectedPostImage);
+      if (selectedPostImage || selectedPostVideo) {
+        let mediaType!: 'image' | 'video';
+        let result;
+        if (selectedPostImage) {
+          mediaType = 'image';
+          result = await ImageUtils.readAsBase64(selectedPostImage);
+        }
 
-        const response = await PostUtils.sendPostWithImage({
+        if (selectedPostVideo) {
+          mediaType = 'video';
+          result = await ImageUtils.readAsBase64(selectedPostVideo);
+        }
+
+        const response = await PostUtils.sendPostWithMedia({
           dispatch,
           file: result as string,
           postData,
           imageInputRef,
           setApiResponse,
-          setLoading
+          setLoading,
+          mediaType
         });
 
         if (response && response?.data.message) {
           PostUtils.closePostModal(dispatch);
+          setHasVideo(false)
         }
       } else {
         const response = await postService.createPost(postData);
         if (response && response?.data.message) {
+          setHasVideo(false)
           setApiResponse('success');
           setLoading(false);
           PostUtils.closePostModal(dispatch);
         }
       }
     } catch (error) {
+      setHasVideo(false)
       if (isAxiosError(error)) {
         const typedError: AxiosError<IError> = error;
         const message = typedError?.response?.data?.message || 'Something went wrong';
@@ -271,8 +286,10 @@ const AddPost = ({ selectedImage, selectedVideo }: AddPostProps) => {
                       <TbTrash />
                     </div>
                     {hasVideo ? (
-                      <div style={{marginTop: '-40px'}}>
-                        <video src={postImage} width={'100%'} controls > </video>
+                      <div style={{ marginTop: '-40px' }}>
+                        <video src={postImage} width={'100%'} controls>
+                          {' '}
+                        </video>
                       </div>
                     ) : (
                       <img src={postImage} alt="" data-testid="post-image" className="post-image" />

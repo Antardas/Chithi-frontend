@@ -22,6 +22,11 @@ class PostService {
     return response;
   }
 
+  async createPostWithVideo(body: IPostData) {
+    const response = await axios.post('/post/video', body);
+    return response;
+  }
+
   async deletePost(postId: string) {
     const response = await axios.delete<OnlyMessageResponse>(`/post/${postId}`,);
     return response;

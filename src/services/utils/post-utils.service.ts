@@ -92,14 +92,21 @@ export class PostUtils {
     Utils.dispatchNotification(message, type, dispatch);
   }
 
-  static async sendPostWithImage({ dispatch, file, imageInputRef, postData, setApiResponse, setLoading }: ISendPostWithImage) {
+  static async sendPostWithMedia({ dispatch, file, imageInputRef, postData, setApiResponse, setLoading, mediaType }: ISendPostWithImage) {
     try {
-      postData.image = file;
+      if (mediaType === 'image') {
+        postData.image = file;
+        postData.video = ''
+      } else {
+        postData.video = file;
+        postData.image = ''
+      }
+
       if (imageInputRef.current) {
         imageInputRef.current.textContent = postData.post;
       }
 
-      const response = await postService.createPostWithImage(postData);
+      const response = mediaType === 'image' ? await postService.createPostWithImage(postData) : await postService.createPostWithVideo(postData);
       if (response) {
         setApiResponse('success');
         setLoading(false);
@@ -331,8 +338,9 @@ interface ISendPostWithImage {
   setApiResponse: SetState<string>;
   setLoading: SetState<boolean>;
   dispatch: AppDispatch;
+  mediaType: 'image' | 'video';
 }
-interface IUpdatePostWithImage extends Omit<ISendPostWithImage, 'imageInputRef' | 'postData'> {
+interface IUpdatePostWithImage extends Omit<ISendPostWithImage, 'imageInputRef' | 'postData' | 'mediaType'> {
   postId: string;
   postData: IPostDataEdit;
 }
@@ -341,7 +349,7 @@ interface IUpdatePost extends Omit<IUpdatePostWithImage, 'file'> {
   postData: IPostDataEdit;
 }
 
-type IAddNotification = Omit<ISendPostWithImage, 'file' | 'postData' | 'imageInputRef'> & {
+type IAddNotification = Omit<ISendPostWithImage, 'file' | 'postData' | 'imageInputRef' | 'mediaType'> & {
   message: string;
   type: NotificationType;
 };
