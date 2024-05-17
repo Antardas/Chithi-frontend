@@ -41,7 +41,7 @@ const PostForm = () => {
     openPostModal();
     dispatch(toggleVideoModal(!videoModalIsOpen));
 	};
-	
+
   const openGifModal = () => {
     openPostModal();
     dispatch(toggleGifModal(!gifModalIsOpen));
@@ -52,11 +52,11 @@ const PostForm = () => {
   };
 
   const handleImageFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    ImageUtils.addFileToRedux(e, '', setSelectedPostImage, dispatch);
+    ImageUtils.addFileToRedux(e, '', setSelectedPostImage, dispatch, 'image');
 	};
-	
+
   const handleVideoFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    ImageUtils.addFileToRedux(e, '', setSelectedPostVideo, dispatch);
+    ImageUtils.addFileToRedux(e, '', setSelectedPostVideo, dispatch, 'video');
   };
   return (
     <div>
@@ -100,18 +100,17 @@ const PostForm = () => {
               <li className="post-form-list-item" onClick={openFeelingModal}>
                 <img src={feeling} alt="" /> Feeling
               </li>
-              
-							{/**  
+
+							{/**
 							 * Video Input Section
-							 * 
-							 * 
+							 *
+							 *
 							 */}
-							<li className="post-form-list-item image-select" onClick={openImageModal}>
+							<li className="post-form-list-item image-select" onClick={openVideoModal}>
                 <Input
                   id="post-video"
                   name="image"
 									type="file"
-									accept="video/mp4,video/x-m4v,video/*"
 									className="file-input"
                   ref={videoInputRef}
                   onClick={() => {
@@ -127,7 +126,7 @@ const PostForm = () => {
           </div>
         </div>
       </div>
-      {isOpen && type === 'add' ? <AddPost selectedImage={selectedPostImage} /> : null}
+      {isOpen && type === 'add' ? <AddPost selectedImage={selectedPostImage} selectedVideo={selectedPostVideo} /> : null}
       {isOpen && type === 'edit' ? <EditPost /> : null}
     </div>
   );

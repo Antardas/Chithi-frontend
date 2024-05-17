@@ -6,6 +6,7 @@ export interface IPostData {
   gifUrl: string;
   profilePicture: string;
   image: string;
+  video: string;
 }
 export interface IPostDataEdit extends IPostData {
   imgVersion: string;
@@ -21,6 +22,7 @@ export interface IPost {
   gifUrl?: string;
   profilePicture: string;
   image?: string;
+  video?: string;
   userId: string;
   username: string;
   email: string;

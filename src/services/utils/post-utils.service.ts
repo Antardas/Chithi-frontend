@@ -47,6 +47,7 @@ export class PostUtils {
   }: IClearImage<T>) {
     postData.gifUrl = '';
     postData.image = '';
+    postData.video = '';
     setSelectedPostImage(undefined);
     setPostImage('');
     setTimeout(() => {

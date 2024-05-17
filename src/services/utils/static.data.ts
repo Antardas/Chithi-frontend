@@ -223,6 +223,7 @@ export const emptyPostData: IPost = {
   username: '',
   email: '',
   avatarColor: '',
+  video: '',
   commentCount: 0,
   reactions: {
     angry: 0,

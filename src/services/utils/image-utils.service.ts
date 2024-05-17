@@ -3,14 +3,21 @@ import { AppDispatch, useAppDispatch } from '~/redux/store';
 import { IPost } from '~/types/post';
 import { SetState } from '~/types/utils';
 export class ImageUtils {
-  private static validateFile(file: File): boolean {
-    const validTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif'];
-    return file && validTypes.indexOf(file.type) > -1;
+  private static validateFile(file: File, type: 'image' | 'video'): boolean {
+    console.log(file.type);
+
+    if (type === 'image') {
+      const validTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif'];
+      return file && validTypes.indexOf(file.type) > -1;
+    } else {
+      const validTypes = ['video/m4v', 'video/avi', 'video/mp4', 'video/mpg', 'video/webm'];
+      return file && validTypes.indexOf(file.type) > -1;
+    }
   }
 
-  private static checkFileSize(file: File): string {
+  private static checkFileSize(file: File, type: 'image' | 'video'): string {
     let fileError = '';
-    const isValid = ImageUtils.validateFile(file);
+    const isValid = ImageUtils.validateFile(file, type);
 
     if (!isValid) {
       fileError += `${file.name} not accepted.\n`;
@@ -23,8 +30,8 @@ export class ImageUtils {
     return fileError;
   }
 
-  static checkFile(file: File) {
-    const hasError = ImageUtils.checkFileSize(file);
+  static checkFile(file: File, type: 'image' | 'video') {
+    const hasError = ImageUtils.checkFileSize(file, type);
     if (hasError) {
       const errorMessages = hasError.split('\n').filter(Boolean);
       errorMessages.forEach((item) => window.alert(item));
@@ -36,25 +43,32 @@ export class ImageUtils {
   static addFileToRedux(
     event: React.ChangeEvent<HTMLInputElement>,
     post: string,
-    setSelectedPostImage: SetState<File | undefined>,
-    dispatch: AppDispatch
+    setSelectedFile: SetState<File | undefined>,
+    dispatch: AppDispatch,
+    type: 'image' | 'video'
   ) {
+
+    console.log(type, 'type----');
+
     const file: File | null = event.target.files?.length ? event.target.files[0] : null;
     if (!file) {
       window.alert('Select a File');
       return;
     }
 
-    ImageUtils.checkFile(file);
+    ImageUtils.checkFile(file, type);
 
-    setSelectedPostImage(file);
+    setSelectedFile(file);
     dispatch(
       updatePostItem({
-        image: URL.createObjectURL(file),
+        image: type === 'image' ? URL.createObjectURL(file) : '',
         gifUrl: '',
         imgId: '',
         imgVersion: '',
-        post
+        post,
+        video: type === 'video' ? URL.createObjectURL(file) : '',
+        videoId: '',
+        videoVersion: ''
       })
     );
   }
