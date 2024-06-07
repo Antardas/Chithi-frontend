@@ -26,6 +26,10 @@ class PostService {
     const response = await axios.post('/post/video', body);
     return response;
   }
+  async updatePostWithVideo(postId: string, body: IPostDataEdit) {
+    const response = await axios.put(`/post/video/${postId}`, body);
+    return response;
+  }
 
   async deletePost(postId: string) {
     const response = await axios.delete<OnlyMessageResponse>(`/post/${postId}`,);
@@ -39,6 +43,10 @@ class PostService {
 
   async getPostWithImage(page: number = 1) {
     const response = await axios.get<IGetPostsApiResponse>(`/post/all/images/${page}`);
+    return response;
+  }
+  async getPostsWithVideos(page: number = 1) {
+    const response = await axios.get<IGetPostsApiResponse>(`/post/all/videos/${page}`);
     return response;
   }
   async getReactionsByUsername(username: string) {
