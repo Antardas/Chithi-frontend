@@ -11,6 +11,7 @@ import { RootState, useAppDispatch } from '~/redux/store';
 import { ImageUtils } from '~/services/utils/image-utils.service';
 import { SetState } from '~/types/utils';
 import { toggleGifModal } from '~/redux/reducers/modal/modal.reducer';
+import { Utils } from '~/services/utils/utils.service';
 interface ModalBoxSelectionProps {
   setSelectedPostImage: SetState<File | undefined>;
   setSelectedPostVideo: SetState<File | undefined>;
@@ -36,7 +37,11 @@ const ModalBoxSelection = ({ setSelectedPostImage, setSelectedPostVideo }: Modal
     ImageUtils.addFileToRedux(e, post, setSelectedPostImage, dispatch, 'image');
   };
   const handleVideoFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    ImageUtils.addFileToRedux(e, post, setSelectedPostVideo, dispatch, 'video');
+    try {
+      ImageUtils.addFileToRedux(e, post, setSelectedPostVideo, dispatch, 'video');
+    } catch (error) {
+      Utils.addErrorNotification(error, dispatch);
+    }
   };
   return (
     <>
