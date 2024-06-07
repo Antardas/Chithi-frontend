@@ -67,7 +67,10 @@ export class PostUtils {
         gifUrl: '',
         image: '',
         imgId: '',
-        imgVersion: ''
+        imgVersion: '',
+        video: '',
+        videoId: '',
+        videoVersion: ''
       })
     );
   }
@@ -96,10 +99,10 @@ export class PostUtils {
     try {
       if (mediaType === 'image') {
         postData.image = file;
-        postData.video = ''
+        postData.video = '';
       } else {
         postData.video = file;
-        postData.image = ''
+        postData.image = '';
       }
 
       if (imageInputRef.current) {
@@ -129,14 +132,10 @@ export class PostUtils {
     }
   }
 
-  static async updatePostWithImage({ dispatch, file, postData, postId, setApiResponse, setLoading }: IUpdatePostWithImage) {
+  static async updatePostWithMedia({ dispatch, postData, postId, setApiResponse, setLoading, mediaType }: IUpdatePostWithImage) {
     try {
-      postData.image = file;
-      postData.gifUrl = '';
-      postData.imgId = '';
-      postData.imgVersion = '';
-
-      const response = await postService.updatePostWithImage(postId, postData);
+      const response =
+        mediaType === 'image' ? await postService.updatePostWithImage(postId, postData) : await postService.updatePostWithVideo(postId, postData);
 
       if (response) {
         // setApiResponse('success');
@@ -340,11 +339,11 @@ interface ISendPostWithImage {
   dispatch: AppDispatch;
   mediaType: 'image' | 'video';
 }
-interface IUpdatePostWithImage extends Omit<ISendPostWithImage, 'imageInputRef' | 'postData' | 'mediaType'> {
+interface IUpdatePostWithImage extends Omit<ISendPostWithImage, 'imageInputRef' | 'postData' | 'file'> {
   postId: string;
   postData: IPostDataEdit;
 }
-interface IUpdatePost extends Omit<IUpdatePostWithImage, 'file'> {
+interface IUpdatePost extends Omit<IUpdatePostWithImage, 'file' | 'mediaType'> {
   postId: string;
   postData: IPostDataEdit;
 }

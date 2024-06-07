@@ -125,6 +125,11 @@ export class Utils {
     public_id = public_id.replace(/['"]+/g, '');
     return `https://res.cloudinary.com/${import.meta.env.VITE_CLOUD_NAME}/image/upload/v${version}/${public_id}`;
   }
+  static generateVideoUrl(version: string, public_id: string): string {
+    version = version.replace(/['"]+/g, '');
+    public_id = public_id.replace(/['"]+/g, '');
+    return `https://res.cloudinary.com/${import.meta.env.VITE_CLOUD_NAME}/video/upload/v${version}/${public_id}`;
+  }
 
   static checkIfUserIsBlocked(blocked: string[], userId: string) {
     return blocked.some((id) => id === userId);

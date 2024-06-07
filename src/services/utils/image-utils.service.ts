@@ -47,7 +47,6 @@ export class ImageUtils {
     dispatch: AppDispatch,
     type: 'image' | 'video'
   ) {
-
     console.log(type, 'type----');
 
     const file: File | null = event.target.files?.length ? event.target.files[0] : null;
@@ -56,7 +55,9 @@ export class ImageUtils {
       return;
     }
 
-    ImageUtils.checkFile(file, type);
+    if (!ImageUtils.checkFile(file, type)) {
+      throw new Error('file is not valid');
+    }
 
     setSelectedFile(file);
     dispatch(

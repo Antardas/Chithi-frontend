@@ -23,7 +23,8 @@ import {
   FaUser,
   // FaUserCheck,
   FaUserPlus,
-  FaUsers
+  FaUsers,
+  FaVideo
 } from 'react-icons/fa';
 import { IPost, IDropdownOption } from '~/types/post.js';
 import { ITabItems } from '~/types/utils.js';
@@ -71,6 +72,12 @@ export const sideBarItems: ISideBarItems[] = [
     name: 'Photos',
     url: '/app/social/photos',
     iconName: 'FaImages'
+  },
+  {
+    index: 9,
+    name: 'Videos',
+    url: '/app/social/videos',
+    iconName: 'FaVideo'
   },
   {
     index: 7,
@@ -131,6 +138,9 @@ export const fontAwesomeIcons = {
     className: 'icon'
   }),
   FaImages: ConvertToJSX(FaImages, {
+    className: 'icon'
+  }),
+  FaVideo: ConvertToJSX(FaVideo, {
     className: 'icon'
   }),
   FaRegBell: ConvertToJSX(FaRegBell, {
