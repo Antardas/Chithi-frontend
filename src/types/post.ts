@@ -11,6 +11,8 @@ export interface IPostData {
 export interface IPostDataEdit extends IPostData {
   imgVersion: string;
   imgId: string;
+  videoId: string;
+  videoVersion: string;
 }
 
 export interface IPost {
@@ -38,6 +40,8 @@ export interface IPost {
   };
   imgVersion?: string;
   imgId?: string;
+  videoVersion?: string;
+  videoId?: string;
   createAt: string;
   [key: string]: unknown;
 }
