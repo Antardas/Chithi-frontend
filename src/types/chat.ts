@@ -33,6 +33,10 @@ export interface ISenderReceiver {
   senderName: string;
   receiverName: string;
 }
+export interface ISocketMessageReaction {
+	username: string;
+	setChatMessages: (messages:IMessageList[]) =>void
+}
 
 export interface IConversationUsers {
   sender: string;

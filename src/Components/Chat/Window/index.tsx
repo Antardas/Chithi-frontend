@@ -14,17 +14,21 @@ import { chatService } from '~/services/api/chat/chat.service';
 import { IMarkMessageAsDeleted, IMessageList, ISendMessageBody, IUpdateMessageReaction } from '~/types/chat';
 import MessageDisplay from './MessageDisplay';
 import { socketService } from '~/services/socket/sokcet.service';
+import { setSelectedChatMessages } from '~/redux/reducers/chat/chat.reducer';
 
 const ChatWindow = () => {
   const { isLoading, onlineUsers } = useSelector((state: RootState) => state.chat);
   const { profile } = useSelector((state: RootState) => state.user);
+  const { selectedChatMessages:chatMessages } = useSelector((state: RootState) => state.chat);
   const [receiver, setReceiver] = useState<IUser | null>(null);
   // const [onlineUsers, setOnlineUsers] = useState<string[]>([]);
   const [conversationId, setConversationId] = useState<string>('');
-  const [chatMessages, setChatMessages] = useState<IMessageList[]>([]);
   const [searchparams] = useSearchParams();
   const dispatch = useAppDispatch();
   const isRendered = useRef(false);
+	const setChatMessages = (messages:IMessageList[]) => {
+		dispatch(setSelectedChatMessages(messages))
+	} 
   const sendMessage = async ({ gifUrl, image, message }: ISendMessageParam) => {
     try {
       const isSenderInChatPage = ChatUtils.chatUsers.some((user) => user.sender === profile?.username && user.receiver === receiver?.username);
@@ -145,17 +149,10 @@ const ChatWindow = () => {
   useEffect(() => {
     const username = searchparams.get('username');
     if (username) {
-      ChatUtils.socketIOnMessageReaction({
-        chatMessages,
-        username,
-        setChatMessages,
-        setConversationId
-      });
+			ChatUtils.socketIOnMessageReaction({setChatMessages, username})
     }
-    return () => {
-      socketService.socket?.off('ADDED_REACTION');
-    };
-  }, [searchparams, chatMessages]);
+    
+  }, [searchparams]);
 
   return (
     <div className="chat-window-container" data-testid="chatWindowContainer">

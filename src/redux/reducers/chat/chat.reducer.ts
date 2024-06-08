@@ -4,7 +4,9 @@ import { IMessageList } from '~/types/chat';
 import { IGetALlNotificationResponse } from '~/types/notification';
 
 interface ChatStoreInitialState {
-  chatList: IMessageList[];
+	chatList: IMessageList[];
+	selectedChatMessages: IMessageList[];
+	conversationId: string;
   onlineUsers: string[];
   selectedChatUser: IMessageList | null;
   isLoading: boolean;
@@ -29,7 +31,9 @@ interface ISetSelectedChatUser extends IAction {
 }
 
 const initialState: ChatStoreInitialState = {
-  chatList: [],
+	chatList: [],
+	selectedChatMessages: [],
+	conversationId:'',
   onlineUsers: [],
   isLoading: false,
   selectedChatUser: null
@@ -48,7 +52,13 @@ const chatSlice = createSlice({
       const { isLoading, user } = action.payload;
       state.selectedChatUser = user;
       state.isLoading = isLoading;
-    },
+		},
+		setSelectedChatMessages: (state, action) => {
+			state.selectedChatMessages = action.payload
+		},
+		setConversationId: (state, action) => {
+			state.conversationId = action.payload
+		},
     addOnlineUsers: (state, action) => {
       state.onlineUsers = action.payload;
     }
@@ -83,5 +93,5 @@ const chatSlice = createSlice({
   }
 });
 
-export const { addToChatList, setSelectedChatUser, addOnlineUsers } = chatSlice.actions;
+export const { addToChatList, setSelectedChatUser, addOnlineUsers, setSelectedChatMessages, setConversationId } = chatSlice.actions;
 export default chatSlice.reducer;
