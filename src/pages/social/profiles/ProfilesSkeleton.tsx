@@ -2,7 +2,7 @@ import BackgroundHeaderSkeleton from "~/Components/BackgroundHeader/BackgroundHe
 import PostFormSkeleton from "~/Components/Post/PostForm/PostFormSkeleton";
 import PostSkeleton from "~/Components/Post/PostSkeleton";
 import { tabItems } from "~/services/utils/static.data";
-
+import '~/pages/social/profiles/Profiles.scss'
 const ProfileSkeleton = () => {
   return (
     <div className="profile-wrapper">

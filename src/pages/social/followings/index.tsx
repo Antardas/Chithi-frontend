@@ -57,7 +57,7 @@ const Followings = () => {
   return (
     <div className="card-container">
       <div className="people">Following</div>
-      <div className="card-element">
+      <div className={`${followings.length && 'card-element'}`}>
         {/* People Card */}
         {followings.map((item, index) => (
           <div className="card-element-item" key={`users-${index}`} data-testid="card-element-item">

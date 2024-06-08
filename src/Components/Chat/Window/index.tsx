@@ -152,6 +152,9 @@ const ChatWindow = () => {
         setConversationId
       });
     }
+    return () => {
+      socketService.socket?.off('ADDED_REACTION');
+    };
   }, [searchparams, chatMessages]);
 
   return (

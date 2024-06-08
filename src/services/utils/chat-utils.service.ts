@@ -147,7 +147,9 @@ export class ChatUtils {
     const clonedChatMessages = Utils.cloneDeep(chatMessages) as IMessageList[];
 
     socketService.socket?.on('ADDED_REACTION', (data: IMessageList) => {
-      if (data.senderUsername.toLowerCase() === username || data.receiverUsername.toLowerCase() === username) {
+      if (data.senderUsername.toLowerCase() === username.toLowerCase() || data.receiverUsername.toLowerCase() === username.toLowerCase()) {
+        console.log('User Found  After Reaction');
+
         setConversationId(data.conversationId);
 
         const messageIndex = clonedChatMessages.findIndex((message) => message._id === data._id);
