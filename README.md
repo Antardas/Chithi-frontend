@@ -99,3 +99,27 @@ Chithi is a social media application designed to provide a smooth and engaging u
    ```bash
    npm run dev
    ```
+
+## Challenges Faced
+
+While working on Chithi, we encountered several challenges, particularly in real-time communication, state management, and user experience:
+
+1. **Using Socket.IO**
+   - Ensuring real-time updates for chat messages and reactions.
+   - Avoiding multiple event listener registrations and memory leaks.
+
+2. **Managing State**
+   - Keeping state consistent across components with asynchronous updates.
+   - Optimizing state updates to prevent unnecessary re-renders.
+
+3. **User Authentication**
+   - Implementing secure sign-up, sign-in, and password reset.
+   - Managing user sessions across different devices.
+
+4. **User Experience**
+   - Implementing real-time notifications for new messages and reactions.
+   - Providing efficient user search functionality.
+
+5. **Testing and Debugging**
+   - Setting up automated tests with Jest, Vitest, and React Testing Library.
+   - Debugging issues in a real-time environment.
