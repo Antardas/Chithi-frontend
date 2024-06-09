@@ -100,6 +100,14 @@ Chithi is a social media application designed to provide a smooth and engaging u
    npm run dev
    ```
 
+## Running Unit Tests
+
+To ensure the reliability and correctness of the application, you can run the unit tests using the following command:
+
+```bash
+npm run test
+```
+
 ## Challenges Faced
 
 While working on Chithi, we encountered several challenges, particularly in real-time communication, state management, and user experience:
