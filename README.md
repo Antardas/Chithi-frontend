@@ -38,15 +38,12 @@ Chithi is a social media application designed to provide a smooth and engaging u
 |                       | 4.Block User                                 |
 |                       | 5.Unblock User                               |
 
-Technology Stack
-
-| ![Image 1](https://res.cloudinary.com/dyn3w0n6w/image/upload/v1717868436/Chithi%20Presentation/png-clipart-angularjs-typescript-javascript-vue-js-others-blue-angle-thumbnail_n2iccr.png) | ![Image 2](https://res.cloudinary.com/dyn3w0n6w/image/upload/v1717868436/Chithi%20Presentation/React-Symbol_sonbkt.png) | ![Image 3](https://res.cloudinary.com/dyn3w0n6w/image/upload/v1717868615/Chithi%20Presentation/640px-Sass_Logo_Color.svg_tm10qs.png) |
-|-------------------------|-------------------------|-------------------------|
-| ![Redux](https://res.cloudinary.com/dyn3w0n6w/image/upload/v1717868437/Chithi%20Presentation/1_AJpFZrofvxMn3MHh9p3i_Q_yfsq0q.jpg) | ![Axios](https://res.cloudinary.com/dyn3w0n6w/image/upload/v1717868809/Chithi%20Presentation/57233884-20344080-6fe5-11e9-8df3-0df1282e1574_s5jj1m.png) | ![Socket.io](https://res.cloudinary.com/dyn3w0n6w/image/upload/v1717868436/Chithi%20Presentation/socket-io_rurvrn.png) |
-|-------------------------|-------------------------|-------------------------|
-| ![Redux](https://res.cloudinary.com/dyn3w0n6w/image/upload/v1717868437/Chithi%20Presentation/1_AJpFZrofvxMn3MHh9p3i_Q_yfsq0q.jpg) | ![Axios](https://res.cloudinary.com/dyn3w0n6w/image/upload/v1717868809/Chithi%20Presentation/57233884-20344080-6fe5-11e9-8df3-0df1282e1574_s5jj1m.png) | ![Socket.io](https://res.cloudinary.com/dyn3w0n6w/image/upload/v1717868436/Chithi%20Presentation/socket-io_rurvrn.png) |
-
-
+## Technology Stack
+|||||
+|:-:|:-:|:-:|:-:|
+| ![Typescript](./tech-logo/ts.png) |  ![React](./tech-logo/react.png) | ![Sass](./tech-logo/sass.png)| ![axios](./tech-logo/axios.png)|
+| ![Vitest](./tech-logo/vitest.png)|![React Testing Libray](./tech-logo/rtl.png) | ![Redux Toolkit](./tech-logo/redux.jpg) | ![MSW](./tech-logo/msw.jpeg) |
+| ![Socket.io](./tech-logo/socket-io.png)
 1. Typescript
 2. React 18
 3. Node.js
