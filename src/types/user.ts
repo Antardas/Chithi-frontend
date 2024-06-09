@@ -1,3 +1,5 @@
+import { IPost } from './post';
+
 interface IBasicInfo {
   quote: string;
   work: string;
@@ -68,6 +70,13 @@ interface IGetUserById {
   data: IUser;
   message: string;
 }
+interface IGetUserByUsername {
+  data: {
+    posts: IPost[];
+    user: IUser;
+  };
+  message: string;
+}
 
 interface ISocketBlockedData {
   blockedUser: string;
@@ -87,17 +96,38 @@ interface ISearchUserResponse {
   message: string;
 }
 
+interface IUpdatePassword {
+  newPassword: string;
+  confirmPassword: string;
+  currentPassword: string;
+}
+interface SocialLinks {
+  instagram: string;
+  twitter: string;
+  facebook: string;
+  youtube: string;
+}
+interface BasicInfo {
+  quote: string;
+  work: string;
+  school: string;
+  location: string;
+}
 export type {
   ISignUpResponse,
   IUser,
   INotificationSettings,
-  IBasicInfo,
-  ISocialLinks,
   IUserState,
   ISuggestionUser,
   ICurrentUser,
   ISocketBlockedData,
   ISearchUser,
   ISearchUserResponse,
-  IGetUserById
+  IGetUserById,
+  IGetUserByUsername,
+  IUpdatePassword,
+  BasicInfo,
+  SocialLinks,
+  BasicInfo as IBasicInfo,
+  SocialLinks as ISocialLinks
 };

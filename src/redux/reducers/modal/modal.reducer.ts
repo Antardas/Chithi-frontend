@@ -12,9 +12,10 @@ const initialState: IModalInterface = {
   image: '',
   data: null,
   feelingsIsOpen: false,
-  openFileDialog: false,
+  openFileDialog: false, // TODO: change the file to Image
   reactionModalIsOpen: false,
   gifModalIsOpen: false,
+	videoModalIsOpen: false,
   commentsModalIsOpen: false,
   deleteDialogIsOpen: false,
   showCommentBox: false
@@ -42,12 +43,13 @@ const modalSlice = createSlice({
       state.image = '';
       state.data = null;
       state.feelingsIsOpen = false;
-      state.openFileDialog = false;
+      state.openFileDialog = false; // TODO: change the file to Image
       state.reactionModalIsOpen = false;
       state.gifModalIsOpen = false;
       state.commentsModalIsOpen = false;
       state.deleteDialogIsOpen = false;
-      state.showCommentBox = false;
+			state.showCommentBox = false;
+			state.videoModalIsOpen = false
     },
 
     addPostFeeling: (state, action) => {
@@ -58,7 +60,10 @@ const modalSlice = createSlice({
       state.feelingsIsOpen = action.payload;
     },
     toggleImageModal: (state, action) => {
-      state.openFileDialog = action.payload;
+      state.openFileDialog = action.payload; // TODO: change the file to Image
+    },
+    toggleVideoModal: (state, action) => {
+      state.videoModalIsOpen = action.payload;
     },
     toggleGifModal: (state, action) => {
       state.gifModalIsOpen = action.payload;
@@ -91,7 +96,8 @@ export const {
   toggleFeelingModal,
   toggleReactionModal,
   toggleImageModal,
-  toggleCommentBox
+	toggleCommentBox,
+	toggleVideoModal
 } = modalSlice.actions;
 
 export default modalSlice.reducer;

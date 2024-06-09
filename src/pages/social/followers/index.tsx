@@ -25,13 +25,13 @@ const Followers = () => {
   const getFollowers = useCallback(async () => {
     setLoading(true);
     try {
-      const result = await followerService.getUserFollowers();
+      const result = await followerService.getUserFollowers(profile?._id as string);
       setFollowers(result.data.data);
     } catch (error) {
       Utils.addErrorNotification(error, dispatch);
     }
     setLoading(false);
-  }, [dispatch]);
+  }, [dispatch, profile?._id]);
 
   const blockUser = async (user: IFollower) => {
     try {
@@ -71,7 +71,7 @@ const Followers = () => {
   return (
     <div className="card-container">
       <div className="people">Followers</div>
-      <div className="card-element">
+      <div className={`${followers.length && 'card-element'}`}>
         {/* People Card */}
         {followers.map((item, index) => (
           <div className="card-element-item" key={`users-${item._id}`} data-testid="card-element-item">

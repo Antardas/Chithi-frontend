@@ -251,7 +251,7 @@ const Header = () => {
                   }}
                   className="environment"
                 >
-                  DEV
+                  {environment}
                 </span>
               ) : (
                 ''

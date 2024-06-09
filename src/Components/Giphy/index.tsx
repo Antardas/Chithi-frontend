@@ -19,7 +19,8 @@ const Giphy = () => {
     dispatch(
       updatePostItem({
         gifUrl: gifUrl,
-        image: ''
+        image: '',
+        video: ''
       })
     );
     dispatch(toggleGifModal(!gifModalIsOpen));
@@ -47,7 +48,7 @@ const Giphy = () => {
           </div>
 
           {loading ? <Spinner /> : null}
-          
+
           <ul className="giphy-container-picker-list" data-testid="unorderedList">
             {gifs.map((gif, index) => (
               <li className="giphy-container-picker-list-item" data-testid="list-item" key={index} onClick={() => selectGif(gif.images.original.url)}>

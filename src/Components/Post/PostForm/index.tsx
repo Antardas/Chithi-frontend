@@ -7,18 +7,21 @@ import { RootState, useAppDispatch } from '~/redux/store';
 import photo from '~/assets/images/photo.png';
 import gif from '~/assets/images/gif.png';
 import feeling from '~/assets/images/feeling.png';
-import { openModal, toggleFeelingModal, toggleGifModal, toggleImageModal } from '~/redux/reducers/modal/modal.reducer';
+import video from '~/assets/images/video.png';
+import { openModal, toggleFeelingModal, toggleGifModal, toggleImageModal, toggleVideoModal } from '~/redux/reducers/modal/modal.reducer';
 import AddPost from '~/Components/Post/PostModal/AddPost';
 import { ImageUtils } from '~/services/utils/image-utils.service';
 import EditPost from '../PostModal/EditPost';
 
 const PostForm = () => {
   const { profile } = useSelector((state: RootState) => state.user);
-  const { type, isOpen, openFileDialog, gifModalIsOpen, feelingsIsOpen } = useSelector((state: RootState) => state.modal);
+  const { type, isOpen, openFileDialog, gifModalIsOpen, feelingsIsOpen,videoModalIsOpen } = useSelector((state: RootState) => state.modal);
   const [selectedPostImage, setSelectedPostImage] = useState<File>();
+  const [selectedPostVideo, setSelectedPostVideo] = useState<File>();
 
   const dispatch = useAppDispatch();
-  const fileInputRef = useRef<HTMLInputElement>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null); // TODO: change the file to Image
+  const videoInputRef = useRef<HTMLInputElement>(null);
   const openPostModal = () => {
     dispatch(
       openModal({
@@ -33,6 +36,12 @@ const PostForm = () => {
     dispatch(toggleImageModal(!openFileDialog));
   };
 
+	const openVideoModal = () => {
+		videoInputRef.current?.click()
+    openPostModal();
+    dispatch(toggleVideoModal(!videoModalIsOpen));
+	};
+
   const openGifModal = () => {
     openPostModal();
     dispatch(toggleGifModal(!gifModalIsOpen));
@@ -42,8 +51,12 @@ const PostForm = () => {
     dispatch(toggleFeelingModal(!feelingsIsOpen));
   };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    ImageUtils.addFileToRedux(e, '', setSelectedPostImage, dispatch);
+  const handleImageFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    ImageUtils.addFileToRedux(e, '', setSelectedPostImage, dispatch, 'image');
+	};
+
+  const handleVideoFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    ImageUtils.addFileToRedux(e, '', setSelectedPostVideo, dispatch, 'video');
   };
   return (
     <div>
@@ -77,7 +90,7 @@ const PostForm = () => {
                       fileInputRef.current.value = '';
                     }
                   }}
-                  onChange={handleChange}
+                  onChange={handleImageFileChange}
                 />
                 <img src={photo} alt="" /> Photo
               </li>
@@ -87,11 +100,33 @@ const PostForm = () => {
               <li className="post-form-list-item" onClick={openFeelingModal}>
                 <img src={feeling} alt="" /> Feeling
               </li>
+
+							{/**
+							 * Video Input Section
+							 *
+							 *
+							 */}
+							<li className="post-form-list-item image-select" onClick={openVideoModal}>
+                <Input
+                  id="post-video"
+                  name="image"
+									type="file"
+									className="file-input"
+                  ref={videoInputRef}
+                  onClick={() => {
+                    if (videoInputRef.current) {
+                      videoInputRef.current.value = '';
+                    }
+                  }}
+                  onChange={handleVideoFileChange}
+                />
+                <img src={video} alt="" /> Video
+              </li>
             </ul>
           </div>
         </div>
       </div>
-      {isOpen && type === 'add' ? <AddPost selectedImage={selectedPostImage} /> : null}
+      {isOpen && type === 'add' ? <AddPost selectedImage={selectedPostImage} selectedVideo={selectedPostVideo} /> : null}
       {isOpen && type === 'edit' ? <EditPost /> : null}
     </div>
   );

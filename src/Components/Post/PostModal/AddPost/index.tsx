@@ -22,11 +22,12 @@ import { postService } from '~/services/api/post/post.service';
 import Spinner from '~/Components/Spinner';
 
 const maxNumberOfCharacter = 100;
-const AddPost = ({ selectedImage }: AddPostProps) => {
+const AddPost = ({ selectedImage, selectedVideo }: AddPostProps) => {
   const { profile } = useSelector((state: RootState) => state.user);
   const { gifModalIsOpen, feeling } = useSelector((state: RootState) => state.modal);
-  const { image, gifUrl, post, privacy } = useSelector((state: RootState) => state.post);
+  const { image, gifUrl, post, privacy, video } = useSelector((state: RootState) => state.post);
   const [loading, setLoading] = useState<boolean>(false);
+  const [hasVideo, setHasVideo] = useState<boolean>(false);
   const [postImage, setPostImage] = useState<string>('');
   const [allowedNumberOfChar, _setAllowedNumberOfChar] = useState('100/100');
   const [textAreaBackground, setTextAreaBackground] = useState<string>('#ffffff');
@@ -38,9 +39,11 @@ const AddPost = ({ selectedImage }: AddPostProps) => {
     feelings: '',
     gifUrl: '',
     profilePicture: '',
-    image: ''
+    image: '',
+    video: ''
   });
   const [selectedPostImage, setSelectedPostImage] = useState<File | undefined>(selectedImage);
+  const [selectedPostVideo, setSelectedPostVideo] = useState<File | undefined>(selectedVideo);
   const [apiResponse, setApiResponse] = useState<string>('');
   const counterRef = useRef<HTMLSpanElement>(null);
   const inputRef = useRef<HTMLDivElement>(null);
@@ -84,6 +87,7 @@ const AddPost = ({ selectedImage }: AddPostProps) => {
   };
 
   const clearImage = () => {
+    setSelectedPostVideo(undefined)
     PostUtils.clearImage({
       postData,
       post,
@@ -107,30 +111,44 @@ const AddPost = ({ selectedImage }: AddPostProps) => {
       postData.gifUrl = gifUrl ?? '';
       postData.profilePicture = profile?.profilePicture ?? '';
 
-      if (selectedPostImage) {
-        const result = await ImageUtils.readAsBase64(selectedPostImage);
+      if (selectedPostImage || selectedPostVideo) {
+        let mediaType!: 'image' | 'video';
+        let result;
+        if (selectedPostImage) {
+          mediaType = 'image';
+          result = await ImageUtils.readAsBase64(selectedPostImage);
+        }
 
-        const response = await PostUtils.sendPostWithImage({
+        if (selectedPostVideo) {
+          mediaType = 'video';
+          result = await ImageUtils.readAsBase64(selectedPostVideo);
+        }
+
+        const response = await PostUtils.sendPostWithMedia({
           dispatch,
           file: result as string,
           postData,
           imageInputRef,
           setApiResponse,
-          setLoading
+          setLoading,
+          mediaType
         });
 
         if (response && response?.data.message) {
           PostUtils.closePostModal(dispatch);
+          setHasVideo(false)
         }
       } else {
         const response = await postService.createPost(postData);
         if (response && response?.data.message) {
+          setHasVideo(false)
           setApiResponse('success');
           setLoading(false);
           PostUtils.closePostModal(dispatch);
         }
       }
     } catch (error) {
+      setHasVideo(false)
       if (isAxiosError(error)) {
         const typedError: AxiosError<IError> = error;
         const message = typedError?.response?.data?.message || 'Something went wrong';
@@ -150,12 +168,18 @@ const AddPost = ({ selectedImage }: AddPostProps) => {
   useEffect(() => {
     if (image) {
       setPostImage(image);
+      setHasVideo(false);
       PostUtils.postInputData({ imageInputRef, post: '', postData, setPostData });
     } else if (gifUrl) {
+      setHasVideo(false);
       PostUtils.postInputData({ imageInputRef, post: '', postData, setPostData });
       setPostImage(gifUrl);
+    } else if (video) {
+      setHasVideo(true);
+      PostUtils.postInputData({ imageInputRef, post: '', postData, setPostData });
+      setPostImage(video);
     }
-  }, [image, gifUrl, postData]);
+  }, [image, gifUrl, postData, video]);
 
   useEffect(() => {
     if (inputRef && inputRef.current) {
@@ -188,7 +212,7 @@ const AddPost = ({ selectedImage }: AddPostProps) => {
           <div
             className="modal-box"
             style={{
-              height: selectedImage || image || gifUrl || postData.gifUrl || postData.image ? '700px' : 'auto'
+              height: selectedImage || image || gifUrl || video || postData.gifUrl || postData.image ? '700px' : 'auto'
             }}
           >
             {loading ? (
@@ -261,7 +285,15 @@ const AddPost = ({ selectedImage }: AddPostProps) => {
                     <div className="image-delete-btn" data-testid="image-delete-btn" onClick={clearImage}>
                       <TbTrash />
                     </div>
-                    <img src={postImage} alt="" data-testid="post-image" className="post-image" />
+                    {hasVideo ? (
+                      <div style={{ marginTop: '-40px' }}>
+                        <video src={postImage} width={'100%'} controls>
+                          {' '}
+                        </video>
+                      </div>
+                    ) : (
+                      <img src={postImage} alt="" data-testid="post-image" className="post-image" />
+                    )}
                   </div>
                 </div>
               </div>
@@ -289,7 +321,7 @@ const AddPost = ({ selectedImage }: AddPostProps) => {
             <span className="char_count" data-testid="allowed-number" ref={counterRef}>
               {allowedNumberOfChar}
             </span>
-            <ModalBoxSelection setSelectedPostImage={setSelectedPostImage} />
+            <ModalBoxSelection setSelectedPostImage={setSelectedPostImage} setSelectedPostVideo={setSelectedPostVideo} />
 
             <div className="modal-box-button" data-testid="post-button">
               {/*
@@ -328,4 +360,5 @@ export default AddPost;
 
 interface AddPostProps {
   selectedImage?: File;
+  selectedVideo?: File;
 }

@@ -7,8 +7,8 @@ class FollowerService {
     const response = await axios.get<GetFollowingsResponse>('/users/followings');
     return response;
   }
-  async getUserFollowers() {
-    const response = await axios.get<GetFollowingsResponse>('/users/followers');
+  async getUserFollowers(userId: string) {
+    const response = await axios.get<GetFollowingsResponse>(`/users/followers/${userId}`);
     return response;
   }
   async followUser(followeeId: string) {

@@ -16,7 +16,7 @@ import CommentsModal from '~/Components/Post/Comments/CommentsModal';
 import ImageModal from '../ImageModal';
 import { openModal, toggleDeleteDialog } from '~/redux/reducers/modal/modal.reducer';
 import { clearPostItem, updatePostItem } from '~/redux/reducers/post/post.reducer';
-import Dialog from '../Dialog';
+import Dialog from '~/Components/Dialog';
 import { postService } from '~/services/api/post/post.service';
 
 interface IPostProps {
@@ -139,7 +139,7 @@ const Post = ({ post: rawPost, showIcons }: IPostProps) => {
 
               {post?.createAt && (
                 <p className="time-text-display" data-testid="time-display">
-                  {timeAgo.transform(post?.createAt)} &middot; {getPrivacy(post.privacy)}
+                  {timeAgo.transform(post?.createAt ?? (post.createdAt as string))} &middot; {getPrivacy(post.privacy)}
                 </p>
               )}
             </div>
@@ -169,6 +169,25 @@ const Post = ({ post: rawPost, showIcons }: IPostProps) => {
                     <img className="image" src={Utils.generateImageUrl(post.imgVersion, post.imgId)} alt="" />
                   </div>
                   <img className="post-image" src={Utils.generateImageUrl(post.imgVersion, post.imgId)} alt="" />
+                </div>
+              )}
+
+              {/**
+               * Showing Video if the videoId and videoVersion are available
+               *  */}
+              {post.videoId && post.videoVersion && !post?.gifUrl && post.bgColor === '#ffffff' && (
+                <div
+                  data-testid="post-video"
+                  className="image-display-flex"
+                  style={{
+                    backgroundColor: "#000000"
+                  }}
+                  onClick={() => {
+                    // setShowImageModal(true);
+                    // setImageUrl(Utils.generateImageUrl(post.imgVersion as string, post.imgId as string));
+                  }}
+                >
+                  <video  width={'100%'} className="post-video" src={Utils.generateVideoUrl(post.videoVersion, post.videoId)} controls />
                 </div>
               )}
 

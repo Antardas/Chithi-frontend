@@ -28,17 +28,23 @@ const Streams = () => {
   const { profile } = useSelector((state: RootState) => state.user);
   const [loading, setLoading] = useState<boolean>(false);
   const [currentPage, setCurrentPage] = useState<number>(0);
-  const [followings, setFollowings] = useState<IFollower[]>([])
+  const [followings, setFollowings] = useState<IFollower[]>([]);
   const bodyRef = useRef<HTMLInputElement | null>(null);
   const bottomLineRef = useRef<HTMLInputElement | null>(null);
-  const dispatch = useAppDispatch(); 
+  const dispatch = useAppDispatch();
   const [username] = useLocalStorage('username');
+  let timerRef: undefined | ReturnType<typeof setTimeout>;
 
   const fetchNextPost = () => {
-    if (currentPage <= Math.ceil(totalPost / PAGE_SIZE)) {
-      setCurrentPage(currentPage + 1);
+    if (!timerRef) {
+      timerRef = setTimeout(() => {
+        if (currentPage <= Math.ceil(totalPost / PAGE_SIZE)) {
+          setCurrentPage(currentPage + 1);
 
-      // getAllPost();
+          // getAllPost();
+        }
+        timerRef = undefined; // Reset timer reference
+      }, 300);
     }
   };
 
@@ -91,7 +97,7 @@ const Streams = () => {
   useEffectOnce(() => {
     dispatch(getSuggestions());
     setCurrentPage(currentPage + 1);
-    getFollowings()
+    getFollowings();
     // getAllPost();
     // dispatch(getPosts(1));
   });

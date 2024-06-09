@@ -23,9 +23,12 @@ import {
   FaUser,
   // FaUserCheck,
   FaUserPlus,
-  FaUsers
+  FaUsers,
+  FaVideo
 } from 'react-icons/fa';
 import { IPost, IDropdownOption } from '~/types/post.js';
+import { ITabItems } from '~/types/utils.js';
+import { INotificationType } from '~/types/notification.js';
 
 export interface ISideBarItems {
   index: number;
@@ -69,6 +72,12 @@ export const sideBarItems: ISideBarItems[] = [
     name: 'Photos',
     url: '/app/social/photos',
     iconName: 'FaImages'
+  },
+  {
+    index: 9,
+    name: 'Videos',
+    url: '/app/social/videos',
+    iconName: 'FaVideo'
   },
   {
     index: 7,
@@ -129,6 +138,9 @@ export const fontAwesomeIcons = {
     className: 'icon'
   }),
   FaImages: ConvertToJSX(FaImages, {
+    className: 'icon'
+  }),
+  FaVideo: ConvertToJSX(FaVideo, {
     className: 'icon'
   }),
   FaRegBell: ConvertToJSX(FaRegBell, {
@@ -221,6 +233,7 @@ export const emptyPostData: IPost = {
   username: '',
   email: '',
   avatarColor: '',
+  video: '',
   commentCount: 0,
   reactions: {
     angry: 0,
@@ -255,7 +268,7 @@ export const reactionsColor = {
   wow: '#f7b124'
 };
 
-export const notificationItems = [
+export const notificationItems: INotificationType[] = [
   {
     index: 0,
     title: 'Direct Messages',
@@ -286,7 +299,7 @@ export const notificationItems = [
   }
 ];
 
-export const tabItems = (showPassword: any, showNotification: any) => {
+export const tabItems = (showPassword: boolean, showNotification: boolean): ITabItems[] => {
   const items = [
     { key: 'Timeline', show: true, icon: ConvertToJSX(FaUser, { className: 'banner-nav-item-name-icon' }) },
     { key: 'Followers', show: true, icon: ConvertToJSX(FaHeart, { className: 'banner-nav-item-name-icon' }) },

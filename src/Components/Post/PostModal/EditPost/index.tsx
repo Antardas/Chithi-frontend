@@ -26,8 +26,11 @@ const maxNumberOfCharacter = 100;
 const EditPost = () => {
   const { profile } = useSelector((state: RootState) => state.user);
   const { gifModalIsOpen, feeling } = useSelector((state: RootState) => state.modal);
-  const { image, gifUrl, post, privacy, bgColor, feelings, imgId, imgVersion, _id } = useSelector((state: RootState) => state.post);
+  const { image, gifUrl, post, privacy, bgColor, feelings, imgId, imgVersion, _id, videoId, videoVersion, video } = useSelector(
+    (state: RootState) => state.post
+  );
   const [loading, setLoading] = useState<boolean>(false);
+  const [hasVideo, setHasVideo] = useState<boolean>(false);
   const [postImage, setPostImage] = useState<string>('');
   const [allowedNumberOfChar, _setAllowedNumberOfChar] = useState('100/100');
   const [textAreaBackground, setTextAreaBackground] = useState<string>('#ffffff');
@@ -41,9 +44,13 @@ const EditPost = () => {
     profilePicture: '',
     image: '',
     imgId: '',
-    imgVersion: ''
+    imgVersion: '',
+    video: '',
+    videoId: '',
+    videoVersion: ''
   });
   const [selectedPostImage, setSelectedPostImage] = useState<File | undefined>(undefined);
+  const [selectedPostVideo, setSelectedPostVideo] = useState<File | undefined>(undefined);
   const [apiResponse, setApiResponse] = useState<string>('');
   const counterRef = useRef<HTMLSpanElement>(null);
   const inputRef = useRef<HTMLDivElement>(null);
@@ -87,6 +94,8 @@ const EditPost = () => {
   };
 
   const clearImage = () => {
+    setSelectedPostVideo(undefined);
+    setHasVideo(false);
     PostUtils.clearImage({
       postData,
       post,
@@ -98,16 +107,29 @@ const EditPost = () => {
     });
   };
 
-  const updatePostWithImage = async (image: File) => {
-    const result = await ImageUtils.readAsBase64(image);
+  const updatePostWithMedia = async (file: File, type: 'image' | 'video') => {
+    const result = (await ImageUtils.readAsBase64(file)) as string;
+    if (type === 'image') {
+      postData.image = result;
+      postData.video = '';
+    } else {
+      postData.video = result;
+      postData.image = '';
+    }
 
-    const response = await PostUtils.updatePostWithImage({
+    postData.gifUrl = '';
+    postData.imgId = '';
+    postData.imgVersion = '';
+    postData.videoId = '';
+    postData.videoVersion = '';
+
+    const response = await PostUtils.updatePostWithMedia({
       dispatch,
-      file: result as string,
       postData,
       postId: _id,
       setApiResponse,
-      setLoading
+      setLoading,
+      mediaType: type
     });
 
     if (response && response.data.message) {
@@ -129,7 +151,7 @@ const EditPost = () => {
         postData.feelings = feeling.name;
       }
 
-      if (postData.gifUrl || (postData.imgId && postData.imgVersion)) {
+      if (postData.gifUrl || (postData.imgId && postData.imgVersion) || (postData.videoId && postData.videoVersion)) {
         postData.bgColor = '#ffffff';
       }
 
@@ -138,11 +160,15 @@ const EditPost = () => {
       postData.profilePicture = profile?.profilePicture ?? '';
 
       if (selectedPostImage) {
-        await updatePostWithImage(selectedPostImage);
+        await updatePostWithMedia(selectedPostImage, 'image');
+      } else if (selectedPostVideo) {
+        await updatePostWithMedia(selectedPostVideo, 'video');
       } else {
         await updateUserPost();
       }
+      setHasVideo(false);
     } catch (error) {
+      setHasVideo(false);
       if (isAxiosError(error)) {
         const typedError: AxiosError<IError> = error;
         const message = typedError?.response?.data?.message || 'Something went wrong';
@@ -196,33 +222,64 @@ const EditPost = () => {
       // });
     }
 
-    if (gifUrl && !imgId) {
+    if (gifUrl) {
       postData.gifUrl = gifUrl;
+      postData.image = '';
+      postData.video = '';
+      postData.imgId = '';
+      postData.imgVersion = '';
+      postData.videoId = '';
+      postData.videoVersion = '';
+
       setPostImage(gifUrl);
+      setHasVideo(false);
       postInputData();
     }
 
-    if (imgId && imgVersion && !gifUrl) {
+    if (imgId && imgVersion) {
       postData.imgId = imgId;
       postData.imgVersion = imgVersion;
+      postData.videoId = '';
+      postData.videoVersion = '';
+
+      setHasVideo(false);
       const imgUrl = Utils.generateImageUrl(imgVersion, imgId);
       setPostImage(imgUrl);
       postInputData();
     }
-  }, [bgColor, feelings, imgId, imgVersion, getFeeling, gifUrl, post, postData, postInputData]);
+
+    if (videoId && !imgId && !gifUrl) {
+      postData.videoId = videoId;
+      postData.videoVersion = videoVersion as string;
+      postData.imgId = '';
+      postData.imgVersion = '';
+      const videoUrl = Utils.generateVideoUrl(videoVersion as string, videoId);
+      setPostImage(videoUrl);
+      setHasVideo(true);
+      postInputData();
+    }
+  }, [bgColor, feelings, imgId, imgVersion, getFeeling, gifUrl, post, postData, postInputData, videoId, videoVersion]);
 
   useEffect(() => {
     if (image) {
       setPostImage(image);
+      setHasVideo(false);
       PostUtils.postInputData({ imageInputRef, post, postData, setPostData });
     } else if (gifUrl) {
       PostUtils.postInputData({ imageInputRef, post, postData, setPostData });
       postData.image = '';
+      postData.video = '';
+      setSelectedPostVideo(undefined);
+      setHasVideo(false);
       setSelectedPostImage(undefined);
       setPostImage(gifUrl);
+    } else if (video) {
+      setPostImage(video);
+      setHasVideo(true);
+      PostUtils.postInputData({ imageInputRef, post, postData, setPostData });
     }
     editableFields();
-  }, [editableFields, gifUrl, image, postData, post]);
+  }, [editableFields, gifUrl, image, postData, post, video]);
 
   useEffect(() => {
     if (inputRef && inputRef.current) {
@@ -269,7 +326,7 @@ const EditPost = () => {
           <div
             className="modal-box"
             style={{
-              height: image || gifUrl || gifUrl || imgId ? '700px' : 'auto'
+              height: image || gifUrl  || hasVideo || imgId ? '700px' : 'auto'
             }}
           >
             {loading ? (
@@ -342,7 +399,15 @@ const EditPost = () => {
                     <div className="image-delete-btn" data-testid="image-delete-btn" onClick={clearImage}>
                       <TbTrash />
                     </div>
-                    <img src={postImage} alt="" data-testid="post-image" className="post-image" />
+                    {hasVideo ? (
+                      <div style={{ marginTop: '-40px' }}>
+                        <video src={postImage} width={'100%'} controls>
+                          {' '}
+                        </video>
+                      </div>
+                    ) : (
+                      <img src={postImage} alt="" data-testid="post-image" className="post-image" />
+                    )}{' '}
                   </div>
                 </div>
               </div>
@@ -370,7 +435,7 @@ const EditPost = () => {
             <span className="char_count" data-testid="allowed-number" ref={counterRef}>
               {allowedNumberOfChar}
             </span>
-            <ModalBoxSelection setSelectedPostImage={setSelectedPostImage} />
+            <ModalBoxSelection setSelectedPostImage={setSelectedPostImage} setSelectedPostVideo={setSelectedPostVideo} />
 
             <div className="modal-box-button" data-testid="edit-button">
               {/*

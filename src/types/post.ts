@@ -6,10 +6,13 @@ export interface IPostData {
   gifUrl: string;
   profilePicture: string;
   image: string;
+  video: string;
 }
 export interface IPostDataEdit extends IPostData {
   imgVersion: string;
   imgId: string;
+  videoId: string;
+  videoVersion: string;
 }
 
 export interface IPost {
@@ -21,6 +24,7 @@ export interface IPost {
   gifUrl?: string;
   profilePicture: string;
   image?: string;
+  video?: string;
   userId: string;
   username: string;
   email: string;
@@ -36,6 +40,8 @@ export interface IPost {
   };
   imgVersion?: string;
   imgId?: string;
+  videoVersion?: string;
+  videoId?: string;
   createAt: string;
   [key: string]: unknown;
 }

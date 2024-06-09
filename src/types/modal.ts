@@ -5,7 +5,7 @@ export interface IModalInterface {
   isOpen: boolean;
   feeling: IFeeling;
   image: string;
-  data: object | null;
+  data: object | null | string;
   feelingsIsOpen: boolean;
   openFileDialog: boolean;
   reactionModalIsOpen: boolean;
@@ -13,4 +13,5 @@ export interface IModalInterface {
   deleteDialogIsOpen: boolean;
   gifModalIsOpen: boolean;
   showCommentBox: boolean;
+  videoModalIsOpen: boolean;
 }
