@@ -11,7 +11,7 @@ const AuthTabs = (): React.JSX.Element => {
   const [type, setType] = useState<'SIGN_IN' | 'SIGN_UP'>('SIGN_IN');
   const [environment, setEnvironment] = useState<string>('');
   const [loggedIn, setLoggedIn, deleteLoggedIn] = useLocalStorage('keepLoggedIn');
-  const loggedInBoolean = JSON.parse(loggedIn ?? '') as boolean;
+  const loggedInBoolean = JSON.parse(loggedIn ?? 'false') as boolean;
   const navigate = useNavigate();
   useEffect(() => {
     setEnvironment(Utils.appEnvironment());

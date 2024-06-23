@@ -3,6 +3,7 @@ import axios from 'axios';
 const GIPHY_URL = 'https://api.giphy.com/v1/gifs';
 const API_KEY = import.meta.env.VITE_GIPHY_API_KEY;
 export interface GiphyResponse {
+  id: string;
   images: {
     original: {
       url: string;

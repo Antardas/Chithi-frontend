@@ -137,6 +137,8 @@ const CommentArea = ({ post, setPost }: ICommentAreaProps) => {
         }
       }
     } catch (error) {
+      console.log(error);
+
       if (isAxiosError(error)) {
         const typedError: AxiosError<IError> = error;
         const message = typedError?.response?.data?.message || 'Something went wrong';
