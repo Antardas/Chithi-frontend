@@ -9,11 +9,15 @@ import { updatePostItem } from '~/redux/reducers/post/post.reducer';
 import { toggleGifModal } from '~/redux/reducers/modal/modal.reducer';
 import { useSelector } from 'react-redux';
 import Spinner from '../Spinner';
+import useDebounce from '~/hooks/useDebounce';
+import useEffectOnce from '~/hooks/useEffectOnce';
 const Giphy = () => {
   const { gifModalIsOpen } = useSelector((state: RootState) => state.modal);
   const [gifs, setGifs] = useState<GiphyResponse[]>([]);
   const [loading, setLoading] = useState(false);
   const dispatch = useAppDispatch();
+  const [searchTerm, setSearchTerm] = useState<string>('');
+  const debounceValue = useDebounce(searchTerm, 300);
 
   const selectGif = (gifUrl: string) => {
     dispatch(
@@ -26,9 +30,15 @@ const Giphy = () => {
     dispatch(toggleGifModal(!gifModalIsOpen));
   };
 
-  useEffect(() => {
+  useEffectOnce(() => {
     GiphyUtils.getTrendingGifs(setGifs, setLoading);
-  }, []);
+  });
+
+  useEffect(() => {
+    if (debounceValue) {
+      GiphyUtils.searchGifs(debounceValue, setGifs, setLoading);
+    }
+  }, [debounceValue]);
 
   return (
     <>
@@ -43,7 +53,7 @@ const Giphy = () => {
               labelText=""
               placeholder="Search Gif"
               className="giphy-container-picker-form-input"
-              handleChange={(e) => GiphyUtils.searchGifs(e.target.value, setGifs, setLoading)}
+              handleChange={(e) => setSearchTerm(e.target.value)}
             />
           </div>
 
@@ -51,7 +61,7 @@ const Giphy = () => {
 
           <ul className="giphy-container-picker-list" data-testid="unorderedList">
             {gifs.map((gif, index) => (
-              <li className="giphy-container-picker-list-item" data-testid="list-item" key={index} onClick={() => selectGif(gif.images.original.url)}>
+              <li className="giphy-container-picker-list-item" data-testid="list-item" key={gif.id} onClick={() => selectGif(gif.images.original.url)}>
                 <img style={{ width: '470px' }} src={`${gif.images.original.url}`} alt="" />
               </li>
             ))}
