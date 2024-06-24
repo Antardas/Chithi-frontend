@@ -43,8 +43,7 @@ const Login = () => {
       axios.defaults.headers['Authorization'] = result.data.token;
       setToken(result.data.token);
       setStoredUsername(`${result.data.user.username || ''}`);
-      setLoggedIn(JSON.stringify(true));
-      setKeepLoggedIn(true);
+      setLoggedIn(JSON.stringify(keepLoggedIn));
       setLoading(false);
       setErrorMessage('');
       setHasError(false);

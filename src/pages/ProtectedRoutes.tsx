@@ -1,5 +1,5 @@
 import { AxiosResponse } from 'axios';
-import React, { useCallback } from 'react';
+import React, { useCallback, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Navigate, useNavigate } from 'react-router-dom';
 import useEffectOnce from '~/hooks/useEffectOnce';
@@ -10,18 +10,20 @@ import { addUser } from '~/redux/reducers/user/user.reducer';
 import { RootState, useAppDispatch } from '~/redux/store';
 import { userService } from '~/services/api/user/user.service';
 import { Utils } from '~/services/utils/utils.service';
-import { ICurrentUser } from '~/types/user';
+import { ICurrentUser, IUser } from '~/types/user';
 
 const ProtectedRoutes: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [username, setStoredUsername, removeStorageUsername] = useLocalStorage('username');
-  const [loggedIn, setLoggedIn, deleteLoggedIn] = useLocalStorage('keepLoggedIn');
-  const [pageReload, setPageReload, removeSessionPageReload] = useSessionStorage('pageReload');
+  const [_username, _setStoredUsername, removeStorageUsername] = useLocalStorage('username');
+  const [loggedIn, setLoggedIn, _deleteLoggedIn] = useLocalStorage('keepLoggedIn');
+  const [pageReload, _setPageReload, removeSessionPageReload] = useSessionStorage('pageReload');
   const dispatch = useAppDispatch();
   const { profile, token } = useSelector((state: RootState) => state.user);
   const navigate = useNavigate();
+  // const [userData, setUserData] = useState<IUser | null>(null);
   const checkUser = useCallback(async () => {
     try {
       const response: AxiosResponse<ICurrentUser> = await userService.currentUser();
+      // setUserData(response.data.user);
       //TODO dispatch the conversation list
       dispatch(
         addUser({
@@ -29,7 +31,7 @@ const ProtectedRoutes: React.FC<{ children: React.ReactNode }> = ({ children }) 
           profile: response.data.user
         })
       );
-      dispatch(getConversationList())
+      dispatch(getConversationList());
     } catch (error) {
       console.log(error);
       setTimeout(async () => {
@@ -46,11 +48,11 @@ const ProtectedRoutes: React.FC<{ children: React.ReactNode }> = ({ children }) 
     }
   }, [removeSessionPageReload, removeStorageUsername, setLoggedIn, dispatch, navigate]);
 
-  useEffectOnce( async() => {
+  useEffectOnce(async () => {
     await checkUser();
   });
 
-  if (loggedIn || (!JSON.stringify(loggedIn) && profile && token) || pageReload) {
+  if ((profile?._id && token) || JSON.parse(loggedIn ?? 'false')) {
     return <>{children}</>;
   } else {
     return (

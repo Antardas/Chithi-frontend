@@ -23,6 +23,9 @@ const Followers = () => {
   const navigate = useNavigate();
 
   const getFollowers = useCallback(async () => {
+    if (!profile?._id) {
+      return null;
+    }
     setLoading(true);
     try {
       const result = await followerService.getUserFollowers(profile?._id as string);
