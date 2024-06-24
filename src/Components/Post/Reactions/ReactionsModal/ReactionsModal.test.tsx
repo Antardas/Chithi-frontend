@@ -26,7 +26,7 @@ describe('ReactionsModal', () => {
   });
 
   it('should have list items tabs', async () => {
-    let items = [];
+    let items: HTMLElement[] = [];
     renderWithRouter(<ReactionModal />);
     const listElement = screen.getByRole('list');
     const { getAllByRole } = within(listElement);

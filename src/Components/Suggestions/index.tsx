@@ -8,6 +8,7 @@ import { addToSuggestion } from '~/redux/reducers/suggestion/suggestion.reducer'
 import { RootState, useAppDispatch } from '~/redux/store';
 import { FollowerUtils } from '~/services/utils/followers-utils.service';
 import { Utils } from '~/services/utils/utils.service';
+import { IFollower } from '~/types/follower';
 import { IUser } from '~/types/user';
 
 const Suggestion = () => {
@@ -16,7 +17,7 @@ const Suggestion = () => {
   const dispatch = useAppDispatch();
   const followUser = async (user: IUser) => {
     try {
-      await FollowerUtils.followUser(user, dispatch);
+      await FollowerUtils.followUser(user as unknown as IFollower, dispatch);
       const updatedUsers = users.filter((item) => item._id !== user._id);
       dispatch(addToSuggestion({ users: updatedUsers, isLoading: false }));
     } catch (error) {

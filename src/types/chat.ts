@@ -20,6 +20,7 @@ export interface IMessageList {
   createdAt: string;
   deleteForMe: boolean;
   deleteForEveryone: boolean;
+  message?: string;
 }
 
 export interface GetConversationList {
@@ -34,8 +35,8 @@ export interface ISenderReceiver {
   receiverName: string;
 }
 export interface ISocketMessageReaction {
-	username: string;
-	setChatMessages: (messages:IMessageList[]) =>void
+  username: string;
+  setChatMessages: (messages: IMessageList[]) => void;
 }
 
 export interface IConversationUsers {

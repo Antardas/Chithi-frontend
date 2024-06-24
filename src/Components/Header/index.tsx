@@ -104,7 +104,7 @@ const Header = () => {
   );
 
   const openChatPage = useCallback(
-    async (message: IMessageList) => {
+    async (message: IMessageData) => {
       if (message && profile) {
         const user = message;
         const obj = {

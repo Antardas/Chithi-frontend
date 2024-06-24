@@ -90,7 +90,7 @@ const Followers = () => {
               btnTextTwo="Unblock"
               onClickBtnOne={() => blockUser(item)}
               onClickBtnTwo={() => unblockUser(item)}
-              navigateToProfile={() => ProfileUtils.navigateToProfile(item, navigate)}
+              navigateToProfile={() => ProfileUtils.navigateToProfile(item as unknown as IUser, navigate)}
             />
           </div>
         ))}

@@ -34,14 +34,14 @@ const MessageInput = ({ setChatMessage }: { setChatMessage: (obj: ISendMessagePa
     setFileBase64('');
     setMessage('');
   };
-  
+
   const fileInputClick = () => {
     if (fileInputRef.current) {
       fileInputRef.current.click();
     }
   };
   const addToPreview = async (file: File) => {
-    const isImageIsValid = ImageUtils.checkFile(file);
+    const isImageIsValid = ImageUtils.checkFile(file, 'image');
     if (!isImageIsValid) {
       return;
     }

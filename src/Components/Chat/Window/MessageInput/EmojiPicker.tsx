@@ -1,7 +1,6 @@
 import React from 'react';
 import Picker, { EmojiClickData, EmojiStyle } from 'emoji-picker-react';
-const EmojiPicker = React.memo(({ onEmojiClick, pickerStyle }: EmojiPickerProps) => {
-
+const EmojiPicker = React.memo(({ onEmojiClick }: EmojiPickerProps) => {
   return (
     <div className="emoji-picker" data-testid="emoji-picker">
       <Picker

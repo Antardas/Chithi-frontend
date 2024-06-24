@@ -24,7 +24,8 @@ const initialState: IModalInterface = {
   reactionModalIsOpen: false,
   commentsModalIsOpen: false,
   deleteDialogIsOpen: false,
-  showCommentBox: false
+  showCommentBox: false,
+  videoModalIsOpen: false
 };
 
 const modalData: IModalInterface = {
@@ -43,7 +44,8 @@ const modalData: IModalInterface = {
   reactionModalIsOpen: true,
   commentsModalIsOpen: true,
   deleteDialogIsOpen: true,
-  showCommentBox: true
+  showCommentBox: true,
+  videoModalIsOpen: false
 };
 
 describe('modal reducer', () => {
@@ -244,7 +246,7 @@ describe('modal reducer', () => {
   });
 
   it('should toggleDeleteDialog', () => {
-    expect(reducer(initialState, toggleDeleteDialog({data:null, toggle:true}))).toEqual({
+    expect(reducer(initialState, toggleDeleteDialog({ data: null, toggle: true }))).toEqual({
       type: '',
       isOpen: false,
       feeling: {

@@ -121,7 +121,7 @@ export class NotificationUtils {
     socketService.socket.on('CHAT_LIST', (data: IMessageList) => {
       const clonedMessageNotification = Utils.cloneDeep(messageNotification) as IMessageList[];
       if (data.receiverUsername === profile.username) {
-        const notificationData = {
+        const notificationData:IMessageList = {
           senderId: data.senderId,
           senderUsername: data.senderUsername,
           senderAvatarColor: data.senderAvatarColor,
@@ -134,7 +134,7 @@ export class NotificationUtils {
           conversationId: data.conversationId,
           body: data.body,
           isRead: data.isRead
-        };
+        } as unknown as IMessageList;
 
         const messageIndex = clonedMessageNotification.findIndex((msg) => msg.conversationId === data.conversationId);
 

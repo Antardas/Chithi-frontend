@@ -121,7 +121,7 @@ export class ChatUtils {
     });
   }
 
-  static socketIOMessageReceived({ chatMessages, username, setConversationId, setChatMessages }: ISocketIOMessageReceived) {
+  static socketIOMessageReceived({ username, setConversationId, setChatMessages }: ISocketIOMessageReceived) {
     // const clonedChatMessages = Utils.cloneDeep(chatMessages) as IMessageList[];
     socketService.socket?.on('MESSAGE_RECEIVED', (data: IMessageList) => {
       if (data.senderUsername.toLowerCase() === username.toLowerCase() || data.receiverUsername.toLowerCase() === username.toLowerCase()) {
@@ -143,26 +143,24 @@ export class ChatUtils {
     });
   }
 
+  static socketIOnMessageReaction({ setChatMessages, username }: ISocketMessageReaction) {
+    socketService.socket?.on('ADDED_REACTION', (data: IMessageList) => {
+      const chatMessages = store.getState().chat.selectedChatMessages;
+      const clonedChatMessages = Utils.cloneDeep(chatMessages) as IMessageList[];
+      if (data.senderUsername.toLowerCase() === username.toLowerCase() || data.receiverUsername.toLowerCase() === username.toLowerCase()) {
+        console.log('User Found  After Reaction');
 
-	static socketIOnMessageReaction({ setChatMessages, username }:ISocketMessageReaction) {
-		
-		socketService.socket?.on('ADDED_REACTION', (data: IMessageList) => {
-				const chatMessages = store.getState().chat.selectedChatMessages
-				const clonedChatMessages = Utils.cloneDeep(chatMessages) as IMessageList[];
-		    if (data.senderUsername.toLowerCase() === username.toLowerCase() || data.receiverUsername.toLowerCase() === username.toLowerCase()) {
-		      console.log('User Found  After Reaction');
-	
-		      // setConversationId(data.conversationId);
-	
-		      const messageIndex = clonedChatMessages.findIndex((message) => message._id === data._id);
-	
-		      if (messageIndex !== -1) {
-		        clonedChatMessages.splice(messageIndex, 1, data);
-		        setChatMessages(clonedChatMessages);
-		      }
-		    }
-		  });
-	}
+        // setConversationId(data.conversationId);
+
+        const messageIndex = clonedChatMessages.findIndex((message) => message._id === data._id);
+
+        if (messageIndex !== -1) {
+          clonedChatMessages.splice(messageIndex, 1, data);
+          setChatMessages(clonedChatMessages);
+        }
+      }
+    });
+  }
 
   static getSenderAndReceiverObj(profile: IUser, user: ISearchUser): ISenderReceiver {
     return {
@@ -212,5 +210,5 @@ interface ISocketIOMessageReceived {
   chatMessages: IMessageList[];
   username: string;
   setConversationId: SetState<string>;
-  setChatMessages: SetState<IMessageList[]>;
+  setChatMessages: (messages: IMessageList[]) => void;
 }

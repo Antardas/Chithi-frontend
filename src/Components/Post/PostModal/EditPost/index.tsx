@@ -21,6 +21,7 @@ import { ImageUtils } from '~/services/utils/image-utils.service';
 import { postService } from '~/services/api/post/post.service';
 import Spinner from '~/Components/Spinner';
 import { Utils } from '~/services/utils/utils.service';
+import { SetState } from '~/types/utils';
 
 const maxNumberOfCharacter = 100;
 const EditPost = () => {
@@ -264,9 +265,9 @@ const EditPost = () => {
     if (image) {
       setPostImage(image);
       setHasVideo(false);
-      PostUtils.postInputData({ imageInputRef, post, postData, setPostData });
+      PostUtils.postInputData({ imageInputRef, post, postData, setPostData: setPostData as unknown as SetState<IPostDataEdit | IPostData> });
     } else if (gifUrl) {
-      PostUtils.postInputData({ imageInputRef, post, postData, setPostData });
+      PostUtils.postInputData({ imageInputRef, post, postData, setPostData: setPostData as unknown as SetState<IPostDataEdit | IPostData> });
       postData.image = '';
       postData.video = '';
       setSelectedPostVideo(undefined);
@@ -276,7 +277,7 @@ const EditPost = () => {
     } else if (video) {
       setPostImage(video);
       setHasVideo(true);
-      PostUtils.postInputData({ imageInputRef, post, postData, setPostData });
+      PostUtils.postInputData({ imageInputRef, post, postData, setPostData: setPostData as unknown as SetState<IPostDataEdit | IPostData> });
     }
     editableFields();
   }, [editableFields, gifUrl, image, postData, post, video]);
@@ -326,7 +327,7 @@ const EditPost = () => {
           <div
             className="modal-box"
             style={{
-              height: image || gifUrl  || hasVideo || imgId ? '700px' : 'auto'
+              height: image || gifUrl || hasVideo || imgId ? '700px' : 'auto'
             }}
           >
             {loading ? (

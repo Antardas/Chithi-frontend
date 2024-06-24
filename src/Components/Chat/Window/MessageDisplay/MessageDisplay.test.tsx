@@ -31,7 +31,7 @@ describe('MessageDisplay', () => {
       deleteChatMessage: () => {}
     };
   });
-  const useDetectOutsideClickSpy = useDetectOutsideClickMocked.mockReturnValue([false, null]);
+  const useDetectOutsideClickSpy = useDetectOutsideClickMocked.mockReturnValue([false, () => {}]);
 
   it('should have empty message chat', async () => {
     renderWithRouter(<MessageDisplay {...props} />);
@@ -88,7 +88,7 @@ describe('MessageDisplay', () => {
   });
 
   it('should display reactions container', async () => {
-    useDetectOutsideClickSpy.mockReturnValue([true, null]);
+    useDetectOutsideClickSpy.mockReturnValue([true, () => {}]);
     props.chatMessages = [messageData];
     renderWithRouter(<MessageDisplay {...props} />);
     const messageContent = await screen.findAllByTestId('message-content');

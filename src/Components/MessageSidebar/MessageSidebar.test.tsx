@@ -4,7 +4,8 @@ import MessageSidebar from '~/Components/MessageSidebar';
 import { existingUser } from '~/mocks/data/user.mock';
 import { IMessageData } from '~/types/message';
 import userEvent from '@testing-library/user-event';
-const messageData: IMessageData = {
+import { IMessageList } from '~/types/chat';
+const messageData: IMessageList = {
   _id: '12345',
   conversationId: '23456',
   receiverId: '1q2w3e4r5t',
@@ -20,7 +21,9 @@ const messageData: IMessageData = {
   gifUrl: '',
   selectedImage: '',
   reaction: [],
-  createdAt: new Date().toString()
+  createdAt: new Date().toString(),
+  deleteForEveryone: false,
+  deleteForMe: false
 };
 describe('MessageSidebar', () => {
   it('should display message notification content', () => {

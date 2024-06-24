@@ -5,7 +5,7 @@ import { Utils } from '~/services/utils/utils.service';
 import { IError, SuggestionResponse } from '~/types/axios';
 import { AppDispatch } from '../store';
 
-const getSuggestions = createAsyncThunk('user/getSuggestions', async (_name?: string, { dispatch }) => {
+const getSuggestions = createAsyncThunk('user/getSuggestions', async (_name: string, { dispatch }) => {
   try {
     const response: AxiosResponse<SuggestionResponse> = await userService.getUserSuggestion();
 

@@ -127,7 +127,7 @@ const Peoples = () => {
 
             <div className="card-element-header">
               <div className="card-element-header-bg"></div>
-              <Avatar name={item.username} bgColor={item.avatarColor} textColor="#ffffff" size={120} avatarSrc={item.profilePicture} />
+              <Avatar name={item?.username ?? ''} bgColor={item.avatarColor} textColor="#ffffff" size={120} avatarSrc={item.profilePicture} />
               <div className="card-element-header-text">
                 <span className="card-element-header-name">{item.username}</span>
               </div>

@@ -95,7 +95,7 @@ const Streams = () => {
 
   useInfinityScroll(bodyRef, bottomLineRef, fetchNextPost);
   useEffectOnce(() => {
-    dispatch(getSuggestions());
+    dispatch(getSuggestions(''));
     setCurrentPage(currentPage + 1);
     getFollowings();
     // getAllPost();

@@ -85,7 +85,7 @@ const Profiles = () => {
     setHasImage(!hasImage);
     if (data instanceof File) {
       if (type === 'background') {
-        const isValidFile: boolean = ImageUtils.checkFile(data);
+        const isValidFile: boolean = ImageUtils.checkFile(data, 'image');
 
         if (!isValidFile) {
           return;
@@ -96,7 +96,7 @@ const Profiles = () => {
         const base64 = await ImageUtils.readAsBase64(data);
         setSelectedBackgroundImage(base64 as string);
       } else {
-        const isValidFile: boolean = ImageUtils.checkFile(data);
+        const isValidFile: boolean = ImageUtils.checkFile(data, 'image');
 
         if (!isValidFile) {
           return;
