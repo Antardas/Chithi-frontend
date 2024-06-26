@@ -136,7 +136,7 @@ const LeftSide = ({
             </div>
           )}
           <div className="message-time">
-            <span data-testid="chat-time">{timeAgo.timeFormat(message?.createdAt)}</span>
+            <span data-testid="chat-time">{timeAgo.transform(message?.createdAt)}</span>
           </div>
         </div>
       </div>
