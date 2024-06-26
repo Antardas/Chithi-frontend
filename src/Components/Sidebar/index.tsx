@@ -74,7 +74,7 @@ const Sidebar = () => {
       leaveChatPage();
     }
     navigate(newUrl);
-    socketService.socket.off('MESSAGE_RECEIVED');
+    // socketService.socket.off('MESSAGE_RECEIVED');
   };
 
   const markMessageAsRead = useCallback(

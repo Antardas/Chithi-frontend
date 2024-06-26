@@ -16,7 +16,7 @@ interface MessageSidebarProps {
 }
 const MessageSidebar = ({ profile, messageCount, messageNotifications, openChatPage }: MessageSidebarProps) => {
   return (
-    <div className="message-dropdown" data-testid="message-sidebar">
+    <div className="message-dropdown" data-testid="message-sidebar" key={'message-sidebar'}>
       <div className="message-card">
         <div className="message-card-body">
           <div className="message-bg-primary">

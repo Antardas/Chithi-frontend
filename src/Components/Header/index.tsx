@@ -34,7 +34,7 @@ import { chatService } from '~/services/api/chat/chat.service';
 const Header = () => {
   // State and Hooks
   const { profile } = useSelector((state: RootState) => state.user);
-  const { chatList } = useSelector((state: RootState) => state.chat);
+  const { conversations } = useSelector((state: RootState) => state.chat);
   const { socketConnected } = useSelector((state: RootState) => state.app);
   const [environment, setEnvironment] = useState<string>('');
   const [settings, setSettings] = useState<ISettingsDropdown[]>([]);
@@ -129,7 +129,7 @@ const Header = () => {
         navigate(`/app/social/chat/messages?${createSearchParams(params)}`);
       }
     },
-    [chatList, profile]
+    [profile, navigate]
   );
   const onLogout = async () => {
     try {
@@ -159,7 +159,7 @@ const Header = () => {
     const env = Utils.appEnvironment();
     setEnvironment(env);
     if (profile) {
-      const sum = chatList.reduce((acc: number, cur: IMessageList) => {
+      const sum = conversations.reduce((acc: number, cur: IMessageList) => {
         if (!cur.isRead && cur.receiverUsername === profile?.username) {
           acc += 1;
         }
@@ -168,9 +168,9 @@ const Header = () => {
       console.log(sum);
 
       setMessageCount(sum);
-      setMessageNotification(chatList);
+      setMessageNotification(conversations);
     }
-  }, [profile, chatList]);
+  }, [profile, conversations]);
 
   useEffectOnce(() => {
     Utils.mapSettingsDropDownItems(setSettings);
@@ -181,12 +181,12 @@ const Header = () => {
   useEffect(() => {
     if (socketConnected) {
       socketService.socket.emit('SETUP', { userId: username });
-      ChatUtils.usersOnline()
+      ChatUtils.usersOnline();
     }
   }, [socketConnected, username]);
 
   useEffect(() => {
-    if (socketConnected) {
+    if (socketConnected && profile) {
       NotificationUtils.socketIONotifications(profile as IUser, notifications, setNotifications, 'header', setNotificationCount);
       NotificationUtils.socketIOMessageNotification({
         profile: profile as IUser,
@@ -196,10 +196,10 @@ const Header = () => {
         dispatch,
         location
       });
-      return () => {
-        NotificationUtils.cleanup();
-      };
     }
+    return () => {
+      NotificationUtils.cleanup();
+    };
   }, [notifications, profile, socketConnected]);
   // All Utility and extra function
 

@@ -101,7 +101,6 @@ const Streams = () => {
     // getAllPost();
     // dispatch(getPosts(1));
   });
-  console.log('🚀 ~ useEffectOnce ~ dispatch:', dispatch);
 
   useEffect(() => {
     getAllPost();

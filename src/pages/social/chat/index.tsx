@@ -7,7 +7,7 @@ import '~/pages/social/chat/Chat.scss';
 import { getConversationList } from '~/redux/api/chat';
 import { RootState, useAppDispatch } from '~/redux/store';
 const Chat = () => {
-  const { chatList, selectedChatUser } = useSelector((sate: RootState) => sate.chat);
+  const { conversations, selectedChatUser } = useSelector((sate: RootState) => sate.chat);
   const dispatch = useAppDispatch();
   useEffectOnce(() => {
     dispatch(getConversationList());
@@ -20,8 +20,8 @@ const Chat = () => {
             <ChatList />
           </div>
           <div className="private-chat-wrapper-content-conversation">
-            {selectedChatUser || chatList.length ? <ChatWindow /> : null}
-            {!selectedChatUser && !chatList.length ? (
+            {selectedChatUser || conversations.length ? <ChatWindow /> : null}
+            {!selectedChatUser && !conversations.length ? (
               <div className="no-chat" data-testid="no-chat">
                 Select or Search for users to chat with
               </div>
