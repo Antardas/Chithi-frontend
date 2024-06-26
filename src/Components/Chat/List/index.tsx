@@ -13,20 +13,20 @@ import useDebounce from '~/hooks/useDebounce';
 import { ChatUtils } from '~/services/utils/chat-utils.service';
 import { IConversationUsers, IMessageList } from '~/types/chat';
 import { createSearchParams, useLocation, useNavigate, useSearchParams } from 'react-router-dom';
-import { setSelectedChatUser } from '~/redux/reducers/chat/chat.reducer';
+import { setConversations, setSelectedChatUser } from '~/redux/reducers/chat/chat.reducer';
 import { chatService } from '~/services/api/chat/chat.service';
 import { timeAgo } from '~/services/utils/timeago.utils';
 import ChatListBody from './ChatListBody';
+import { socketService } from '~/services/socket/sokcet.service';
 export type COMPONENT_TYPE = 'chatList' | 'searchList' | '';
 const ChatList = () => {
   const { profile } = useSelector((sate: RootState) => sate.user);
-  const { chatList } = useSelector((sate: RootState) => sate.chat);
   const [result, setResult] = useState<ISearchUser[]>([]);
   const [isSearching, setIsSearching] = useState<boolean>(false);
   const [searchTerm, setSearchTerm] = useState<string>('');
   const [selectedUser, setSelectedUser] = useState<ISearchUser | null>(null);
   const [componentType, setComponentType] = useState<COMPONENT_TYPE>('');
-  const [chatMessageList, setChatMessageList] = useState<IMessageList[]>([]);
+  const { conversations } = useSelector((state: RootState) => state.chat);
   const [searchParams] = useSearchParams();
   const dispatch = useAppDispatch();
   const searchDebounce = useDebounce(searchTerm, 1000);
@@ -56,7 +56,6 @@ const ChatList = () => {
       if (!profile) {
         return;
       }
-      console.log('Reached here ', 2);
       try {
         const newUser: IMessageList = {
           receiverId: user?._id,
@@ -73,13 +72,12 @@ const ChatList = () => {
         ChatUtils.joinRoomEvent(formattedUser, profile);
         ChatUtils.privateChatMessages = [];
         const paramsId = searchParams.get('id');
-        const existingUser = chatMessageList.find((chat) => chat.receiverId === paramsId || chat.senderId === paramsId);
+        const existingUser = conversations.find((chat) => chat.receiverId === paramsId || chat.senderId === paramsId);
         if (!existingUser) {
-          console.log('Reached here ', 3);
-          const newChaMessageList = [newUser, ...chatMessageList];
-          setChatMessageList(newChaMessageList);
+          const newChaMessageList = [newUser, ...conversations];
+          dispatch(setConversations(newChaMessageList));
 
-          if (!chatList.length) {
+          if (!conversations.length) {
             dispatch(
               setSelectedChatUser({
                 isLoading: false,
@@ -97,7 +95,7 @@ const ChatList = () => {
         Utils.addErrorNotification(error, dispatch);
       }
     },
-    [chatList, chatMessageList, dispatch, searchParams, profile]
+    [conversations, dispatch, searchParams, profile]
   );
 
   const updateQueryParams = (user: IMessageList) => {
@@ -116,19 +114,20 @@ const ChatList = () => {
 
   const removeSelectedUserFromList = (event: React.MouseEvent<HTMLDivElement>) => {
     event.stopPropagation();
-    const clonedChatList = Utils.cloneDeep(chatMessageList) as IMessageList[];
+    const clonedChatList = Utils.cloneDeep(conversations) as IMessageList[];
     const paramsUserId = searchParams.get('id');
     const index = clonedChatList.findIndex((item) => item.receiverId === paramsUserId);
 
     if (index !== 1) {
       clonedChatList.splice(index, 1);
       setSelectedUser(null);
-      setChatMessageList(clonedChatList);
+      dispatch(setConversations(clonedChatList));
+
       ChatUtils.updateSelectedUser({
         chatMessageList: clonedChatList,
         dispatch,
         navigate,
-        params: chatMessageList.length ? updateQueryParams(chatMessageList[0]) : ({} as ReturnType<typeof updateQueryParams>),
+        params: conversations.length ? updateQueryParams(conversations[0]) : ({} as ReturnType<typeof updateQueryParams>),
         pathname: `${location.pathname}`,
         profile: profile as IUser,
         setSelectedChatUser,
@@ -183,19 +182,18 @@ const ChatList = () => {
 
   useEffect(() => {
     if (!profile) return;
-    console.log('rendering-socket-effect');
-    ChatUtils.socketIOChatList({
-      chatMessageList,
-      profile: profile as IUser,
-      setChatMessageList
-    });
-  }, [chatMessageList, profile]);
+    // console.log('rendering-socket-effect');
+    ChatUtils.socketIOChatList();
+  }, [profile]);
 
-  useEffect(() => {
-    if (!chatList.length) return;
-    console.log('rendering-set-chat-message');
-    setChatMessageList(chatList);
-  }, [chatList]);
+  // useEffect(() => {
+  //   if (!conversations.length) return;
+  //   dispatch(setConversations(conversations));
+
+  //   return () => {
+  //     socketService.socket?.off('CHAT_LIST');
+  //   };
+  // }, [conversations, dispatch]);
 
   useEffect(() => {
     if (selectedUser && componentType === 'searchList') {
@@ -248,7 +246,7 @@ const ChatList = () => {
 
         <div className="conversation-container-body">
           <div className="conversation">
-            {chatMessageList.map((data) => (
+            {conversations.map((data) => (
               <div
                 data-testid="conversation-item"
                 className={`conversation-item ${isMatchedUsername(data) ? 'active' : ''}`}
@@ -278,7 +276,9 @@ const ChatList = () => {
                     <FaTimes />
                   </div>
                 ) : null}
-                {data.body && !data.deleteForMe && !data.deleteForEveryone ? <ChatListBody data={data} profile={profile as IUser} /> : null}
+                {data.body && !data.deleteForMe && !data.deleteForEveryone ? (
+                  <ChatListBody key={`chatListBody-${data._id}`} data={data} profile={profile as IUser} />
+                ) : null}
                 {data.body && (data.deleteForEveryone || (data.deleteForMe && data.senderUsername === profile?.username)) ? (
                   <div className="conversation-message">
                     <span className="message-deleted">message deleted</span>

@@ -2,12 +2,12 @@ import { SetState } from '~/types/utils';
 import { socketService } from '../socket/sokcet.service';
 import { ISearchUser, IUser } from '~/types/user';
 import { IConversationUsers, IMessageList, ISendMessageBody, ISenderReceiver, ISocketMessageReaction } from '~/types/chat';
-import { AppDispatch, store } from '~/redux/store';
+import { AppDispatch, RootState, store } from '~/redux/store';
 import { ActionCreatorWithPayload } from '@reduxjs/toolkit';
 import { createSearchParams, NavigateFunction } from 'react-router-dom';
 import { chatService } from '../api/chat/chat.service';
 import { Utils } from './utils.service';
-import { addOnlineUsers } from '~/redux/reducers/chat/chat.reducer';
+import { addOnlineUsers, setConversations } from '~/redux/reducers/chat/chat.reducer';
 
 export class ChatUtils {
   static privateChatMessages: IMessageList[] = [];
@@ -102,8 +102,15 @@ export class ChatUtils {
     }
   }
 
-  static socketIOChatList({ profile, chatMessageList, setChatMessageList }: ISocketIOChatListParams) {
+  static socketIOChatList() {
     socketService.socket?.on('CHAT_LIST', (data: IMessageList) => {
+      const profile = store.getState().user.profile;
+
+      if (!profile) {
+        return null;
+      }
+
+      const chatMessageList = store.getState().chat.conversations;
       if (data.senderUsername === profile.username || data.receiverUsername === profile.username) {
         let messageIndex = chatMessageList.findIndex((message) => message.conversationId === data.conversationId);
 
@@ -116,7 +123,7 @@ export class ChatUtils {
           messageIndex = chatMessageList.findIndex((message) => message.receiverUsername === data.receiverUsername);
           clonedChatMessageList.splice(messageIndex, 1);
         }
-        setChatMessageList(clonedChatMessageList);
+        store.dispatch(setConversations(clonedChatMessageList));
       }
     });
   }
