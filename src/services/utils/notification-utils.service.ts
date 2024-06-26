@@ -118,10 +118,10 @@ export class NotificationUtils {
     dispatch,
     location
   }: ISocketIOMessageNotification) {
-    socketService.socket.on('CHAT_LIST', (data: IMessageList) => {
+    socketService.socket.on('MESSAGE_RECEIVED', (data: IMessageList) => {
       const clonedMessageNotification = Utils.cloneDeep(messageNotification) as IMessageList[];
       if (data.receiverUsername === profile.username) {
-        const notificationData:IMessageList = {
+        const notificationData: IMessageList = {
           senderId: data.senderId,
           senderUsername: data.senderUsername,
           senderAvatarColor: data.senderAvatarColor,
@@ -152,7 +152,7 @@ export class NotificationUtils {
         if (!Utils.checkUrl(location.pathname, 'chat')) {
           Utils.dispatchNotification('You have new messages', 'success', dispatch);
         }
-        setMessageNotification(clonedMessageNotification)
+        setMessageNotification(clonedMessageNotification);
       }
     });
   }
@@ -160,6 +160,7 @@ export class NotificationUtils {
     socketService.socket?.off('INSERT_NOTIFICATION');
     socketService.socket?.off('UPDATE_NOTIFICATION');
     socketService.socket?.off('DELETE_NOTIFICATION');
+    socketService.socket?.off('MESSAGE_RECEIVED');
   }
 }
 
