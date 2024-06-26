@@ -4,9 +4,10 @@ import { IMessageList } from '~/types/chat';
 import { IGetALlNotificationResponse } from '~/types/notification';
 
 interface ChatStoreInitialState {
-	chatList: IMessageList[];
-	selectedChatMessages: IMessageList[];
-	conversationId: string;
+  chatList: IMessageList[];
+  selectedChatMessages: IMessageList[];
+  conversations: IMessageList[]; // it's used for show contacts or recent chat whom talk with logged in user
+  conversationId: string;
   onlineUsers: string[];
   selectedChatUser: IMessageList | null;
   isLoading: boolean;
@@ -29,11 +30,15 @@ interface ISetSelectedChatUser extends IAction {
     user: IMessageList | null;
   };
 }
+interface ISetConversations extends IAction {
+  payload: IMessageList[];
+}
 
 const initialState: ChatStoreInitialState = {
-	chatList: [],
-	selectedChatMessages: [],
-	conversationId:'',
+  chatList: [],
+  selectedChatMessages: [],
+  conversations: [],
+  conversationId: '',
   onlineUsers: [],
   isLoading: false,
   selectedChatUser: null
@@ -52,13 +57,16 @@ const chatSlice = createSlice({
       const { isLoading, user } = action.payload;
       state.selectedChatUser = user;
       state.isLoading = isLoading;
-		},
-		setSelectedChatMessages: (state, action) => {
-			state.selectedChatMessages = action.payload
-		},
-		setConversationId: (state, action) => {
-			state.conversationId = action.payload
-		},
+    },
+    setSelectedChatMessages: (state, action) => {
+      state.selectedChatMessages = action.payload;
+    },
+    setConversations: (state, action: ISetConversations) => {
+      state.conversations = action.payload;
+    },
+    setConversationId: (state, action) => {
+      state.conversationId = action.payload;
+    },
     addOnlineUsers: (state, action) => {
       state.onlineUsers = action.payload;
     }
@@ -82,8 +90,7 @@ const chatSlice = createSlice({
           }
         });
 
-
-        state.chatList = [...sortedData];
+        state.conversations = [...sortedData];
       }
       state.isLoading = false;
     });
@@ -93,5 +100,5 @@ const chatSlice = createSlice({
   }
 });
 
-export const { addToChatList, setSelectedChatUser, addOnlineUsers, setSelectedChatMessages, setConversationId } = chatSlice.actions;
+export const { addToChatList, setSelectedChatUser, addOnlineUsers, setSelectedChatMessages, setConversationId,setConversations } = chatSlice.actions;
 export default chatSlice.reducer;
