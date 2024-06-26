@@ -17,7 +17,6 @@ import { setConversations, setSelectedChatUser } from '~/redux/reducers/chat/cha
 import { chatService } from '~/services/api/chat/chat.service';
 import { timeAgo } from '~/services/utils/timeago.utils';
 import ChatListBody from './ChatListBody';
-import { socketService } from '~/services/socket/sokcet.service';
 export type COMPONENT_TYPE = 'chatList' | 'searchList' | '';
 const ChatList = () => {
   const { profile } = useSelector((sate: RootState) => sate.user);
@@ -145,14 +144,14 @@ const ChatList = () => {
     }
   };
 
-  const addUsernameToURLQuery = async (user: IMessageList) => {
+  const addUsernameToURLQuery = async (lastMessage: IMessageList) => {
     try {
       const paramsUsername = searchParams.get('username');
       const existingUser = ChatUtils.chatUsers.find((chat) => chat.sender === paramsUsername || chat.receiver === paramsUsername);
 
-      const params = updateQueryParams(user);
+      const params = updateQueryParams(lastMessage);
       const body: IConversationUsers = {
-        receiver: user.receiverUsername !== profile?.username ? user.receiverUsername : user.senderUsername,
+        receiver: lastMessage.receiverUsername !== profile?.username ? lastMessage.receiverUsername : lastMessage.senderUsername,
         sender: profile?.username as string
       };
 
@@ -161,9 +160,9 @@ const ChatList = () => {
       }
 
       await chatService.addChatUsers(body);
-      if (user?.receiverUsername.toLowerCase() === profile?.username?.toLowerCase() && !user.isRead) {
+      if (lastMessage?.receiverUsername.toLowerCase() === profile?.username?.toLowerCase() && !lastMessage.isRead) {
         const messageReadBody: IConversationUsers = {
-          receiver: user.senderId,
+          receiver: lastMessage.senderId,
           sender: profile._id
         };
         await chatService.markAsRead(messageReadBody);
@@ -185,6 +184,12 @@ const ChatList = () => {
     // console.log('rendering-socket-effect');
     ChatUtils.socketIOChatList();
   }, [profile]);
+
+  useEffect(() => {
+    if (conversations.length && !searchParams.get('username')) {
+      addUsernameToURLQuery(conversations[0])
+    }
+  }, [conversations])
 
   // useEffect(() => {
   //   if (!conversations.length) return;
