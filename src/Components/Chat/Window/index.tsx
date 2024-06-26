@@ -19,16 +19,19 @@ import { setSelectedChatMessages } from '~/redux/reducers/chat/chat.reducer';
 const ChatWindow = () => {
   const { isLoading, onlineUsers } = useSelector((state: RootState) => state.chat);
   const { profile } = useSelector((state: RootState) => state.user);
-  const { selectedChatMessages:chatMessages } = useSelector((state: RootState) => state.chat);
+  const { selectedChatMessages: chatMessages } = useSelector((state: RootState) => state.chat);
   const [receiver, setReceiver] = useState<IUser | null>(null);
   // const [onlineUsers, setOnlineUsers] = useState<string[]>([]);
   const [conversationId, setConversationId] = useState<string>('');
   const [searchparams] = useSearchParams();
   const dispatch = useAppDispatch();
   const isRendered = useRef(false);
-	const setChatMessages = (messages:IMessageList[]) => {
-		dispatch(setSelectedChatMessages(messages))
-	} 
+  const setChatMessages = useCallback(
+    (messages: IMessageList[]) => {
+      dispatch(setSelectedChatMessages(messages));
+    },
+    [dispatch]
+  );
   const sendMessage = async ({ gifUrl, image, message }: ISendMessageParam) => {
     try {
       const isSenderInChatPage = ChatUtils.chatUsers.some((user) => user.sender === profile?.username && user.receiver === receiver?.username);
@@ -118,14 +121,14 @@ const ChatWindow = () => {
   };
 
   useEffect(() => {
-    // if (!isRendered.current) {
-    // isRendered.current = true;
-    getUserProfileById();
-    getNewUserMessages();
-    // }
-    // return () => {
-    //   isRendered.current = false;
-    // };
+    if (!isRendered.current) {
+      isRendered.current = true;
+      getUserProfileById();
+      getNewUserMessages();
+    }
+    return () => {
+      isRendered.current = false;
+    };
   }, [searchparams, getNewUserMessages, getUserProfileById]);
 
   useEffect(() => {
@@ -142,16 +145,15 @@ const ChatWindow = () => {
     }
 
     return () => {
-      socketService.socket?.off('MESSAGE_RECEIVED');
-      socketService.socket?.off('CHAT_LIST');
+      // socketService.socket?.off('MESSAGE_RECEIVED');
+      // socketService.socket?.off('CHAT_LIST');
     };
-  }, [searchparams, chatMessages]);
+  }, [searchparams, chatMessages, setChatMessages]);
   useEffect(() => {
     const username = searchparams.get('username');
     if (username) {
-			ChatUtils.socketIOnMessageReaction({setChatMessages, username})
+      ChatUtils.socketIOnMessageReaction({ setChatMessages, username });
     }
-    
   }, [searchparams]);
 
   return (
