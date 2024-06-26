@@ -108,7 +108,7 @@ const MessageDisplay = ({ chatMessages, deleteChatMessage, profile, updateMessag
 
       <div className="message-page" ref={scrollRef} data-testid="message-page">
         {chatMessages.map((message, index) => (
-          <div className="message-chat" data-testid="message-chat" key={`message-${message._id}`}>
+          <div className="message-chat" data-testid="message-chat" key={`message-${message._id}${index}`}>
             {index === 0 || timeAgo.dayMonthYear(message.createdAt) !== timeAgo.dayMonthYear(chatMessages[index - 1].createdAt) ? (
               <div className="message-date-group">
                 <div className="message-chat-date" data-testid="message-chat-date">
