@@ -33,7 +33,7 @@ const Profiles = () => {
   const [bgUrl, setBgUrl] = useState('');
   const [galleryImages, setGalleryImages] = useState<IImageData[]>([]);
   const [imageUrl, setImageUrl] = useState('');
-  const [displayContent, setDisplayContent] = useState('timeline');
+  const [displayContent, setDisplayContent] = useState('Timeline');
   const [loading, setLoading] = useState(true);
   const [showImageModal, setShowImageModal] = useState(false);
   const [userProfileData, setUserProfileData] = useState<IUser | null>(null);
@@ -200,7 +200,7 @@ const Profiles = () => {
               />
             ) : null}
             <div className="profile-content">
-              {displayContent === 'timeline' ? <Timeline loading={loading} userProfileData={user as IUser} posts={posts} /> : null}
+              {displayContent === 'Timeline' ? <Timeline loading={loading} userProfileData={user as IUser} posts={posts} /> : null}
               {displayContent === 'Followers' && user ? <FollowerCard userData={user} /> : null}
               {displayContent === 'Gallery' && user ? (
                 <>
