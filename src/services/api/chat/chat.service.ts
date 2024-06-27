@@ -7,7 +7,8 @@ class ChatService {
     return response;
   }
   async addChatUsers(body: IConversationUsers) {
-    const response = await axios.post<GetConversationList>('chat/message/users', body);
+    console.log(`🚀 ~ ChatService ~ addChatUsers ~ body:`, body);
+    const response = await axios.post<GetConversationList>('/chat/message/users', body);
     return response;
   }
   /**

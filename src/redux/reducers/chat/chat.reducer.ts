@@ -8,6 +8,7 @@ interface ChatStoreInitialState {
   selectedChatMessages: IMessageList[];
   conversations: IMessageList[]; // it's used for show contacts or recent chat whom talk with logged in user
   conversationId: string;
+  conversationUsername: string;
   onlineUsers: string[];
   selectedChatUser: IMessageList | null;
   isLoading: boolean;
@@ -39,6 +40,7 @@ const initialState: ChatStoreInitialState = {
   selectedChatMessages: [],
   conversations: [],
   conversationId: '',
+  conversationUsername: '',
   onlineUsers: [],
   isLoading: false,
   selectedChatUser: null
@@ -66,6 +68,9 @@ const chatSlice = createSlice({
     },
     setConversationId: (state, action) => {
       state.conversationId = action.payload;
+    },
+    setConversationUsername: (state, action) => {
+      state.conversationUsername = action.payload;
     },
     addOnlineUsers: (state, action) => {
       state.onlineUsers = action.payload;
@@ -100,5 +105,5 @@ const chatSlice = createSlice({
   }
 });
 
-export const { addToChatList, setSelectedChatUser, addOnlineUsers, setSelectedChatMessages, setConversationId,setConversations } = chatSlice.actions;
+export const { addToChatList, setSelectedChatUser, addOnlineUsers, setSelectedChatMessages, setConversationId,setConversations, setConversationUsername } = chatSlice.actions;
 export default chatSlice.reducer;

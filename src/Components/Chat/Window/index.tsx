@@ -14,7 +14,7 @@ import { chatService } from '~/services/api/chat/chat.service';
 import { IMarkMessageAsDeleted, IMessageList, ISendMessageBody, IUpdateMessageReaction } from '~/types/chat';
 import MessageDisplay from './MessageDisplay';
 import { socketService } from '~/services/socket/sokcet.service';
-import { setSelectedChatMessages } from '~/redux/reducers/chat/chat.reducer';
+import { setConversationUsername, setSelectedChatMessages } from '~/redux/reducers/chat/chat.reducer';
 
 const ChatWindow = () => {
   const { isLoading, onlineUsers } = useSelector((state: RootState) => state.chat);
@@ -133,22 +133,18 @@ const ChatWindow = () => {
 
   useEffect(() => {
     const username = searchparams.get('username');
+    dispatch(setConversationUsername(username));
     if (username) {
-      ChatUtils.socketIOMessageReceived({
-        chatMessages,
-        username,
-        setChatMessages,
-        setConversationId
-      });
+      ChatUtils.socketIOMessageReceived();
       // ChatUtils.usersOnline();
       ChatUtils.usersOnChatPage();
     }
 
     return () => {
-      // socketService.socket?.off('MESSAGE_RECEIVED');
-      // socketService.socket?.off('CHAT_LIST');
+      socketService.socket?.off('MESSAGE_RECEIVED', ChatUtils.addReceivedMessageToChat);
+      socketService.socket?.off('MESSAGE_READ', ChatUtils.markMassageIsReadToChat);
     };
-  }, [searchparams, chatMessages, setChatMessages]);
+  }, [searchparams]);
   useEffect(() => {
     const username = searchparams.get('username');
     if (username) {
@@ -163,25 +159,19 @@ const ChatWindow = () => {
       ) : (
         <div data-testid="chatWindow">
           <div className="chat-title" data-testid="chat-title">
-            {receiver ? (
-              <div className="chat-title-avatar">
-                <Avatar
-                  name={receiver?.username as string}
-                  bgColor={receiver.avatarColor}
-                  textColor="#ffffff"
-                  size={40}
-                  avatarSrc={receiver?.profilePicture}
-                />
-              </div>
-            ) : null}
-            {receiver ? (
-              <div className="chat-title-items">
-                <div className={`chat-name ${Utils.checkIfUserIsOnline(receiver?.username as string, onlineUsers) ? '' : 'user-not-online'}`}>
-                  {receiver?.username}
+            {receiver && receiver?.username && (
+              <>
+                <div className="chat-title-avatar">
+                  <Avatar name={receiver.username} bgColor={receiver.avatarColor} textColor="#ffffff" size={40} avatarSrc={receiver.profilePicture} />
                 </div>
-                {Utils.checkIfUserIsOnline(receiver?.username as string, onlineUsers) && <span className="chat-active">Online</span>}
-              </div>
-            ) : null}
+                <div className="chat-title-items">
+                  <div className={`chat-name ${Utils.checkIfUserIsOnline(receiver.username, onlineUsers) ? '' : 'user-not-online'}`}>
+                    {receiver.username}
+                  </div>
+                  {Utils.checkIfUserIsOnline(receiver.username, onlineUsers) && <span className="chat-active">Online</span>}
+                </div>
+              </>
+            )}
           </div>
           <div className="chat-window">
             <div className="chat-window-message">

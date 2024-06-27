@@ -185,11 +185,11 @@ const ChatList = () => {
     ChatUtils.socketIOChatList();
   }, [profile]);
 
-  useEffect(() => {
-    if (conversations.length && !searchParams.get('username')) {
-      addUsernameToURLQuery(conversations[0])
-    }
-  }, [conversations])
+  // useEffect(() => {
+  //   if (conversations.length && !searchParams.get('username')) {
+  //     addUsernameToURLQuery(conversations[0])
+  //   }
+  // }, [conversations, searchParams])
 
   // useEffect(() => {
   //   if (!conversations.length) return;

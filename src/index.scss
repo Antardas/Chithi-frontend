@@ -137,3 +137,9 @@ p {
     transform: none;
   }
 }
+
+
+.menu-link , .button,.banner-nav-item .title {
+  user-select: none;
+}
+

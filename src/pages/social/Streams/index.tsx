@@ -102,6 +102,7 @@ const Streams = () => {
     // dispatch(getPosts(1));
   });
 
+  //  Prevent Multiple call, mostly useEffect Mounting time call
   useEffect(() => {
     getAllPost();
   }, [currentPage]);
