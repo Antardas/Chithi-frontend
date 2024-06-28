@@ -108,8 +108,8 @@ const Streams = () => {
   }, [currentPage]);
 
   useEffect(() => {
-    PostUtils.socketIOPost(posts, dispatch);
-  }, [posts, dispatch]);
+    PostUtils.socketIOPost();
+  }, []);
 
   useEffect(() => {
     getReactionsByUserName(username ?? profile?.username ?? '');

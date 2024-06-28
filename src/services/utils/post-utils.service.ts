@@ -224,51 +224,54 @@ export class PostUtils {
     }
   }
 
-  static socketIOPost(posts: IPost[], dispatch: AppDispatch) {
-    const clonedPosts = Utils.cloneDeep(posts) as IPost[];
-    socketService.socket &&
-      socketService.socket.on('addPost', (data: IPost) => {
-        const { profile } = store.getState().user;
-        if (!profile?.blockedBy.find((item) => item === data.userId)) {
-          clonedPosts.unshift(data);
+  static socketIOPost() {
+    socketService.socket?.on('addPost', (data: IPost) => {
+      const posts = store.getState().posts.posts;
+      const clonedPosts = Utils.cloneDeep(posts) as IPost[];
+      const { profile } = store.getState().user;
+      if (!profile?.blockedBy.find((item) => item === data.userId)) {
+        clonedPosts.unshift(data);
 
-          dispatch(addPosts(clonedPosts));
-        }
-      });
+        store.dispatch(addPosts(clonedPosts));
+      }
+    });
 
-    socketService.socket &&
-      socketService.socket.on('update post', (data: IPost) => {
-        console.log('🚀 ~ PostUtils ~ socketService.socket.on ~ data:', data);
+    socketService.socket?.on('update post', (data: IPost) => {
+      const posts = store.getState().posts.posts;
+      console.log('🚀 ~ PostUtils ~ socketService.socket.on ~ data:', data);
 
-        PostUtils.updateSinglePost(posts, data, dispatch);
-      });
+      PostUtils.updateSinglePost(posts, data, store.dispatch);
+    });
 
-    socketService.socket &&
-      socketService.socket.on('delete post', (postId: string) => {
-        let clonedPosts = Utils.cloneDeep(posts) as IPost[];
-        clonedPosts = clonedPosts.filter((data) => data._id !== postId);
-        dispatch(addPosts(clonedPosts));
-      });
+    socketService.socket?.on('delete post', (postId: string) => {
+      const posts = store.getState().posts.posts;
+      let clonedPosts = Utils.cloneDeep(posts) as IPost[];
+      clonedPosts = clonedPosts.filter((data) => data._id !== postId);
+      store.dispatch(addPosts(clonedPosts));
+    });
 
     // TODO: fix the Type
-    socketService.socket &&
-      socketService.socket.on('update like', (data: SocketReactionResponse) => {
-        const post = posts.find((item) => item._id === data.postId);
+    socketService.socket?.on('update like', (data: SocketReactionResponse) => {
+      const posts = store.getState().posts.posts;
+      const postIndex = posts.findIndex((item) => item._id === data.postId);
 
-        if (post) {
-          post.reactions = data.postReactions;
-          PostUtils.updateSinglePost(posts, post, dispatch);
-        }
-      });
+      if (postIndex !== 1) {
+        const updatedPost = {
+          ...posts[postIndex],
+          reactions: data.postReactions
+        };
+        PostUtils.updateSinglePost(posts, updatedPost, store.dispatch);
+      }
+    });
     // TODO: fix the Type
-    socketService.socket &&
-      socketService.socket.on('update comment', (data: ICommentSocketResponse) => {
-        const post = posts.find((item) => item._id === data.postId);
-        if (post) {
-          post.commentCount = data.commentsCount;
-          PostUtils.updateSinglePost(posts, post, dispatch);
-        }
-      });
+    socketService.socket?.on('update comment', (data: ICommentSocketResponse) => {
+      const posts = store.getState().posts.posts;
+      const post = posts.find((item) => item._id === data.postId);
+      if (post) {
+        post.commentCount = data.commentsCount;
+        PostUtils.updateSinglePost(posts, post, store.dispatch);
+      }
+    });
   }
 
   static updateSinglePost(posts: IPost[], post: IPost, dispatch: AppDispatch) {

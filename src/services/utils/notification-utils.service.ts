@@ -8,6 +8,7 @@ import { AppDispatch, store } from '~/redux/store';
 import { IMessageList } from '~/types/chat';
 import { SetState } from '~/types/utils';
 import { Location } from 'react-router-dom';
+import { ChatUtils } from './chat-utils.service';
 
 export class NotificationUtils {
   private static state = store.getState();

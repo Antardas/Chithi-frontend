@@ -141,10 +141,11 @@ const ChatWindow = () => {
     }
 
     return () => {
+      dispatch(setConversationUsername(''));
       socketService.socket?.off('MESSAGE_RECEIVED', ChatUtils.addReceivedMessageToChat);
       socketService.socket?.off('MESSAGE_READ', ChatUtils.markMassageIsReadToChat);
     };
-  }, [searchparams]);
+  }, [searchparams,dispatch]);
   useEffect(() => {
     const username = searchparams.get('username');
     if (username) {

@@ -136,7 +136,6 @@ export class ChatUtils {
     if (!username) {
       return;
     }
-    console.log(`🚀 ~ ChatUtils ~ addReceivedMessageToChat ~ addReceivedMessageToChat:`, username);
     if (data.senderUsername.toLowerCase() === username.toLowerCase() || data.receiverUsername.toLowerCase() === username.toLowerCase()) {
       store.dispatch(setConversationId(data.conversationId));
       ChatUtils.privateChatMessages.push(data);

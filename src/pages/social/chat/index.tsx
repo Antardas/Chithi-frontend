@@ -28,7 +28,7 @@ const Chat = () => {
 
   // Return False Meaning it won't block the navigation
   useBlocker(({ nextLocation }) => {
-    if (nextLocation.pathname.includes('chat')) {
+    if (nextLocation.pathname.includes('chat/messages')) {
       return false;
     }
     const paramsUsername = searchParams.get('username');
