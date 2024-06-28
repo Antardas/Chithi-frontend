@@ -98,8 +98,8 @@ const Timeline = ({ loading, userProfileData, posts: userPosts }: Props) => {
   }, [getUserByUsername]);
 
   useEffect(() => {
-    PostUtils.socketIOPost(posts, dispatch);
-  }, [posts, dispatch]);
+    PostUtils.socketIOPost();
+  }, []);
   return (
     <div className="timeline-wrapper" data-testid="timeline">
       <div className="timeline-wrapper-container">
