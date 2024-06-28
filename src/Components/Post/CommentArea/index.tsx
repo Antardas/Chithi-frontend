@@ -113,7 +113,7 @@ const CommentArea = ({ post, setPost }: ICommentAreaProps) => {
       dispatch(addReactions(newReactions));
 
       sendSocketReactions({
-        post,
+        post: updatedPost,
         hasResponse,
         newReaction: reaction as ReactionType,
         prevReaction: reactionResponse.data.reactions.type as ReactionType
@@ -194,7 +194,8 @@ const CommentArea = ({ post, setPost }: ICommentAreaProps) => {
               </div>
             ) : (
               <div className="reaction-display" data-testid="default-reaction">
-                <img className="reaction-img" src={like} alt="" /><span>Like</span>
+                <img className="reaction-img" src={like} alt="" />
+                <span>Like</span>
               </div>
             )}
           </div>
