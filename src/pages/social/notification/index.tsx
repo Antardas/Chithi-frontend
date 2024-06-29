@@ -31,7 +31,20 @@ const Notifications = () => {
     setLoading(true);
     try {
       const response = await notificationService.getUserNotifications();
-      setNotifications(response.data.data);
+      const sortedNotification = response.data.data.sort((a, b) => {
+        const aCreatedAt = new Date(a.createdAt);
+        const bCreatedAt = new Date(b.createdAt);
+        if (aCreatedAt > bCreatedAt) {
+          return -1;
+        } else if (aCreatedAt < bCreatedAt) {
+          return 1;
+        } else {
+          return 0;
+        }
+      });
+      console.log(sortedNotification, response.data.data);
+
+      setNotifications(sortedNotification);
     } catch (error) {
       if (isAxiosError(error)) {
         const typedError: AxiosError<IError> = error;
@@ -70,7 +83,6 @@ const Notifications = () => {
     [dispatch]
   );
 
-
   useEffectOnce(() => {
     getUserNotifications();
   });
@@ -81,7 +93,6 @@ const Notifications = () => {
       NotificationUtils.cleanup();
     };
   }, [notifications, profile]);
-
 
   return (
     <div>
@@ -124,7 +135,7 @@ const Notifications = () => {
                         className="subtitle"
                         onClick={(e) => {
                           e.preventDefault();
-                          e.stopPropagation()
+                          e.stopPropagation();
                           deleteNotification(notification._id);
                         }}
                       >
@@ -134,7 +145,7 @@ const Notifications = () => {
                     <div className="subtitle-body">
                       <small className="subtitle">{!notification?.read ? <FaCircle className="icon" /> : <FaRegCircle className="icon" />}</small>
                       {/* TODO: Fix the Time Ago */}
-                      <p className="subtext">{ timeAgo.transform(notification.createdAt)}</p>
+                      <p className="subtext">{timeAgo.transform(notification.createdAt)}</p>
                     </div>
                   </div>
                 </div>

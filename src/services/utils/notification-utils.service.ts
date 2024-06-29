@@ -22,7 +22,17 @@ export class NotificationUtils {
   ) {
     socketService.socket.on('INSERT_NOTIFICATION', (data: INotification[], { userTo }: { userTo: string }) => {
       if (profile._id === userTo) {
-        notifications = [...data];
+        notifications = [...data].sort((a, b) => {
+          const aCreatedAt = new Date(a.createdAt);
+          const bCreatedAt = new Date(b.createdAt);
+          if (aCreatedAt > bCreatedAt) {
+            return -1;
+          } else if (aCreatedAt < bCreatedAt) {
+            return 1;
+          } else {
+            return 0;
+          }
+        });
         if (type === 'notificationPage') {
           setNotifications(notifications);
         } else {
@@ -116,8 +126,7 @@ export class NotificationUtils {
     messageNotification,
     setMessageNotification,
     setMessageCount,
-    dispatch,
-    location
+    dispatch
   }: ISocketIOMessageNotification) {
     socketService.socket.on('MESSAGE_RECEIVED', (data: IMessageList) => {
       const clonedMessageNotification = Utils.cloneDeep(messageNotification) as IMessageList[];
@@ -150,7 +159,7 @@ export class NotificationUtils {
           return acc;
         }, 0);
         setMessageCount(sum);
-        if (!Utils.checkUrl(location.pathname, 'chat')) {
+        if (!Utils.checkUrl(window.location.pathname, 'chat')) {
           Utils.dispatchNotification('You have new messages', 'success', dispatch);
         }
         setMessageNotification(clonedMessageNotification);
@@ -173,5 +182,5 @@ interface ISocketIOMessageNotification {
   setMessageNotification: SetState<IMessageList[]>;
   setMessageCount: SetState<number>;
   dispatch: AppDispatch;
-  location: Location;
+  location?: Location;
 }

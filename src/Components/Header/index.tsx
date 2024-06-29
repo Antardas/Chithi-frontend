@@ -66,7 +66,18 @@ const Header = () => {
   const getUserNotifications = useCallback(async () => {
     try {
       const response = await notificationService.getUserNotifications();
-      const notificationsForDropdownItem = NotificationUtils.mapNotificationItemDropdown(response.data.data, setNotificationCount);
+      const sortedNotification = response.data.data.sort((a, b) => {
+        const aCreatedAt = new Date(a.createdAt);
+        const bCreatedAt = new Date(b.createdAt);
+        if (aCreatedAt > bCreatedAt) {
+          return -1;
+        } else if (aCreatedAt < bCreatedAt) {
+          return 1;
+        } else {
+          return 0;
+        }
+      });
+      const notificationsForDropdownItem = NotificationUtils.mapNotificationItemDropdown(sortedNotification, setNotificationCount);
       setNotifications(notificationsForDropdownItem);
     } catch (error) {
       if (isAxiosError(error)) {
@@ -193,8 +204,7 @@ const Header = () => {
         messageNotification: messageNotification,
         setMessageCount,
         setMessageNotification,
-        dispatch,
-        location
+        dispatch
       });
     }
     return () => {
