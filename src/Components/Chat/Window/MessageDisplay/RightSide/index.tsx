@@ -63,12 +63,7 @@ const RightSide = ({
             }
           }}
         >
-          {message.deleteForEveryone && message.deleteForMe ? (
-            <div className="message-bubble right-message-bubble">
-              <span className="message-deleted">message deleted</span>
-            </div>
-          ) : null}
-          {!message.deleteForEveryone && message.deleteForMe && message.senderUsername === profile.username ? (
+          {message.deleteForEveryone || (message.deleteForMe && message.receiverProfilePicture === profile.username) ? (
             <div className="message-bubble right-message-bubble">
               <span className="message-deleted">message deleted</span>
             </div>
