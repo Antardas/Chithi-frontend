@@ -49,6 +49,48 @@ const MessageDisplay = ({ chatMessages, deleteChatMessage, profile, updateMessag
     });
   };
 
+  const renderDateGroup = (message: IMessageList, index: number) => {
+    if (index === 0 || timeAgo.dayMonthYear(message.createdAt) !== timeAgo.dayMonthYear(chatMessages[index - 1].createdAt)) {
+      return (
+        <div className="message-date-group">
+          <div className="message-chat-date" data-testid="message-chat-date">
+            {timeAgo.chatMessageTransform(message.createdAt)}
+          </div>
+        </div>
+      );
+    }
+    return null;
+  };
+
+  const renderMessageSide = (message: IMessageList, index: number) => {
+    const commonProps = {
+      message,
+      lasMessage: chatMessages[chatMessages.length - 1],
+      profile,
+      index,
+      activeElementIndex,
+      setActiveElementIndex,
+      deleteMessage,
+      handleReaction: handleReactionClick,
+      reactionRef,
+      setImageUrl,
+      setSelectedReaction,
+      setShowImageModal,
+      showImageModal,
+      showReactionOnHover: showReactionIconOnHover,
+      showReactionIcon,
+      setToggleReaction,
+      toggleReaction
+    };
+
+    if (message.senderUsername === profile.username) {
+      return <RightSide {...commonProps} />;
+    } else if (message.receiverUsername === profile.username) {
+      return <LeftSide {...commonProps} />;
+    }
+    return null;
+  };
+
   return (
     <>
       {showImageModal ? (
@@ -109,60 +151,8 @@ const MessageDisplay = ({ chatMessages, deleteChatMessage, profile, updateMessag
       <div className="message-page" ref={scrollRef} data-testid="message-page">
         {chatMessages.map((message, index) => (
           <div className="message-chat" data-testid="message-chat" key={`message-${message._id}${index}`}>
-            {index === 0 || timeAgo.dayMonthYear(message.createdAt) !== timeAgo.dayMonthYear(chatMessages[index - 1].createdAt) ? (
-              <div className="message-date-group">
-                <div className="message-chat-date" data-testid="message-chat-date">
-                  {timeAgo.chatMessageTransform(message.createdAt)}
-                </div>
-              </div>
-            ) : null}
-
-            {message.receiverUsername === profile.username || message.senderUsername === profile.username ? (
-              <>
-                {message.senderUsername === profile.username ? (
-                  <RightSide
-                    message={message}
-                    lasMessage={chatMessages[chatMessages.length - 1]}
-                    profile={profile}
-                    index={index}
-                    activeElementIndex={activeElementIndex}
-                    setActiveElementIndex={setActiveElementIndex}
-                    deleteMessage={deleteMessage}
-                    handleReaction={handleReactionClick}
-                    reactionRef={reactionRef}
-                    setImageUrl={setImageUrl}
-                    setSelectedReaction={setSelectedReaction}
-                    setShowImageModal={setShowImageModal}
-                    showImageModal={showImageModal}
-                    showReactionOnHover={showReactionIconOnHover}
-                    showReactionIcon={showReactionIcon}
-                    setToggleReaction={setToggleReaction}
-                    toggleReaction={toggleReaction}
-                  />
-                ) : null}
-                {message.receiverUsername === profile.username ? (
-                  <LeftSide
-                    message={message}
-                    lasMessage={chatMessages[chatMessages.length - 1]}
-                    profile={profile}
-                    index={index}
-                    activeElementIndex={activeElementIndex}
-                    setActiveElementIndex={setActiveElementIndex}
-                    deleteMessage={deleteMessage}
-                    handleReaction={handleReactionClick}
-                    reactionRef={reactionRef}
-                    setImageUrl={setImageUrl}
-                    setSelectedReaction={setSelectedReaction}
-                    setShowImageModal={setShowImageModal}
-                    showImageModal={showImageModal}
-                    showReactionOnHover={showReactionIconOnHover}
-                    showReactionIcon={showReactionIcon}
-                    setToggleReaction={setToggleReaction}
-                    toggleReaction={toggleReaction}
-                  />
-                ) : null}
-              </>
-            ) : null}
+            {renderDateGroup(message, index)}
+            {renderMessageSide(message, index)}
           </div>
         ))}
       </div>

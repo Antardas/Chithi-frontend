@@ -136,12 +136,12 @@ const ChatWindow = () => {
     dispatch(setConversationUsername(username));
     if (username) {
       ChatUtils.socketIOMessageReceived();
-      // ChatUtils.usersOnline();
+      ChatUtils.usersOnline();
       ChatUtils.usersOnChatPage();
     }
 
     return () => {
-      dispatch(setConversationUsername(''));
+      dispatch(setConversationUsername('')); // NOTE: maybe we don't need it
       socketService.socket?.off('MESSAGE_RECEIVED', ChatUtils.addReceivedMessageToChat);
       socketService.socket?.off('MESSAGE_READ', ChatUtils.markMassageIsReadToChat);
     };
