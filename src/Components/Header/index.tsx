@@ -90,7 +90,9 @@ const Header = () => {
   const onMarkAsRead = async (notification: INotificationDropdown) => {
     try {
       const response = await NotificationUtils.markAsRead(notification._id, notification, setNotificationDialogContent);
-      Utils.dispatchNotification(response.data.message, 'success', dispatch);
+      if (response) {
+        Utils.dispatchNotification(response.data.message, 'success', dispatch);
+      }
     } catch (error) {
       if (isAxiosError(error)) {
         const typedError: AxiosError<IError> = error;
