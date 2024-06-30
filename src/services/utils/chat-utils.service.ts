@@ -144,17 +144,18 @@ export class ChatUtils {
   }
 
   static markMassageIsReadToChat(data: IMessageList) {
-    const username = store.getState().chat.conversationUsername;
+    let username = store.getState().chat.conversationUsername;
     if (!username) {
       return;
-    }
+		}
+		username = username.toLowerCase()
 
     if (data.senderUsername.toLowerCase() === username || data.receiverUsername.toLowerCase() === username) {
       const messageIndex = ChatUtils.privateChatMessages.findIndex((message) => message._id === data._id);
 
       if (messageIndex !== -1) {
         ChatUtils.privateChatMessages.splice(messageIndex, 1, data);
-        store.dispatch(setSelectedChatMessages(ChatUtils.privateChatMessages));
+        store.dispatch(setSelectedChatMessages([...ChatUtils.privateChatMessages]));
       }
     }
   }
