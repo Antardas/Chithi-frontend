@@ -116,6 +116,9 @@ export class NotificationUtils {
       };
       setNotificationDialogContent(data);
     }
+    if (notification.read) {
+      return null;
+    }
 
     const response = await notificationService.markNotificationAsRead(id);
     return response;

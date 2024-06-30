@@ -55,11 +55,14 @@ const Notifications = () => {
   }, [dispatch]);
 
   const markAsRead = async (notification: INotification) => {
+    console.log(`🚀 ~ markAsRead ~ notification:`, notification);
     try {
-      const { imgId, imgVersion,gifUrl, _id} = notification;
+      const { imgId, imgVersion, gifUrl, _id } = notification;
       notification.imgUrl = imgId && imgVersion ? Utils.generateImageUrl(imgVersion || '', imgId) : gifUrl ?? '';
       const response = await NotificationUtils.markAsRead(_id, notification, setNotificationDialogContent);
-      Utils.dispatchNotification(response.data.message, 'success', dispatch);
+      if (response) {
+        Utils.dispatchNotification(response.data.message, 'success', dispatch);
+      }
     } catch (error) {
       if (isAxiosError(error)) {
         const typedError: AxiosError<IError> = error;
