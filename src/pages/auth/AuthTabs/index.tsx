@@ -16,12 +16,9 @@ const AuthTabs = (): React.JSX.Element => {
   useEffect(() => {
     setEnvironment(Utils.appEnvironment());
     if (loggedInBoolean) {
-      if (loggedInBoolean) {
-        console.log('whats this');
 
-        navigate('/app/social/streams');
-        // window.location.reload();
-      }
+      navigate('/app/social/streams');
+      // window.location.reload();
     }
   }, [loggedIn, navigate]);
   return (

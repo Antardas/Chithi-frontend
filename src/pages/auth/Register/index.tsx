@@ -26,6 +26,7 @@ const Register = () => {
   const dispatch: AppDispatch = useAppDispatch();
   const [, setPageReload] = useSessionStorage('pageReload');
   const [, setToken, removeToken] = useLocalStorage('token');
+  const [, setKeepLoggedIn] = useLocalStorage('keepLoggedIn');
 
   const registerUser = async (event: React.FormEvent<HTMLFormElement>) => {
     setLoading(true);
@@ -48,6 +49,7 @@ const Register = () => {
       setErrorMessage('');
       setHasError(false);
       setAlertType('alert-success');
+      setKeepLoggedIn('true');
       Utils.dispatchUser(result, setPageReload, dispatch, setUser, setToken);
     } catch (error: unknown) {
       setHasError(true);
