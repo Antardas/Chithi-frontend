@@ -8,7 +8,7 @@ import useSessionStorage from '~/hooks/useSessionStorage';
 import { useAppDispatch } from '~/redux/store';
 import { useNavigate } from 'react-router-dom';
 import { userService } from '~/services/api/user/user.service';
-import '~/Components/ChangePassword/ChangePassword.scss'
+import '~/Components/ChangePassword/ChangePassword.scss';
 const ChangePassword = () => {
   const [currentPassword, setCurrentPassword] = useState<string>('');
   const [newPassword, setNewPassword] = useState<string>('');
@@ -18,6 +18,7 @@ const ChangePassword = () => {
   const [, , removeStorageUsername] = useLocalStorage('username');
   const [, setLoggedIn] = useLocalStorage('keepLoggedIn');
   const [, , removeSessionPageReload] = useSessionStorage('pageReload');
+  const [, , removeToken] = useLocalStorage('token');
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
@@ -45,7 +46,8 @@ const ChangePassword = () => {
             dispatch,
             removeStorageUsername,
             removeSessionPageReload,
-            setLoggedIn
+            setLoggedIn,
+            removeToken
           });
           await userService.logoutUser();
           navigate('/');

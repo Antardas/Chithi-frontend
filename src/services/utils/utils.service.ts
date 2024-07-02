@@ -14,6 +14,7 @@ interface IClearStoreParams {
   removeStorageUsername: RemoveValue;
   removeSessionPageReload: RemoveValue;
   setLoggedIn: (value: string) => void;
+  removeToken: () => void;
 }
 export class Utils {
   static avatarColor() {
@@ -48,11 +49,13 @@ export class Utils {
     result: AxiosResponse<ISignUpResponse>,
     pageReload: SetValue,
     dispatch: AppDispatch,
-    setUser: React.Dispatch<React.SetStateAction<IUser | null>>
+    setUser: React.Dispatch<React.SetStateAction<IUser | null>>,
+    setToken: (token: string) => void
   ) => {
     pageReload(JSON.stringify(true));
     dispatch(addUser({ token: result.data.token, profile: result.data.user }));
     setUser(result.data.user);
+    setToken(result.data.token);
   };
 
   static dispatchNotification(message: string, type: NotificationType, dispatch: AppDispatch): void {
@@ -67,12 +70,13 @@ export class Utils {
     dispatch(clearNotification());
   }
 
-  static clearStore({ dispatch, removeStorageUsername, removeSessionPageReload, setLoggedIn }: IClearStoreParams) {
+  static clearStore({ dispatch, removeStorageUsername, removeSessionPageReload, setLoggedIn, removeToken }: IClearStoreParams) {
     dispatch(clearUser());
     dispatch(clearNotification());
     removeStorageUsername();
     removeSessionPageReload();
     setLoggedIn(JSON.stringify(false));
+    removeToken();
   }
 
   static appEnvironment(): string {

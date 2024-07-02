@@ -11,6 +11,7 @@ import Button from '~/Components/Button';
 import { NavigateFunction, useNavigate } from 'react-router-dom';
 import { AppDispatch, useAppDispatch } from '~/redux/store';
 import useSessionStorage from '~/hooks/useSessionStorage';
+import useLocalStorage from '~/hooks/useLocalStorage';
 
 const Register = () => {
   const [username, setUsername] = useState<string>('');
@@ -24,6 +25,7 @@ const Register = () => {
   const navigate: NavigateFunction = useNavigate();
   const dispatch: AppDispatch = useAppDispatch();
   const [, setPageReload] = useSessionStorage('pageReload');
+  const [, setToken, removeToken] = useLocalStorage('token');
 
   const registerUser = async (event: React.FormEvent<HTMLFormElement>) => {
     setLoading(true);
@@ -46,7 +48,7 @@ const Register = () => {
       setErrorMessage('');
       setHasError(false);
       setAlertType('alert-success');
-      Utils.dispatchUser(result, setPageReload, dispatch, setUser);
+      Utils.dispatchUser(result, setPageReload, dispatch, setUser, setToken);
     } catch (error: unknown) {
       setHasError(true);
       setLoading(false);
@@ -95,7 +97,7 @@ const Register = () => {
             style={{
               border: `${hasError ? '1px solid #fa9b8a' : ''}`
             }}
-            labelText='Email'
+            labelText="Email"
           />
           <Input
             id="username"
@@ -109,8 +111,7 @@ const Register = () => {
               setUsername(e.target.value);
             }}
             placeHolder="Username"
-            labelText='Username'
-
+            labelText="Username"
           />
           {/* password field */}
           <Input
@@ -125,8 +126,7 @@ const Register = () => {
               setPassword(e.target.value);
             }}
             placeHolder="Enter your password"
-            labelText='Password'
-
+            labelText="Password"
           />
         </div>
         {/* button component */}

@@ -41,14 +41,13 @@ const Login = () => {
         // keepLoggedIn
       });
       axios.defaults.headers['Authorization'] = result.data.token;
-      setToken(result.data.token);
       setStoredUsername(`${result.data.user.username || ''}`);
       setLoggedIn(JSON.stringify(keepLoggedIn));
       setLoading(false);
       setErrorMessage('');
       setHasError(false);
       setAlertType('alert-success');
-      Utils.dispatchUser(result, setPageReload, dispatch, setUser);
+      Utils.dispatchUser(result, setPageReload, dispatch, setUser, setToken);
     } catch (error: unknown) {
       setHasError(true);
       setLoading(false);

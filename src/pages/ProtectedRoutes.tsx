@@ -15,6 +15,7 @@ import { ICurrentUser, IUser } from '~/types/user';
 const ProtectedRoutes: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [_username, _setStoredUsername, removeStorageUsername] = useLocalStorage('username');
   const [loggedIn, setLoggedIn, _deleteLoggedIn] = useLocalStorage('keepLoggedIn');
+  const [, , removeToken] = useLocalStorage('token');
   const [pageReload, _setPageReload, removeSessionPageReload] = useSessionStorage('pageReload');
   const dispatch = useAppDispatch();
   const { profile, token } = useSelector((state: RootState) => state.user);
@@ -39,7 +40,8 @@ const ProtectedRoutes: React.FC<{ children: React.ReactNode }> = ({ children }) 
           dispatch,
           removeSessionPageReload,
           setLoggedIn,
-          removeStorageUsername
+          removeStorageUsername,
+          removeToken
         });
 
         await userService.logoutUser();

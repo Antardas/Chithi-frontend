@@ -61,6 +61,7 @@ const Header = () => {
   const dispatch = useAppDispatch();
   const [username, _setUsername, deleteUsername] = useLocalStorage('username');
   const [, setLoggedIn] = useLocalStorage('keepLoggedIn');
+  const [, , removeToken] = useLocalStorage('token');
   const [, , deletePageReload] = useSessionStorage('pageReload');
 
   const getUserNotifications = useCallback(async () => {
@@ -150,7 +151,8 @@ const Header = () => {
         dispatch,
         removeSessionPageReload: deletePageReload,
         removeStorageUsername: deleteUsername,
-        setLoggedIn
+        setLoggedIn,
+        removeToken
       });
 
       await userService.logoutUser();
