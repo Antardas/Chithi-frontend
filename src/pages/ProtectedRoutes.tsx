@@ -52,7 +52,7 @@ const ProtectedRoutes: React.FC<{ children: React.ReactNode }> = ({ children }) 
     await checkUser();
   });
 
-  if ((profile?._id && token) || JSON.parse(loggedIn ?? 'false')) {
+  if ((profile?._id && token) || JSON.parse(loggedIn ?? 'false') || (pageReload && JSON.parse(pageReload))) {
     return <>{children}</>;
   } else {
     return (
