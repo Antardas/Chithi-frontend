@@ -62,8 +62,8 @@ const ChatWindow = () => {
   const getChatMessages = useCallback(async (receiverId: string) => {
     try {
       const result = await chatService.getChatMessages(receiverId);
-      setChatMessages(result.data.data);
       ChatUtils.privateChatMessages = [...result.data.data];
+      setChatMessages(result.data.data);
     } catch (error) {
       Utils.addErrorNotification(error, dispatch);
     }

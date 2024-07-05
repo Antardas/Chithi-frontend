@@ -19,13 +19,6 @@ const Chat = () => {
     dispatch(getConversationList());
   });
 
-  useEffect(() => {
-    console.log(`🚀 ~ useEffect ~ chatUsers:`, ChatUtils.chatUsers);
-
-  }, [ChatUtils.chatUsers]);
-
-
-
   // Return False Meaning it won't block the navigation
   useBlocker(({ nextLocation }) => {
     if (nextLocation.pathname.includes('chat/messages')) {

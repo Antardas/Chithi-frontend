@@ -136,7 +136,7 @@ const ChatList = () => {
   };
 
   const isMatchedUsername = (data: IMessageList) => {
-    const paramsUserName = searchParams.get('username');
+    const paramsUserName = searchParams.get('username')?.toLowerCase();
     if (paramsUserName === data.receiverUsername.toLowerCase() || paramsUserName === data.senderUsername.toLowerCase()) {
       return true;
     } else {
