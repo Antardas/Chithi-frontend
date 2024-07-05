@@ -142,33 +142,35 @@ const Photos = () => {
       ) : null}
       <div className="photos-container">
         <div className="photos">Photos</div>
-        <div className="gallery-images" data-testid="gallery-images">
-          {posts.map((post, index) => (
-            <div key={post._id} className={!emptyPost(post) ? 'empty-post-div' : ''}>
-              {!Utils.checkIfUserIsBlocked((profile?.blockedBy as string[]) || [], post.userId) || post.userId === profile?._id ? (
-                PostUtils.checkPrivacy(
-                  post,
-                  profile as IUser,
-                  followings.map((item) => item._id)
-                ) ? (
-                  <GalleryImage
-                    key={`post-photo-${post._id}`}
-                    post={post}
-                    showCaption={true}
-                    showDelete={false}
-                    imgSrc={postImageUrl(post)}
-                    onClick={() => {
-                      setRightImageIndex(index + 1);
-                      setLeftImageIndex(index);
-                      setImageUrl(postImageUrl(post));
-                      setShowImageModal(!showImageModal);
-                    }}
-                  />
-                ) : null
-              ) : null}
-            </div>
-          ))}
-        </div>
+        {posts.length ? (
+          <div className="gallery-images" data-testid="gallery-images">
+            {posts.map((post, index) => (
+              <div key={post._id} className={!emptyPost(post) ? 'empty-post-div' : ''}>
+                {!Utils.checkIfUserIsBlocked((profile?.blockedBy as string[]) || [], post.userId) || post.userId === profile?._id ? (
+                  PostUtils.checkPrivacy(
+                    post,
+                    profile as IUser,
+                    followings.map((item) => item._id)
+                  ) ? (
+                    <GalleryImage
+                      key={`post-photo-${post._id}`}
+                      post={post}
+                      showCaption={true}
+                      showDelete={false}
+                      imgSrc={postImageUrl(post)}
+                      onClick={() => {
+                        setRightImageIndex(index + 1);
+                        setLeftImageIndex(index);
+                        setImageUrl(postImageUrl(post));
+                        setShowImageModal(!showImageModal);
+                      }}
+                    />
+                  ) : null
+                ) : null}
+              </div>
+            ))}
+          </div>
+        ) : null}
 
         {loading && !posts.length ? (
           <div
