@@ -30,7 +30,7 @@ const Photos = () => {
     try {
       const result = await postService.getPostWithImage(1);
       const filteredPosts = result.data.posts.reduce((acc: IPost[], cur: IPost) => {
-        if (!Utils.checkIfUserIsBlocked(profile?.blockedBy as string[], cur.userId) || cur.userId === profile?._id) {
+        if ((profile?.blockedBy && !Utils.checkIfUserIsBlocked(profile?.blockedBy as string[], cur.userId)) || cur.userId === profile?._id) {
           if (
             PostUtils.checkPrivacy(
               cur,
@@ -142,10 +142,10 @@ const Photos = () => {
       ) : null}
       <div className="photos-container">
         <div className="photos">Photos</div>
-        <div className="gallery-images" data-testid='gallery-images'>
+        <div className="gallery-images" data-testid="gallery-images">
           {posts.map((post, index) => (
             <div key={post._id} className={!emptyPost(post) ? 'empty-post-div' : ''}>
-              {!Utils.checkIfUserIsBlocked(profile?.blockedBy as string[], post.userId) || post.userId === profile?._id ? (
+              {!Utils.checkIfUserIsBlocked((profile?.blockedBy as string[]) || [], post.userId) || post.userId === profile?._id ? (
                 PostUtils.checkPrivacy(
                   post,
                   profile as IUser,
