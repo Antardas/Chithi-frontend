@@ -172,14 +172,13 @@ export class ChatUtils {
       const chatMessages = store.getState().chat.selectedChatMessages;
       const clonedChatMessages = Utils.cloneDeep(chatMessages) as IMessageList[];
       if (data.senderUsername.toLowerCase() === username.toLowerCase() || data.receiverUsername.toLowerCase() === username.toLowerCase()) {
-        console.log('User Found  After Reaction');
-
         // setConversationId(data.conversationId);
 
         const messageIndex = clonedChatMessages.findIndex((message) => message._id === data._id);
 
         if (messageIndex !== -1) {
           clonedChatMessages.splice(messageIndex, 1, data);
+          ChatUtils.privateChatMessages.splice(messageIndex, 1, data);
           setChatMessages(clonedChatMessages);
         }
       }
