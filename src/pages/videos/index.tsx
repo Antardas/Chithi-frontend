@@ -73,7 +73,7 @@ const Videos = () => {
                           <video
                             width="350px"
                             height="200px"
-                            autoPlay={true}
+                            autoPlay={false}
                             controls
                             src={`${Utils.generateVideoUrl(post?.videoVersion as string, post?.videoId as string)}`}
                           />

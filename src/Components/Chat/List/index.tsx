@@ -256,7 +256,7 @@ const ChatList = () => {
                 data-testid="conversation-item"
                 className={`conversation-item ${isMatchedUsername(data) ? 'active' : ''}`}
                 onClick={() => addUsernameToURLQuery(data)}
-                key={data._id}
+                key={`conversation-list-${data._id}`}
               >
                 <div className="avatar">
                   <Avatar
