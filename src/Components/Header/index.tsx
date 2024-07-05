@@ -136,8 +136,8 @@ const Header = () => {
           });
         }
         await chatService.addChatUsers({
-          receiver: user.senderId,
-          sender: profile._id
+          receiver: user.senderUsername,
+          sender: profile.username as string
         });
         setIsMessageActive(false);
         navigate(`/app/social/chat/messages?${createSearchParams(params)}`);
