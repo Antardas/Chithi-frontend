@@ -145,12 +145,15 @@ const ChatWindow = () => {
       socketService.socket?.off('MESSAGE_RECEIVED', ChatUtils.addReceivedMessageToChat);
       socketService.socket?.off('MESSAGE_READ', ChatUtils.markMassageIsReadToChat);
     };
-  }, [searchparams,dispatch]);
+  }, [searchparams, dispatch]);
   useEffect(() => {
     const username = searchparams.get('username');
     if (username) {
       ChatUtils.socketIOnMessageReaction({ setChatMessages, username });
     }
+    return () => {
+      socketService.socket.off('ADDED_REACTION');
+    };
   }, [searchparams]);
 
   return (
