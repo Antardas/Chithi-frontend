@@ -77,39 +77,11 @@ function DisplayReactionAndComment({ post }: IDisplayReactionAndCommentProps) {
                         <img className="title-img" src={reactionsMap[item.type]} alt="" />
                         {Utils.firstLatterUpperCase(item.type)}
                       </p>
-                      <div className="likes-block-icons-list">
-                        {loading ? <FaSpinner className="circle-notch" /> : null}
-
-                        {postReactions.slice(0, 19).map((reaction) => (
-
-                            <div key={reaction._id}>
-                              {' '}
-                              <span>{reaction.username}</span>
-                            </div>
-
-                        ))}
-                        {postReactions.length > 20 ? <span>and {postReactions.length - 20} others...</span> : null}
-                      </div>
+                      <ReactionsList loading={loading} postReactions={postReactions} />
                     </div>
                   </div>
                 ))
               : null}
-            {/* <div className="tooltip-container">
-              <img data-testid="reaction-img" className="reaction-img" src={like} alt="" />
-              <div className="tooltip-container-text tooltip-container-bottom" data-testid="reaction-tooltip">
-                <p className="title">
-                  <img className="title-img" src={like} alt="" />
-                  Love
-                </p>
-                <div className="likes-block-icons-list">
-                  <FaSpinner className="circle-notch" />
-                  <div>
-                    <span>Manny</span>
-                  </div>
-                  <span>and 50 others...</span>
-                </div>
-              </div>
-            </div> */}
           </div>
           <span
             data-testid="reactions-count"
@@ -119,19 +91,7 @@ function DisplayReactionAndComment({ post }: IDisplayReactionAndCommentProps) {
           >
             {sumAllReactions()}
             <div className="tooltip-container-text tooltip-container-likes-bottom" data-testid="tooltip-container">
-              <div className="likes-block-icons-list">
-                {loading ? <FaSpinner className="circle-notch" /> : null}
-
-                {postReactions.slice(0, 19).map((reaction) => (
-
-                    <div key={reaction._id}>
-                      {' '}
-                      <span>{reaction.username}</span>{' '}
-                    </div>
-                  
-                ))}
-                {postReactions.length > 20 ? <span>and {postReactions.length - 20} others...</span> : null}
-              </div>
+              <ReactionsList loading={loading} postReactions={postReactions} />
             </div>
           </span>
         </div>
@@ -162,6 +122,17 @@ function DisplayReactionAndComment({ post }: IDisplayReactionAndCommentProps) {
 }
 
 export default DisplayReactionAndComment;
+const ReactionsList = ({ loading, postReactions }: { loading: boolean; postReactions: IReactionPost[] }) => (
+  <div className="likes-block-icons-list">
+    {loading ? <FaSpinner className="circle-notch" /> : null}
+    {postReactions.slice(0, 19).map((reaction) => (
+      <div key={reaction._id}>
+        <span>{reaction.username}</span>
+      </div>
+    ))}
+    {postReactions.length > 20 ? <span>and {postReactions.length - 20} others...</span> : null}
+  </div>
+);
 
 interface IDisplayReactionAndCommentProps {
   post: IPost;
