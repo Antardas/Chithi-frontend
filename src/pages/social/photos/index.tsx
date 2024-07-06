@@ -86,7 +86,7 @@ const Photos = () => {
   };
 
   const onClickRight = () => {
-    if (rightImageIndex === posts.length - 2) {
+    if (rightImageIndex === posts.length - 1) {
       setLastItemRight(true);
       // return;
     }
