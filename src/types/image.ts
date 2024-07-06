@@ -17,3 +17,11 @@ export interface IGetImages {
   message: string;
   data: IImageData[];
 }
+
+export interface IUpdateOrAddBackgroundImage {
+  message: string;
+  data: {
+    bgImageId: string;
+    bgImageVersion: string;
+  };
+}

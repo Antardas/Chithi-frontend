@@ -81,35 +81,15 @@ const Profiles = () => {
     setDisplayContent(data);
   };
 
-  const selectedFileImage = async (data: string | File, type: string) => {
-    setHasImage(!hasImage);
-    if (data instanceof File) {
-      if (type === 'background') {
-        const isValidFile: boolean = ImageUtils.checkFile(data, 'image');
+  // Helper function to validate and process the file
 
-        if (!isValidFile) {
-          return;
-        }
-        // const renamedFIle = ImageUtils.renameImage(data);
-        // console.log(renamedFIle);
-
-        const base64 = await ImageUtils.readAsBase64(data);
-        setSelectedBackgroundImage(base64 as string);
-      } else {
-        const isValidFile: boolean = ImageUtils.checkFile(data, 'image');
-
-        if (!isValidFile) {
-          return;
-        }
-        const base64 = await ImageUtils.readAsBase64(data);
-        setSelectedProfileImage(base64 as string);
-      }
+  // Main function
+  const selectedFileImage = (data: string, type: 'background' | 'profile') => {
+    setHasImage(true);
+    if (type === 'background') {
+      setSelectedBackgroundImage(data as string);
     } else {
-      if (type === 'background') {
-        setSelectedBackgroundImage(data as string);
-      } else {
-        setSelectedProfileImage(data as string);
-      }
+      setSelectedProfileImage(data as string);
     }
   };
 
@@ -117,7 +97,9 @@ const Profiles = () => {
     // setLoading(true);
     try {
       if (type === 'background') {
-        await imageService.addUserBackgroundImage(selectedBackgroundImage);
+        const response = await imageService.addUserBackgroundImage(selectedBackgroundImage);
+        const bgUrl = Utils.generateImageUrl(response.data.data.bgImageVersion, response.data.data.bgImageId);
+        setBgUrl(bgUrl);
       } else {
         await imageService.addUserProfileImage(selectedProfileImage);
       }

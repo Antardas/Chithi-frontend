@@ -1,7 +1,7 @@
 import { AxiosResponse } from 'axios';
 import axios from '~/services/axios';
 import { OnlyMessageResponse } from '~/types/axios';
-import { IAddImage, IGetImages, IImageData } from '~/types/image';
+import { IAddImage, IGetImages, IImageData, IUpdateOrAddBackgroundImage } from '~/types/image';
 
 class ImageService {
   async addUserProfileImage(imageBase64Str: string): Promise<AxiosResponse<IAddImage>> {
@@ -10,8 +10,8 @@ class ImageService {
     });
     return response;
   }
-  async addUserBackgroundImage(imageBase64Str: string): Promise<AxiosResponse<OnlyMessageResponse>> {
-    const response = await axios.post<OnlyMessageResponse>('/images/background', {
+  async addUserBackgroundImage(imageBase64Str: string): Promise<AxiosResponse<IUpdateOrAddBackgroundImage>> {
+    const response = await axios.post<IUpdateOrAddBackgroundImage>('/images/background', {
       image: imageBase64Str
     });
     return response;

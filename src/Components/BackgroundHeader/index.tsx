@@ -10,6 +10,7 @@ import { ITabItems } from '~/types/utils';
 import '~/Components/BackgroundHeader/BackgroundHeader.scss';
 import BackgroundHeaderSkeleton from './BackgroundHeaderSkeleton';
 import { IImageData } from '~/types/image';
+import { ImageUtils } from '~/services/utils/image-utils.service';
 const BackgroundHeader = ({
   user,
   loading,
@@ -38,8 +39,6 @@ const BackgroundHeader = ({
       backgroundFileRef.current.click();
     }
   };
-
-
 
   const profileFileInputClicked = () => {
     if (profileImageRef.current) {
@@ -80,6 +79,22 @@ const BackgroundHeader = ({
         </ul>
       </nav>
     );
+  };
+
+  const validateAndProcessFile = async (file: File): Promise<string | null> => {
+    const isValidFile: boolean = ImageUtils.checkFile(file, 'image');
+
+    if (!isValidFile) {
+      return null;
+    }
+
+    try {
+      const base64 = await ImageUtils.readAsBase64(file);
+      return base64 as string;
+    } catch (error) {
+      console.error('Error converting file to base64', error);
+      return null;
+    }
   };
 
   useEffect(() => {
@@ -187,8 +202,12 @@ const BackgroundHeader = ({
                     }}
                     onChange={(event) => {
                       if (event.target.files && event.target.files.length) {
-                        setSelectedProfileImage(URL.createObjectURL(event.target.files[0]));
-                        selectedFileImage(event.target.files[0], 'profile');
+                        validateAndProcessFile(event.target.files[0]).then((data) => {
+                          if (data && event.target.files && event.target.files[0]) {
+                            setSelectedProfileImage(URL.createObjectURL(event.target.files[0]));
+                            selectedFileImage(data, 'profile');
+                          }
+                        });
                       }
                     }}
                   />
@@ -218,8 +237,12 @@ const BackgroundHeader = ({
                   }}
                   onChange={(event) => {
                     if (event.target.files && event.target.files.length) {
-                      setSelectedBackground(URL.createObjectURL(event.target.files[0]));
-                      selectedFileImage(event.target.files[0], 'background');
+                      validateAndProcessFile(event.target.files[0]).then((data) => {
+                        if (data && event.target.files && event.target.files[0]) {
+                          setSelectedBackground(URL.createObjectURL(event.target.files[0]));
+                          selectedFileImage(data, 'background');
+                        }
+                      });
                     }
                   }}
                 />
@@ -271,7 +294,7 @@ interface BackgroundHeaderProps {
   tabItems: ITabItems[];
   hasError: boolean;
   hideSettings: boolean;
-  selectedFileImage: (url: string | File, type: string) => void;
+  selectedFileImage: (url: string, type: 'background' | 'profile') => void;
   saveImage: (type: 'background' | 'profile') => void;
   cancelFileSelection: () => void;
   removeBackgroundImage: (imgId: string, imgVersion: string) => void;
