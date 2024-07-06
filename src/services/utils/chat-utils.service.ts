@@ -124,7 +124,7 @@ export class ChatUtils {
           clonedChatMessageList.unshift(data);
         } else {
           messageIndex = chatMessageList.findIndex((message) => message.receiverUsername === data.receiverUsername);
-          clonedChatMessageList.splice(messageIndex, 1);
+          clonedChatMessageList.splice(messageIndex, 1, data);
         }
         store.dispatch(setConversations(clonedChatMessageList));
       }
