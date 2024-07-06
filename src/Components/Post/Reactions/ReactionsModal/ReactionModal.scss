@@ -56,5 +56,31 @@
         margin: auto;
       }
     }
+
+
+
+  }
+
+
+}
+
+.circle-notch-rotate {
+  position: relative;
+  left: 50%;
+  right: 50%;
+  top: 50%;
+  transform: translateX(50%);
+  animation: rotate 2s linear infinite;
+  height: 200px;
+  display: block;
+}
+
+@keyframes rotate {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
   }
 }

@@ -12,6 +12,7 @@ import { IReactionPost, ReactionType } from '~/types/reaction';
 import useEffectOnce from '~/hooks/useEffectOnce';
 import { closeModal } from '~/redux/reducers/modal/modal.reducer';
 import { clearPostItem } from '~/redux/reducers/post/post.reducer';
+import { FaSpinner } from 'react-icons/fa';
 const ReactionModal = () => {
   const [activeViewAllTab, setActiveViewAllTab] = useState<boolean>(false);
   const [reactionCount, setReactionCount] = useState<FormattedReactionCount[]>([]);
@@ -21,7 +22,9 @@ const ReactionModal = () => {
   const [reactionColor, setReactionColor] = useState<string>('');
   const { _id, reactions } = useSelector((state: RootState) => state.post);
   const dispatch = useAppDispatch();
+  const [loading, setLoading] = useState(false);
   const getPostReactions = async () => {
+    setLoading(true);
     try {
       const response = await postService.getReactionsByPostId(_id); // TODO: instead of again API call we can pass the previous fetched data from the DisplayReactionAndComment -> getPostReactions
       const sortedReaction = response.data.reactions.sort((a, b) => {
@@ -38,6 +41,8 @@ const ReactionModal = () => {
       setPostReactionsReadOnly(sortedReaction);
     } catch (error) {
       Utils.addErrorNotification(error, dispatch);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -94,6 +99,7 @@ const ReactionModal = () => {
         </div>
 
         <div className="modal-reactions-list">
+          {loading ? <FaSpinner className="circle-notch-rotate" /> : null}
           <ReactionList postReactions={postReactions} />
         </div>
       </ReactionWrapper>
