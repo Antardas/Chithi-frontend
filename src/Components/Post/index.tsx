@@ -136,12 +136,11 @@ const Post = ({ post: rawPost, showIcons }: IPostProps) => {
                   </div>
                 )}
               </div>
-
-              {post?.createAt && (
+              {post?.createAt || (post?.createdAt as string) ? (
                 <p className="time-text-display" data-testid="time-display">
-                  {timeAgo.transform(post?.createAt ?? (post.createdAt as string))} &middot; {getPrivacy(post.privacy)}
+                  {<span>{timeAgo.transform(post.createAt || (post?.createdAt as string))}</span>} &middot; {getPrivacy(post.privacy)}
                 </p>
-              )}
+              ) : null}
             </div>
             <hr />
             <div className="user-post" style={{ marginTop: '1rem', borderBottom: '' }}>
@@ -180,14 +179,14 @@ const Post = ({ post: rawPost, showIcons }: IPostProps) => {
                   data-testid="post-video"
                   className="image-display-flex"
                   style={{
-                    backgroundColor: "#000000"
+                    backgroundColor: '#000000'
                   }}
                   onClick={() => {
                     // setShowImageModal(true);
                     // setImageUrl(Utils.generateImageUrl(post.imgVersion as string, post.imgId as string));
                   }}
                 >
-                  <video  width={'100%'} className="post-video" src={Utils.generateVideoUrl(post.videoVersion, post.videoId)} controls />
+                  <video width={'100%'} className="post-video" src={Utils.generateVideoUrl(post.videoVersion, post.videoId)} controls />
                 </div>
               )}
 
