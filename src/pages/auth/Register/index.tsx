@@ -52,6 +52,7 @@ const Register = () => {
       setAlertType('alert-success');
       setKeepLoggedIn('true');
       axios.defaults.headers.common['Authorization'] = result.data.token;
+      console.log(axios.defaults.headers);
       Utils.dispatchUser(result, setPageReload, dispatch, setUser, setToken);
     } catch (error: unknown) {
       setHasError(true);
