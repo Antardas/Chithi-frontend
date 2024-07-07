@@ -52,10 +52,10 @@ export class Utils {
     setUser: React.Dispatch<React.SetStateAction<IUser | null>>,
     setToken: (token: string) => void
   ) => {
+    setToken(result.data.token);
     pageReload(JSON.stringify(true));
     dispatch(addUser({ token: result.data.token, profile: result.data.user }));
     setUser(result.data.user);
-    setToken(result.data.token);
   };
 
   static dispatchNotification(message: string, type: NotificationType, dispatch: AppDispatch): void {
