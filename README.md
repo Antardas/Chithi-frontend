@@ -2,41 +2,27 @@
 ### Project Name: Chithi
 Chithi is a social media application designed to provide a smooth and engaging user experience using modern technologies. It includes features for authentication, chat, user profiles, posts, comments, reactions, notifications, and follower/block management.
 
-| **Feature**           | **Sub-feature**                              |
-| --------------------- | -------------------------------------------- |
-| **Authentication**    | 1. Sign Up                                   |
-|                       | 2. Sign In                                   |
-|                       | 3. Log Out                                   |
-|                       | 4. Password Reset                            |
-| **Chat**              | 1. Private messages                          |
-|                       | 2. Add Message Reaction                      |
-|                       | 3. Send Image in Message                     |
-|                       | 4. Mark Message as Read                      |
-|                       | 5. Delete Message self / both                |
-|                       | 6. Search User for chat                      |
-| **User**              | 1. Get Single User Profile                   |
-|                       | 2. Get Multiple User with infinite scrolling |
-|                       | 3. Get Random Suggested Users                |
-|                       | 4. Edit Profile                              |
-|                       | 5. Add Cover Page                            |
-| **Post**              | 1. Create Post (also With Image)             |
-|                       | 2. Get All Post (Based on following, public) |
-|                       | 3. Update Post                               |
-|                       | 4. Edit Post                                 |
-| **Comments**          | 1. Add Comment                               |
-|                       | 2. Delete Comment                            |
-| **Reactions**         | 1. Add Post Reaction                         |
-|                       | 2. Show All Post Reaction                    |
-|                       | 3. Remove Self Reaction                      |
-| **Notification**      | 1. Notification Setting                      |
-|                       | 2. Send Notification on Action               |
-|                       | 3. Mark read as notification                 |
-|                       | 4. Display All Notifications                 |
-| **Followers & Block** | 1. Follow User                               |
-|                       | 2. UnFollow User                             |
-|                       | 3. Show all Follower and Following List      |
-|                       | 4.Block User                                 |
-|                       | 5.Unblock User                               |
+
+| **Feature**           | **Sub-feature**                              | **Feature**           | **Sub-feature**                              |
+| --------------------- | -------------------------------------------- | --------------------- | -------------------------------------------- |
+| **Authentication**    | 1. Sign Up                                   | **Post**              | 1. Create Post (also With Image)             |
+|                       | 2. Sign In                                   |                       | 2. Get All Post (Based on following, public) |
+|                       | 3. Log Out                                   |                       | 3. Update Post                               |
+|                       | 4. Password Reset                            |                       | 4. Edit Post                                 |
+| **Chat**              | 1. Private messages                          | **Comments**          | 1. Add Comment                               |
+|                       | 2. Add Message Reaction                      |                       | 2. Delete Comment                            |
+|                       | 3. Send Image in Message                     | **Reactions**         | 1. Add Post Reaction                         |
+|                       | 4. Mark Message as Read                      |                       | 2. Show All Post Reaction                    |
+|                       | 5. Delete Message self / both                |                       | 3. Remove Self Reaction                      |
+|                       | 6. Search User for chat                      | **Notification**      | 1. Notification Setting                      |
+| **User**              | 1. Get Single User Profile                   |                       | 2. Send Notification on Action               |
+|                       | 2. Get Multiple User with infinite scrolling |                       | 3. Mark read as notification                 |
+|                       | 3. Get Random Suggested Users                |                       | 4. Display All Notifications                 |
+|                       | 4. Edit Profile                              | **Followers & Block** | 1. Follow User                               |
+|                       | 5. Add Cover Page                            |                       | 2. UnFollow User                             |
+|                       |                                              |                       | 3. Show all Follower and Following List      |
+|                       |                                              |                       | 4. Block User                                |
+|                       |                                              |                       | 5. Unblock User                              |
 
 ## Technology Stack
 |||||
