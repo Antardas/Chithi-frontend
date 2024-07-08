@@ -1,5 +1,6 @@
 import { AxiosResponse } from 'axios';
 import React, { useCallback, useState } from 'react';
+import { FaSpinner } from 'react-icons/fa';
 import { useSelector } from 'react-redux';
 import { Navigate, useNavigate } from 'react-router-dom';
 import useEffectOnce from '~/hooks/useEffectOnce';
@@ -20,8 +21,10 @@ const ProtectedRoutes: React.FC<{ children: React.ReactNode }> = ({ children }) 
   const dispatch = useAppDispatch();
   const { profile, token } = useSelector((state: RootState) => state.user);
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(true);
   // const [userData, setUserData] = useState<IUser | null>(null);
   const checkUser = useCallback(async () => {
+    setLoading(true);
     try {
       const response: AxiosResponse<ICurrentUser> = await userService.currentUser();
       // setUserData(response.data.user);
@@ -48,11 +51,20 @@ const ProtectedRoutes: React.FC<{ children: React.ReactNode }> = ({ children }) 
         navigate('/');
       }, 1000);
     }
+    setLoading(false);
   }, [removeSessionPageReload, removeStorageUsername, setLoggedIn, dispatch, navigate]);
 
   useEffectOnce(async () => {
     await checkUser();
   });
+
+  if (loading) {
+    return (
+      <div className="initial-loader">
+        <FaSpinner />
+      </div>
+    );
+  }
 
   if ((profile?._id && token) || JSON.parse(loggedIn ?? 'false') || (pageReload && JSON.parse(pageReload))) {
     return <>{children}</>;
