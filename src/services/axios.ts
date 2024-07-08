@@ -10,6 +10,7 @@ const axiosInstance = axios.create({
   },
   withCredentials: true
 });
+console.log(axiosInstance.defaults.headers, 'headers');
 
 axiosInstance.interceptors.request.use(
   function (config) {
