@@ -12,7 +12,7 @@ import { NavigateFunction, useNavigate } from 'react-router-dom';
 import { AppDispatch, useAppDispatch } from '~/redux/store';
 import useSessionStorage from '~/hooks/useSessionStorage';
 import useLocalStorage from '~/hooks/useLocalStorage';
-import axios from '~/services/axios';
+import axiosInstance from '~/services/axios';
 
 const Register = () => {
   const [username, setUsername] = useState<string>('');
@@ -50,9 +50,8 @@ const Register = () => {
       setErrorMessage('');
       setHasError(false);
       setAlertType('alert-success');
-      setKeepLoggedIn('true');
-      axios.defaults.headers.common['Authorization'] = result.data.token;
-      console.log(axios.defaults.headers);
+			setKeepLoggedIn('true');
+      console.log(axiosInstance.defaults.headers);
       Utils.dispatchUser(result, setPageReload, dispatch, setUser, setToken);
     } catch (error: unknown) {
       setHasError(true);

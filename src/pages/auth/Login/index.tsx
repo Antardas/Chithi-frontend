@@ -12,7 +12,7 @@ import useLocalStorage from '~/hooks/useLocalStorage';
 import useSessionStorage from '~/hooks/useSessionStorage';
 import { Utils } from '~/services/utils/utils.service';
 import { useAppDispatch } from '~/redux/store';
-import axios from '~/services/axios';
+import axiosInstance from '~/services/axios';
 const Login = () => {
   const [username, setUsername] = useState<string>('');
   const [password, setPassword] = useState<string>('');
@@ -40,7 +40,7 @@ const Login = () => {
         password
         // keepLoggedIn
       });
-      axios.defaults.headers['Authorization'] = result.data.token;
+      axiosInstance.defaults.headers['Authorization'] = result.data.token;
       setStoredUsername(`${result.data.user.username || ''}`);
       setLoggedIn(JSON.stringify(keepLoggedIn));
       setLoading(false);
