@@ -204,7 +204,8 @@ export class PostUtils {
     const isPublic = post.privacy === 'Public';
 
     // means if I have already followed that author || or that author in my following array
-    const isFollowers = post.privacy === 'Followers' && Utils.checkIfUserIsFollowed(following, post.userId, profile._id) || (post.userId === profile._id);
+    const isFollowers =
+      (post.privacy === 'Followers' && Utils.checkIfUserIsFollowed(following, post.userId, profile._id)) || post.userId === profile._id;
     return isPrivate || isPublic || isFollowers;
   }
 
@@ -224,54 +225,63 @@ export class PostUtils {
     }
   }
 
-  static socketIOPost() {
-    socketService.socket?.on('addPost', (data: IPost) => {
-      const posts = store.getState().posts.posts;
-      const clonedPosts = Utils.cloneDeep(posts) as IPost[];
-      const { profile } = store.getState().user;
-      if (!profile?.blockedBy.find((item) => item === data.userId)) {
-        clonedPosts.unshift(data);
+  static addPostListener(data: IPost) {
+    const posts = store.getState().posts.posts;
+    const clonedPosts = Utils.cloneDeep(posts) as IPost[];
+    const { profile } = store.getState().user;
+    if (!profile?.blockedBy.find((item) => item === data.userId)) {
+      clonedPosts.unshift(data);
 
-        store.dispatch(addPosts(clonedPosts));
-      }
-    });
-
-    socketService.socket?.on('update post', (data: IPost) => {
-      const posts = store.getState().posts.posts;
-      console.log('🚀 ~ PostUtils ~ socketService.socket.on ~ data:', data);
-
-      PostUtils.updateSinglePost(posts, data, store.dispatch);
-    });
-
-    socketService.socket?.on('delete post', (postId: string) => {
-      const posts = store.getState().posts.posts;
-      let clonedPosts = Utils.cloneDeep(posts) as IPost[];
-      clonedPosts = clonedPosts.filter((data) => data._id !== postId);
       store.dispatch(addPosts(clonedPosts));
-    });
+    }
+  }
+  static updatePostListener(data: IPost) {
+    const posts = store.getState().posts.posts;
+    console.log('🚀 ~ PostUtils ~ socketService.socket.on ~ data:', data);
+
+    PostUtils.updateSinglePost(posts, data, store.dispatch);
+  }
+
+  static deletePostListener(postId: string) {
+    const posts = store.getState().posts.posts;
+    let clonedPosts = Utils.cloneDeep(posts) as IPost[];
+    clonedPosts = clonedPosts.filter((data) => data._id !== postId);
+    store.dispatch(addPosts(clonedPosts));
+  }
+
+  static updateLikePostListener(data: SocketReactionResponse) {
+    const posts = store.getState().posts.posts;
+    const postIndex = posts.findIndex((item) => item._id === data.postId);
+
+    if (postIndex !== 1) {
+      const updatedPost = {
+        ...posts[postIndex],
+        reactions: data.postReactions
+      };
+      PostUtils.updateSinglePost(posts, updatedPost, store.dispatch);
+    }
+  }
+
+  static updateCommentPostListener(data: ICommentSocketResponse) {
+    const posts = store.getState().posts.posts;
+    const post = posts.find((item) => item._id === data.postId);
+    if (post) {
+      post.commentCount = data.commentsCount;
+      PostUtils.updateSinglePost(posts, post, store.dispatch);
+    }
+  }
+
+  static socketIOPost() {
+    socketService.socket?.on('addPost', PostUtils.addPostListener);
+
+    socketService.socket?.on('update post', PostUtils.updatePostListener);
+
+    socketService.socket?.on('delete post', PostUtils.deletePostListener);
 
     // TODO: fix the Type
-    socketService.socket?.on('update like', (data: SocketReactionResponse) => {
-      const posts = store.getState().posts.posts;
-      const postIndex = posts.findIndex((item) => item._id === data.postId);
-
-      if (postIndex !== 1) {
-        const updatedPost = {
-          ...posts[postIndex],
-          reactions: data.postReactions
-        };
-        PostUtils.updateSinglePost(posts, updatedPost, store.dispatch);
-      }
-    });
+    socketService.socket?.on('update like', PostUtils.updateLikePostListener);
     // TODO: fix the Type
-    socketService.socket?.on('update comment', (data: ICommentSocketResponse) => {
-      const posts = store.getState().posts.posts;
-      const post = posts.find((item) => item._id === data.postId);
-      if (post) {
-        post.commentCount = data.commentsCount;
-        PostUtils.updateSinglePost(posts, post, store.dispatch);
-      }
-    });
+    socketService.socket?.on('update comment', PostUtils.updateCommentPostListener);
   }
 
   static updateSinglePost(posts: IPost[], post: IPost, dispatch: AppDispatch) {

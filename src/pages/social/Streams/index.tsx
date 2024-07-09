@@ -15,6 +15,7 @@ import { addReactions } from '~/redux/reducers/post/userReactions.reducer';
 import { RootState, useAppDispatch } from '~/redux/store';
 import { followerService } from '~/services/api/follower/follower.service';
 import { postService } from '~/services/api/post/post.service';
+import { socketService } from '~/services/socket/sokcet.service';
 import { PostUtils } from '~/services/utils/post-utils.service';
 import { Utils } from '~/services/utils/utils.service';
 import { IError } from '~/types/axios';
@@ -109,6 +110,19 @@ const Streams = () => {
 
   useEffect(() => {
     PostUtils.socketIOPost();
+
+    return () => {
+      socketService.socket?.off('addPost', PostUtils.addPostListener);
+
+      socketService.socket?.off('update post', PostUtils.updatePostListener);
+
+      socketService.socket?.off('delete post', PostUtils.deletePostListener);
+
+      // TODO: fix the Type
+      socketService.socket?.off('update like', PostUtils.updateLikePostListener);
+      // TODO: fix the Type
+      socketService.socket?.off('update comment', PostUtils.updateCommentPostListener);
+    };
   }, []);
 
   useEffect(() => {
