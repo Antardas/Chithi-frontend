@@ -102,6 +102,10 @@ const BackgroundHeader = ({
       setShowSpinner(false);
     }
   }, [hasImage]);
+
+  if (loading && !user) {
+    return <BackgroundHeaderSkeleton tabItems={tabItems} />;
+  }
   return (
     <>
       {showImagesModal && (
@@ -114,10 +118,7 @@ const BackgroundHeader = ({
           }}
         />
       )}
-
-      {loading ? (
-        <BackgroundHeaderSkeleton tabItems={tabItems} />
-      ) : (
+      {user ? (
         <div className="profile-banner" data-testid="profile-banner">
           {hasImage ? (
             <div className="save-changes-container" data-testid="save-changes-container">
@@ -277,7 +278,7 @@ const BackgroundHeader = ({
             </ul>
           </div>
         </div>
-      )}
+      ) : null}
     </>
   );
 };

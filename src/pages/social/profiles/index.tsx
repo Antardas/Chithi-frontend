@@ -46,6 +46,7 @@ const Profiles = () => {
     const id = searchParams.get('id'),
       uId = searchParams.get('uId');
     if (!username || !id || !uId) return;
+    setLoading(true);
     try {
       const response = await userService.getUserByUsername({
         username: username,
@@ -58,10 +59,10 @@ const Profiles = () => {
       if (newUser?.bgImageVersion && newUser?.bgImageVersion) {
         setBgUrl(Utils.generateImageUrl(newUser.bgImageVersion, newUser.bgImageId));
       }
-      setLoading(false);
     } catch (error) {
       Utils.addErrorNotification(error, dispatch);
     }
+    setLoading(false);
   }, [dispatch, searchParams, username]);
 
   const getUserImages = useCallback(async () => {
@@ -163,24 +164,22 @@ const Profiles = () => {
       <div className="profile-wrapper">
         <div className="profile-wrapper-container">
           <div className="profile-header">
-            {user ? (
-              <BackgroundHeader
-                user={user}
-                loading={loading}
-                hasImage={hasImage}
-                hasError={hasError}
-                url={bgUrl}
-                onClick={changeTabContent}
-                selectedFileImage={selectedFileImage}
-                saveImage={saveImage}
-                cancelFileSelection={cancelFileSelection}
-                removeBackgroundImage={removeBackgroundImage}
-                tabItems={tabItems(username === profile?.username, username === profile?.username)}
-                tab={displayContent}
-                hideSettings={username === profile?.username}
-                galleryImages={galleryImages}
-              />
-            ) : null}
+            <BackgroundHeader
+              user={user  as IUser}
+              loading={loading}
+              hasImage={hasImage}
+              hasError={hasError}
+              url={bgUrl}
+              onClick={changeTabContent}
+              selectedFileImage={selectedFileImage}
+              saveImage={saveImage}
+              cancelFileSelection={cancelFileSelection}
+              removeBackgroundImage={removeBackgroundImage}
+              tabItems={tabItems(username === profile?.username, username === profile?.username)}
+              tab={displayContent}
+              hideSettings={username === profile?.username}
+              galleryImages={galleryImages}
+            />
             <div className="profile-content">
               {displayContent === 'Timeline' ? <Timeline loading={loading} userProfileData={user as IUser} posts={posts} /> : null}
               {displayContent === 'Followers' && user ? <FollowerCard userData={user} /> : null}
