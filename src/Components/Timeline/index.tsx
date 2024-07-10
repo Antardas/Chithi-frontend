@@ -21,6 +21,7 @@ import PostForm from '../Post/PostForm';
 import { addPosts } from '~/redux/reducers/post/posts.reducer';
 import SocialLinks from './SocialLinks';
 import BasicInfo from './BasicInfo';
+import { socketService } from '~/services/socket/sokcet.service';
 const Timeline = ({ loading, userProfileData, posts: userPosts }: Props) => {
   const { profile } = useSelector((state: RootState) => state.user);
   const { posts } = useSelector((state: RootState) => state.posts);
@@ -99,6 +100,18 @@ const Timeline = ({ loading, userProfileData, posts: userPosts }: Props) => {
 
   useEffect(() => {
     PostUtils.socketIOPost();
+    return () => {
+      socketService.socket?.off('addPost', PostUtils.addPostListener);
+
+      socketService.socket?.off('update post', PostUtils.updatePostListener);
+
+      socketService.socket?.off('delete post', PostUtils.deletePostListener);
+
+      // TODO: fix the Type
+      socketService.socket?.off('update like', PostUtils.updateLikePostListener);
+      // TODO: fix the Type
+      socketService.socket?.off('update comment', PostUtils.updateCommentPostListener);
+    }
   }, []);
   return (
     <div className="timeline-wrapper" data-testid="timeline">
