@@ -111,7 +111,7 @@ const Timeline = ({ loading, userProfileData, posts: userPosts }: Props) => {
       socketService.socket?.off('update like', PostUtils.updateLikePostListener);
       // TODO: fix the Type
       socketService.socket?.off('update comment', PostUtils.updateCommentPostListener);
-    }
+    };
   }, []);
   return (
     <div className="timeline-wrapper" data-testid="timeline">
@@ -139,7 +139,7 @@ const Timeline = ({ loading, userProfileData, posts: userPosts }: Props) => {
             />
           </div>
         </div>
-        {loading && !posts.length && (
+        {/* {loading && !posts.length && (
           <div className="timeline-wrapper-container-main">
             <div style={{ marginBottom: '10px' }}>
               <PostFormSkeleton />
@@ -173,7 +173,8 @@ const Timeline = ({ loading, userProfileData, posts: userPosts }: Props) => {
               No post available
             </div>
           </div>
-        )}
+        )} */}
+        {profile && username ? <TimelineWrapper following={following} loading={loading} posts={posts} profile={profile} username={username} /> : null}
       </div>
     </div>
   );
@@ -186,3 +187,54 @@ interface Props {
   posts: IPost[];
   loading: boolean;
 }
+interface WrapperProps {
+  loading: boolean;
+  posts: IPost[];
+  username: string;
+  profile: IUser;
+  following: string[];
+}
+const TimelineWrapper = ({ loading, posts, username, profile, following }: WrapperProps) => {
+  const renderPostForm = username === profile?.username;
+
+  const renderSkeletons = () => (
+    <div className="timeline-wrapper-container-main">
+      <div style={{ marginBottom: '10px' }}>
+        <PostFormSkeleton />
+      </div>
+      {[1, 2, 3, 4, 5].map((index) => (
+        <div key={index}>
+          <PostSkeleton />
+        </div>
+      ))}
+    </div>
+  );
+
+  const renderPosts = () => (
+    <>
+      {posts.map((post) => (
+        <div key={`post-container-${post._id}`} data-testid="posts-item">
+          {(!Utils.checkIfUserIsBlocked(profile?.blockedBy, post.userId) || post.userId === profile?._id) &&
+            PostUtils.checkPrivacy(post, profile, following) && (
+              <Post post={post} showIcons={renderPostForm} loading={loading} key={`post-${post._id}`} />
+            )}
+        </div>
+      ))}
+    </>
+  );
+
+  const renderEmptyState = () => (
+    <div className="empty-page" data-testid="empty-page">
+      No post available
+    </div>
+  );
+
+  return (
+    <div className="timeline-wrapper-container-main">
+      {renderPostForm && <PostForm />}
+      {loading && !posts.length && renderSkeletons()}
+      {!loading && posts.length > 0 && renderPosts()}
+      {!loading && posts.length === 0 && renderEmptyState()}
+    </div>
+  );
+};
