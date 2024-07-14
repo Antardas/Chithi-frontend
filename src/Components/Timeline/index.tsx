@@ -58,6 +58,7 @@ const Timeline = ({ loading, userProfileData, posts: userPosts }: Props) => {
   const getUserByUsername = useCallback(() => {
     if (userProfileData) {
       dispatch(addPosts(userPosts));
+      // setPosts(userPosts);
       setUser(userProfileData);
       setEditableInputs({
         quote: userProfileData.quote,
@@ -95,6 +96,7 @@ const Timeline = ({ loading, userProfileData, posts: userPosts }: Props) => {
   }, [username, profile]);
 
   useEffect(() => {
+    dispatch(addPosts([]));
     getUserByUsername();
   }, [getUserByUsername]);
 
